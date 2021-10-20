@@ -1,0 +1,51 @@
+package com.cscie97.store.model;
+
+/**
+ *  Represents a device
+ *
+ *  Implemented by Sensors and Appliances
+ */
+public interface Device {
+
+	/**
+	 * Simulates a sensor or appliance event,
+	 * such as recognizing a customer's location with a store
+	 *
+	 * @param event event
+	 * @return {@link String}
+	 * @see String
+	 */
+	public abstract String createEvent(String event);
+
+	/**
+	 * Returns the id of a given Device
+	 *
+	 * @return {@link String}
+	 * @see String
+	 */
+	public abstract String getId();
+
+	/**
+	 * Returns type of given Device
+	 *
+	 * Type can be (camera, microphone, speaker, turnstile or robot)
+	 *
+	 * @return {@link String}
+	 * @see String
+	 */
+	public abstract String showDeviceType();
+
+	/**
+	 * Simulates a command being sent to an appliance
+	 *
+	 * Sensors cannot receive
+	 *
+	 * @param command command
+	 * @return {@link String}
+	 * @see String
+	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 */
+	public abstract String createCommand(String command) throws StoreModelServiceException;
+
+
+}

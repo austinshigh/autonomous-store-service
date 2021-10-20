@@ -1,0 +1,313 @@
+# Store Model Service Sample Script
+
+
+# Store Commands
+# define-store <identifier> name <name> address <address>
+define-store store_123 name Eataly address "800 Boylston St, Boston, MA 02199"
+
+
+# show store <identifier>
+show-store store_123
+
+
+# Aisle Commands
+# Define an aisle within the store
+# define-aisle <store_id>:<aisle_number> name <name> description <description> location (floor | store_room)
+define-aisle store_123:aisle_A1 name AISLE_A1 description AISLE_A1_desc location store_room
+define-aisle store_123:aisle_A2 name AISLE_A2 description AISLE_A2_desc location floor
+define-aisle store_123:aisle_A3 name AISLE_A3 description AISLE_A3_desc location floor
+define-aisle store_123:aisle_B1 name AISLE_B1 description AISLE_B1_desc location store_room
+define-aisle store_123:aisle_B2 name AISLE_B2 description AISLE_B2_desc location floor
+define-aisle store_123:aisle_B3 name AISLE_B3 description AISLE_B3_desc location floor
+
+
+# Show the details of the aisle, including the name, description and list of shelves.
+# show-aisle <store_id>[:<aisle_number>]
+show-aisle store_123:aisle_A1
+show-aisle store_123:aisle_A2
+show-aisle store_123:aisle_B2
+
+
+# Shelf Commands
+# Define a new shelf within the store
+# define-shelf <store_id>:<aisle_number>:<shelf_id> name <name> level (high | medium | low) description <description> [temperature (frozen | refrigerated | ambient | warm | hot )]
+define-shelf store_123:aisle_A1:shelf_q1 name Shelf_Q1 level high description "lasanaga" temperature frozen
+define-shelf store_123:aisle_A1:shelf_q2 name Shelf_Q2 level medium description Shelf_Q2_Desc temperature ambient
+define-shelf store_123:aisle_A1:shelf_q3 name Shelf_Q3 level low description Shelf_Q3_Desc temperature refrigerated
+define-shelf store_123:aisle_A1:shelf_q4 name Shelf_Q4 level low description Shelf_Q4_Desc temperature warm
+define-shelf store_123:aisle_A1:shelf_q5 name Shelf_Q5 level medium description Shelf_Q5_Desc temperature hot
+
+
+define-shelf store_123:aisle_A2:shelf_q1 name Shelf_Q1 level high description Shelf_Q1_Desc temperature frozen
+define-shelf store_123:aisle_A2:shelf_q2 name Shelf_Q2 level medium description Shelf_Q2_Desc temperature ambient
+define-shelf store_123:aisle_A2:shelf_q3 name Shelf_Q3 level low description Shelf_Q3_Desc temperature refrigerated
+define-shelf store_123:aisle_A2:shelf_q4 name Shelf_Q4 level low description Shelf_Q4_Desc temperature warm
+define-shelf store_123:aisle_A2:shelf_q5 name Shelf_Q5 level medium description Shelf_Q5_Desc temperature hot
+
+
+define-shelf store_123:aisle_A3:shelf_q1 name Shelf_Q1 level high description Shelf_Q1_Desc temperature frozen
+define-shelf store_123:aisle_A3:shelf_q2 name Shelf_Q2 level medium description Shelf_Q2_Desc temperature ambient
+define-shelf store_123:aisle_A3:shelf_q3 name Shelf_Q3 level low description Shelf_Q3_Desc temperature refrigerated
+define-shelf store_123:aisle_A3:shelf_q4 name Shelf_Q4 level low description Shelf_Q4_Desc temperature warm
+define-shelf store_123:aisle_A3:shelf_q5 name Shelf_Q5 level medium description Shelf_Q5_Desc temperature hot
+
+
+define-shelf store_123:aisle_B1:shelf_q1 name Shelf_Q1 level high description Shelf_Q1_Desc temperature frozen
+define-shelf store_123:aisle_B1:shelf_q2 name Shelf_Q2 level medium description Shelf_Q2_Desc temperature ambient
+define-shelf store_123:aisle_B1:shelf_q3 name Shelf_Q3 level low description Shelf_Q3_Desc temperature refrigerated
+define-shelf store_123:aisle_B1:shelf_q4 name Shelf_Q4 level low description Shelf_Q4_Desc temperature warm
+define-shelf store_123:aisle_B1:shelf_q5 name Shelf_Q5 level medium description Shelf_Q5_Desc temperature hot
+
+
+define-shelf store_123:aisle_B2:shelf_q1 name Shelf_Q1 level high description Shelf_Q1_Desc temperature frozen
+define-shelf store_123:aisle_B2:shelf_q2 name Shelf_Q2 level medium description Shelf_Q2_Desc temperature ambient
+define-shelf store_123:aisle_B2:shelf_q3 name Shelf_Q3 level low description Shelf_Q3_Desc temperature refrigerated
+define-shelf store_123:aisle_B2:shelf_q4 name Shelf_Q4 level low description Shelf_Q4_Desc temperature warm
+define-shelf store_123:aisle_B2:shelf_q5 name Shelf_Q5 level medium description Shelf_Q5_Desc temperature hot
+
+
+define-shelf store_123:aisle_B3:shelf_q1 name Shelf_Q1 level high description Shelf_Q1_Desc temperature frozen
+define-shelf store_123:aisle_B3:shelf_q2 name Shelf_Q2 level medium description Shelf_Q2_Desc temperature ambient
+define-shelf store_123:aisle_B3:shelf_q3 name Shelf_Q3 level low description Shelf_Q3_Desc temperature refrigerated
+define-shelf store_123:aisle_B3:shelf_q4 name Shelf_Q4 level low description Shelf_Q4_Desc temperature warm
+define-shelf store_123:aisle_B3:shelf_q5 name Shelf_Q5 level medium description Shelf_Q5_Desc temperature hot
+
+
+# Show the details of the shelf including id, name, level, description and temperature
+# show-shelf <store_id>[:<aisle_number>[:<shelf_id>]]
+show-shelf store_123:aisle_A2:shelf_q1
+show-shelf store_123:aisle_B1:shelf_q5
+
+
+# Product Commands
+# Define a new product
+# define-product <product_id> name <name> description <description> size <size> category <category> unit_price <unit_price> [temperature (frozen | refrigerated | ambient | warm | hot )]
+define-product prod10 name bournvita description bournvita size 250g category Food unit_price 2 temperature ambient
+define-product prod11 name tea description "green tea" size 500g category Food unit_price 1 temperature ambient
+define-product prod12 name coffee description "premium coffee" size 100g category Food unit_price 3 temperature refrigerated
+define-product prod13 name goggles description "eye wear" size 3 category Men_accessories unit_price 5 temperature ambient
+define-product prod14 name sun_glass description "eye wear" size 3 category Fashion unit_price 7 temperature ambient
+
+
+# Show the details of the product
+# show-product <product_id>
+show-product prod10
+
+
+# Inventory Commands
+# Define a new inventory item within the store
+# define-inventory <inventory_id> location <store_id>:<aisle_number>:<shelf_id> capacity <capacity> count <count> product <product_id>
+define-inventory inv_u21 location store_123:aisle_A1:shelf_q1 capacity 1500 count 1000 product prod10
+define-inventory inv_u22 location store_123:aisle_A1:shelf_q2 capacity 1500 count 1000 product prod11
+define-inventory inv_u23 location store_123:aisle_B2:shelf_q1 capacity 500 count 200 product prod11
+define-inventory inv_u24 location store_123:aisle_B2:shelf_q2 capacity 500 count 200 product prod10
+define-inventory inv_u25 location store_123:aisle_A2:shelf_q1 capacity 200 count 100 product prod10
+define-inventory inv_u26 location store_123:aisle_A2:shelf_q3 capacity 300 count 100 product prod12
+
+
+# Show the details of the inventory
+# show-inventory <inventory_id>
+show-inventory inv_u24
+show-inventory inv_u21
+
+
+# Update the inventory count, count must >= 0 and <= capacity
+# update-inventory <inventory_id> update_count <increment or decrement>
+update-inventory inv_u24 update_count 4
+update-inventory inv_u21 update_count 7
+
+
+# Customer Commands
+# Define a new customer
+# define-customer <customer_id> first_name <first_name> last_name <last_name> type (registered|guest) email_address <email> account <account_address>
+define-customer cust_AB first_name JSON last_name WALLACE type guest email_address json.wallace@ymail.com account json
+define-customer cust_21 first_name BILL last_name ROSE type registered email_address bill.rose@gmail.com account bill
+define-customer cust_22 first_name MARY last_name KELVIN type registered email_address mary.kevin@yahoomail.com account mary
+define-customer cust_E2 first_name SILVER last_name HAWK type guest email_address silver.hawk@rocketmail.com account silver
+define-customer cust_23 first_name MEGON last_name FOX type guest email_address megonfox@testmail.com account megon
+define-customer cust_24 first_name MARIA last_name WILIAMSON type registered email_address maria4567@ymail.com account maria
+define-customer cust_S2 first_name SALINA last_name GOMEZ type registered email_address salina@gmail.com account salina
+
+
+# Update the location of a customer
+# update-customer <customer_id> location <store:aisle>
+update-customer cust_S2 location store_123:aisle_B2
+update-customer cust_21 location store_123:aisle_A2
+update-customer cust_22 location store_123:aisle_A2
+
+
+# Show the details of the customer
+# show-customer <customer_id>
+show-customer cust_21
+show-customer cust_S2
+
+
+# Basket Commands
+
+# define basket <basket_id>
+define-basket b1
+define-basket b2
+define-basket b3
+define-basket b4
+define-basket b5
+
+
+# Associate basket with Customer
+# assign-basket <basket_id> customer <customer_id>
+assign-basket b1 customer cust_21
+assign-basket b2 customer cust_S2
+assign-basket b3 customer cust_22
+
+
+# Get basket_id associated with the customer, create new basket if the customer does not already have a basket associated.
+# get_customer_basket <customer_id>
+get-customer-basket cust_21
+get-customer-basket cust_S2
+get-customer-basket cust_22
+
+
+# Add a product item to a basket
+# add_basket_item <basket_id> product <product_id> item_count <count>
+add-basket-item b1 product prod10 item_count 4
+add-basket-item b3 product prod11 item_count 2
+add-basket-item b3 product prod12 item_count 7
+
+
+
+
+# Remove a product item from a basket
+# remove_basket_item <basket_id> product <product_id> item_count <count>
+remove-basket-item b1 product prod10 item_count 1
+remove-basket-item b3 product prod12 item_count 5
+
+
+
+
+# Clear the contents of the basket and remove the customer association
+# clear_basket <basket_id>
+clear-basket b3
+
+
+# Get the list of product items in the basket, include the product_id and count
+# Show basket_items <basket_id>
+show-basket-items b3
+# it is empty
+show-basket-items b1
+show-basket-items b5
+# it is not assigned yet
+
+
+
+
+# Sensor Commands
+# Define device of type sensor
+# define device <device_id> name <name> type (microphone|camera) location <store>:<aisle>
+define-device mic_A1 name MicrophoneA1 type microphone location store_123:aisle_A2
+define-device cam_A1 name CameraA1 type camera location store_123:aisle_A2
+define-device cam_A2 name CameraA2 type camera location store_123:aisle_A1
+define-device cam_B2 name CameraB1 type camera location store_123:aisle_B2
+
+
+
+
+# Show device details
+# show-device <device_id>
+show-device cam_A1
+show-device mic_A1
+show-device cam_A2
+
+
+
+
+# Create a sensor event, this simulates a sensor event
+# create-event <device_id> event <event>
+create-event cam_A1 event 'item_added_to_basket b1 prod10'
+create-event cam_A1 event 'item_added_to_basket b1 prod11'
+create-event mic_A1 event 'customer_asked_question cust_S2 "where can I find the milk?"'
+
+
+# Appliance Commands
+# Define-device of type appliance
+# define-device <device_id> name <name> type (speaker | robot | turnstile) location <store>:<aisle>
+define-device rob_1 name ROBOT_1 type robot location store_123:aisle_A1
+define-device rob_2 name ROBOT_2 type robot location store_123:aisle_A2
+define-device spk_1 name SPEAKER_1 type speaker location store_123:aisle_A1
+define-device spk_2 name SPEAKER_2 type speaker location store_123:aisle_A2
+define-device turn_a1 name TURNSTILE_A1 type turnstile location store_123:aisle_A2
+define-device turn_a2 name TURNSTILE_A2 type turnstile location store_123:aisle_A2
+define-device turn_a3 name TURNSTILE_A3 type turnstile location store_123:aisle_A2
+
+
+# Show appliance device details
+show-device turn_a1
+show-device rob_2
+
+
+# Create an appliance event, this simulates a sensor event
+# create-event <device_id> event <event_description>
+create-event rob_2 event 'SPILLED_MILK store_123:aisle_A2'
+create-event rob_1 event 'CUSTOMER_QUESTION "where is the detergent?"'
+create-event turn_a1 event 'PRICE_CHECK prod11'
+
+
+# Send the appliance a command
+# create-command <device_id> message <command>
+create-command rob_1 message 'STOCK_SHELF store_123:aisle_A2:shelf_q3'
+create-command rob_2 message 'CLEAN_FLOOR store_123:aisle_A2'
+create-command turn_a3 message 'COUNT_INVENTORY store_123:aisle_A2'
+
+# Additional Testing / Exception Testing
+
+# Calculate basket total
+calculate-basket-total b1
+
+# Show that shelf created without temperature specification is defaulted to ambient temperature
+define-shelf store_123:aisle_A1:shelf_z1 name Shelf_Z1 level high description "lasanaga"
+show-shelf store_123:aisle_A1:shelf_z1
+
+# Show that product created without temperature specification is defaulted to ambient temperature
+define-product testProduct name Delicious description delicious size 250g category Food unit_price 2
+show-product testProduct
+
+# aisle created with an incorrect store id will throw error
+define-aisle FALSE_STORE_ID:aisle_a1 name AISLE_Z1 description AISLE_Z1_desc location store_room
+
+# location for aisle must be "floor" or "store_room"
+define-aisle store_123:test_Aisle name testAisle description test_Aisle_desc location "neither"
+
+# error is thrown when shelf is created with incorrect aisle id
+define-shelf store_123:FALSE_AISLE_ID:shelf_q1 name Shelf_Q1 level high description "lasanaga"
+
+# error is thrown when shelf is created with incorrect store id
+define-shelf FALSE_STORE_ID:aisle_A1:shelf_q1 name Shelf_Q1 level high description "lasanaga"
+
+# create two products, one with volume and one with weight for (size) value
+# display product attributes, show that volume and weight display differently
+define-product weightProduct name weightTest description weight size 250g category Food unit_price 2
+show-product weightProduct
+define-product volumeProduct name volumeTest description volume size 8 category Food unit_price 2
+show-product volumeProduct
+
+# inventory object cannot be created if count is greater than capacity
+define-inventory inv_u21 location store_123:aisle_A1:shelf_q1 capacity 1000 count 2000 product prod10
+
+# message is displayed when an item is added that exceeds capacity for inventory item
+define-inventory testInventory location store_123:aisle_A1:shelf_q1 capacity 2 count 2 product prod10
+update-inventory testInventory update_count 2
+
+# restocking message is displayed when an item is removed and the inventory count reads 0
+update-inventory testInventory update_count -4
+
+# sensor error message is displayed with inventory is removed and the inventory count reads below 0
+update-inventory testInventory update_count -1
+
+# show that when product is removed from basket and quantity equals 0, item is no longer shown in basket contents
+show-basket-items b1
+remove-basket-item b1 product prod10 item_count 3
+show-basket-items b1
+
+# show that item cannot be removed if not contained in the basket
+remove-basket-item b1 product prod10 item_count 1
+
+# error is thrown when user tries to create command for sensor, only appliances can receive commands
+create-command mic_A1 message 'STOCK_SHELF store_123:aisle_A2:shelf_q3'
