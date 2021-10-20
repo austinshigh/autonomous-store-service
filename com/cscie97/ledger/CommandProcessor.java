@@ -29,8 +29,9 @@ public class CommandProcessor {
      *
      * @param command command
      * @throws CommandProcessorException com.cscie97.ledger. command processor exception
+     * @return
      */
-    public void processCommand(String command) throws CommandProcessorException {
+    public String processCommand(String command) throws CommandProcessorException {
         try {
             // separate input on whitespace, unless whitespace within quotations
             ArrayList < String > commands = new ArrayList < String > ();
@@ -47,7 +48,6 @@ public class CommandProcessor {
                 case "#":
                     // print comments
                     System.out.println(command);
-                    break;
                 case "access-type":
                     String access = commands.get(1);
                     if (access.equals("admin") || (access.equals("user"))) {
@@ -58,7 +58,6 @@ public class CommandProcessor {
                         throw new CommandProcessorException("command should follow form:" +
                                 "\naccess-type <admin | user>");
                     }
-                    break;
                 case "create-ledger":
                     if (commands.size() != 6) {
                         // throw exception if incorrect number of command line arguments
@@ -77,7 +76,6 @@ public class CommandProcessor {
                         // throw exception if admin access not set
                         throw new CommandProcessorException("admin access required");
                     }
-                    break;
                 case "create-account":
                     // create new account in current ledger
                     try {
@@ -85,15 +83,13 @@ public class CommandProcessor {
                     } catch (LedgerException e) {
                         throw new CommandProcessorException(e);
                     }
-                    break;
                 case "get-account-balance":
                     // print account balance for specified account
                     try {
-                        System.out.println(currentLedger.getAccountBalance(commands.get(1)));
+                        return(Integer.toString(currentLedger.getAccountBalance(commands.get(1))));
                     } catch (LedgerException e) {
                         throw new CommandProcessorException(e);
                     }
-                    break;
                 case "process-transaction":
                     // process new transaction
                     if (commands.size() != 12) {
@@ -115,23 +111,20 @@ public class CommandProcessor {
                     } catch (LedgerException e) {
                         throw new CommandProcessorException(e);
                     }
-                    break;
                 case "get-account-balances":
                     // get account balances for all accounts in current ledger
                     try {
-                        System.out.println(currentLedger.getAccountBalances());
+                        return(currentLedger.getAccountBalances().toString());
                     } catch (LedgerException e) {
                         throw new CommandProcessorException(e);
                     }
-                    break;
                 case "get-block":
                     // call toString method for specified block, displaying relevant block information
                     try {
-                        System.out.println(currentLedger.getBlock(Integer.parseInt(commands.get(1))));
+                        return(currentLedger.getBlock(Integer.parseInt(commands.get(1))).toString());
                     } catch (LedgerException e) {
                         throw new CommandProcessorException(e);
                     }
-                    break;
                 case "set-block-hash":
                     // set the hash of the specified block to new hash input via CLI
                     // only sets the hash for the deep copy returned by getBlock() does not modify blockchain
@@ -140,24 +133,21 @@ public class CommandProcessor {
                     } catch (LedgerException e) {
                         throw new CommandProcessorException(e);
                     }
-                    break;
                 case "get-transaction":
                     // call toString method for specified transaction, displaying relevant block information
-                    System.out.println(currentLedger.getTransaction(commands.get(1)));
-                    break;
+                    return(currentLedger.getTransaction(commands.get(1)).toString());
                 case "set-transaction-amount":
                     // set the amount of the specified transaction to new amount input via CLI
                     // only sets the amount for the deep copy returned by getTransaction() does not modify blockchain
                     currentLedger.getTransaction(commands.get(1)).setAmount(Integer.parseInt(commands.get(2)));
-                    break;
                 case "validate":
                     // validate the blockchain
                     try {
                         currentLedger.validate();
+                        return("blockchain validated successfully");
                     } catch (LedgerException e) {
                         throw new CommandProcessorException(e);
                     }
-                    break;
                 default:
                     // catch all invalid arguments
                     throw new CommandProcessorException("invalid argument");

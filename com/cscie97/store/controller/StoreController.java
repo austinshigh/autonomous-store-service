@@ -1,12 +1,13 @@
 package com.cscie97.store.controller;
 
+import com.cscie97.ledger.CommandProcessorException;
 import com.cscie97.store.model.Event;
 import com.cscie97.store.model.Observer;
 
 public class StoreController implements Observer {
 
 	@Override
-	public void update(Event event) {
+	public void update(Event event) throws CommandProcessorException {
 		switch(event.getEventType()){
 			case "emergency":{
 				Emergency emergency = new Emergency(event.getArg0(), event.getArg1(), event.getArg2());

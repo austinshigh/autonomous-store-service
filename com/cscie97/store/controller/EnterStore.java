@@ -1,7 +1,10 @@
 package com.cscie97.store.controller;
 
 
+import com.cscie97.ledger.CommandProcessor;
+import com.cscie97.ledger.CommandProcessorException;
 import com.cscie97.ledger.Ledger;
+import com.cscie97.store.model.StoreModelServiceException;
 
 public class EnterStore implements Command {
 
@@ -13,17 +16,21 @@ public class EnterStore implements Command {
 
 	private Ledger ledgerService;
 
-	public EnterStore(String storeId, String customerId, String turnstileId) {
-		this.storeId = storeId;
+	private CommandProcessor commandProcessor;
+
+	public EnterStore(String customerId, String turnstileId, String storeId) {
 		this.customerId = customerId;
 		this.turnstileId = turnstileId;
+		this.storeId = storeId;
+		this.commandProcessor = new CommandProcessor();
 	}
 
 	/**
 	 * @see Command#execute()
 	 */
-	public void execute() {
-		System.out.println("EUREKA!");
+	public void execute() throws CommandProcessorException {
+		String customerId = commandProcessor.processCommand("show-customer " + this.customerId);
+		System.out.println("Look at this: \n" + customerId);
 	}
 
 	/**

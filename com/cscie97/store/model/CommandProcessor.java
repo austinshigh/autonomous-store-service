@@ -28,7 +28,7 @@ public class CommandProcessor {
 		 * @param command command
 		 * @throws CommandProcessorException cscie97.store.command processor exception
 		 */
-		public void processCommand(String command) throws CommandProcessorException {
+		public String processCommand(String command) throws CommandProcessorException {
 			try {
 				// separate input on whitespace, unless whitespace within quotations
 				ArrayList< String > commands = new ArrayList < String > ();
@@ -40,16 +40,14 @@ public class CommandProcessor {
 					commands.add(regexMatcher.group().replace("\"",""));
 				}
 				if (commands.size() == 0){
-					System.out.println('\n');
-					return;
+					return ("\n");
 				}
 				String firstArg = commands.get(0);
 				switch (firstArg) {
 					// compare first word in line to determine method to call
 					case "#":
 							// print comments
-							System.out.println(command);
-						break;
+							return(command);
 					case "define-store":
 						if (commands.size() != 6) {
 							// throw exception if incorrect number of command line arguments
@@ -63,11 +61,10 @@ public class CommandProcessor {
 						// split store location into array for input
 						idArray = commands.get(5).split(", ");
 						try {
-							System.out.println("new store id: " + storeModelService.createStore(commands.get(1), commands.get(3), idArray[0], idArray[1], idArray[2]));
+							return ("new store id: " + storeModelService.createStore(commands.get(1), commands.get(3), idArray[0], idArray[1], idArray[2]));
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "show-store":
 						if (commands.size() != 2) {
 							// throw exception if incorrect number of command line arguments
@@ -75,11 +72,10 @@ public class CommandProcessor {
 									"\nshow-store <identifier>");
 						}
 						try {
-							System.out.println(storeModelService.getStore(commands.get(1).toString()));
+							return(storeModelService.getStore(commands.get(1)).toString());
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "define-aisle":
 						if (commands.size() != 8) {
 							// throw exception if incorrect number of command line arguments
@@ -89,11 +85,10 @@ public class CommandProcessor {
 						// split ids into array for input
 						idArray = commands.get(1).split(":");
 						try {
-							System.out.println("aisle id : " + storeModelService.createAisle(idArray[0], idArray[1], commands.get(3), commands.get(5), commands.get(7)));
+							return("aisle id : " + storeModelService.createAisle(idArray[0], idArray[1], commands.get(3), commands.get(5), commands.get(7)));
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 					}
-						break;
 					case "show-aisle":
 						if (commands.size() != 2) {
 							// throw exception if incorrect number of command line arguments
@@ -103,11 +98,10 @@ public class CommandProcessor {
 						// split ids into array for input
 						idArray = commands.get(1).split(":");
 						try {
-							System.out.println(storeModelService.getAisle(idArray[0], idArray[1]).toString());
+							return(storeModelService.getAisle(idArray[0], idArray[1]).toString());
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "define-shelf":
 						if (!(commands.size() != 10) && !(commands.size() != 8)) {
 							// throw exception if incorrect number of command line arguments
@@ -118,14 +112,13 @@ public class CommandProcessor {
 						idArray = commands.get(1).split(":");
 						try {
 							if (commands.size() == 10) {
-								System.out.println("Shelf defined, new shelf id: " + storeModelService.createShelf(idArray[0], idArray[1], idArray[2], commands.get(3), commands.get(5), commands.get(7), commands.get(9)));
+								return("Shelf defined, new shelf id: " + storeModelService.createShelf(idArray[0], idArray[1], idArray[2], commands.get(3), commands.get(5), commands.get(7), commands.get(9)));
 							}else{
-								System.out.println("Shelf defined, new shelf id: " + storeModelService.createShelf(idArray[0], idArray[1], idArray[2], commands.get(3), commands.get(5), commands.get(7)));
+								return("Shelf defined, new shelf id: " + storeModelService.createShelf(idArray[0], idArray[1], idArray[2], commands.get(3), commands.get(5), commands.get(7)));
 							}
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "show-shelf":
 						if (commands.size() != 2) {
 							// throw exception if incorrect number of command line arguments
@@ -135,11 +128,10 @@ public class CommandProcessor {
 						// split ids into array for input
 						idArray = commands.get(1).split(":");
 						try {
-							System.out.println(storeModelService.showShelfDetails(idArray[0], idArray[1], idArray[2]));
+							return(storeModelService.showShelfDetails(idArray[0], idArray[1], idArray[2]));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "define-inventory":
 						if (commands.size() != 10) {
 							// throw exception if incorrect number of command line arguments
@@ -149,13 +141,12 @@ public class CommandProcessor {
 						// split ids into array for input
 						idArray = commands.get(3).split(":");
 						try {
-							System.out.println("Inventory Created, New Inventory Id:" + storeModelService.createInventory(
+							return("Inventory Created, New Inventory Id:" + storeModelService.createInventory(
 									idArray[0], idArray[1], idArray[2], commands.get(1), Integer.valueOf(commands.get(5)), Integer.valueOf(commands.get(7)), commands.get(9)
 									));
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "update-inventory":
 						if (commands.size() != 4) {
 							// throw exception if incorrect number of command line arguments
@@ -163,11 +154,10 @@ public class CommandProcessor {
 									"update-inventory <inventory_id> update_count <increment or decrement>\n");
 						}
 						try {
-							System.out.println(storeModelService.updateInventory(commands.get(1), commands.get(3)));
+							return(storeModelService.updateInventory(commands.get(1), commands.get(3)));
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "define-product":
 						if (!(commands.size() == 12) && !(commands.size() == 14)) {
 							// throw exception if incorrect number of command line arguments
@@ -182,11 +172,10 @@ public class CommandProcessor {
 								// if temperature is specified, use 7 parameters
 								storeModelService.createProduct(commands.get(1), commands.get(3), commands.get(5), commands.get(7), commands.get(9), Integer.parseInt(commands.get(11)), commands.get(13));;
 							}
-							System.out.println("new product created, product id:" + commands.get(1));
+							return("new product created, product id:" + commands.get(1));
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "show-product":
 						if (commands.size() != 2) {
 							// throw exception if incorrect number of command line arguments
@@ -194,11 +183,10 @@ public class CommandProcessor {
 									"\nshow-product <product_id>");
 						}
 						try {
-							System.out.println(storeModelService.getProduct(commands.get(1)));
+							return(storeModelService.getProduct(commands.get(1)).toString());
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "show-inventory":
 						if (commands.size() != 2) {
 							// throw exception if incorrect number of command line arguments
@@ -206,11 +194,10 @@ public class CommandProcessor {
 									"\nshow-inventory <inventory_id>");
 						}
 						try {
-							System.out.println(storeModelService.getInventoryItem(commands.get(1)));
+							return(storeModelService.getInventoryItem(commands.get(1)).toString());
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "define-customer":
 						if (commands.size() != 12) {
 							// throw exception if incorrect number of command line arguments
@@ -223,11 +210,10 @@ public class CommandProcessor {
 							registered = true;
 						}
 						try {
-							System.out.println("customer id: " + storeModelService.createCustomer(commands.get(1), commands.get(3), commands.get(5), registered, commands.get(9), commands.get(11)));
+							return("customer id: " + storeModelService.createCustomer(commands.get(1), commands.get(3), commands.get(5), registered, commands.get(9), commands.get(11)));
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "show-customer":
 						if (commands.size() != 2) {
 							// throw exception if incorrect number of command line arguments
@@ -235,11 +221,10 @@ public class CommandProcessor {
 									"\nshow-customer <customer_id>");
 						}
 						try {
-							System.out.println(storeModelService.getCustomer(commands.get(1)));
+							return(storeModelService.getCustomer(commands.get(1)).toString());
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "update-customer":
 						if (commands.size() != 4) {
 							// throw exception if incorrect number of command line arguments
@@ -249,11 +234,10 @@ public class CommandProcessor {
 						// split ids into array for input
 						idArray = commands.get(3).split(":");
 						try {
-							System.out.println(storeModelService.updateCustomerLocation(commands.get(1), idArray[0], idArray[1]));
+							return(storeModelService.updateCustomerLocation(commands.get(1), idArray[0], idArray[1]));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "get-customer-basket":
 						if (commands.size() != 2) {
 							// throw exception if incorrect number of command line arguments
@@ -261,11 +245,10 @@ public class CommandProcessor {
 									"\nget-customer-basket <customer_id>");
 						}
 						try {
-							System.out.println("Customer Basket id: " + storeModelService.getCustomerBasketId(commands.get(1)));
+							return("Customer Basket id: " + storeModelService.getCustomerBasketId(commands.get(1)));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "define-basket":
 						if (commands.size() != 2) {
 							// throw exception if incorrect number of command line arguments
@@ -273,11 +256,10 @@ public class CommandProcessor {
 									"\ndefine-basket <basket_id>");
 						}
 						try {
-							System.out.println("Basket id: " + storeModelService.defineBasket(commands.get(1)));
+							return("Basket id: " + storeModelService.defineBasket(commands.get(1)));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "assign-basket":
 						if (commands.size() != 4) {
 							// throw exception if incorrect number of command line arguments
@@ -285,11 +267,10 @@ public class CommandProcessor {
 									"\nassign-basket <basket_id> customer <customer_id>");
 						}
 						try {
-							System.out.println("Basket id: " + storeModelService.associateBasket(commands.get(1),commands.get(3)));
+							return("Basket id: " + storeModelService.associateBasket(commands.get(1),commands.get(3)));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "add-basket-item":
 						if (commands.size() != 6) {
 							// throw exception if incorrect number of command line arguments
@@ -297,13 +278,12 @@ public class CommandProcessor {
 									"\nadd_basket_item <basket_id> product <product_id> item_count <count>");
 						}
 						try {
-							System.out.println(storeModelService.addBasketItem(commands.get(1),
+							return(storeModelService.addBasketItem(commands.get(1),
 									commands.get(3),
 									commands.get(5)));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "remove-basket-item":
 						if (commands.size() != 6) {
 							// throw exception if incorrect number of command line arguments
@@ -311,13 +291,12 @@ public class CommandProcessor {
 									"\nremove_basket_item <basket_id> product <product_id> item_count <count>");
 						}
 						try {
-							System.out.println(storeModelService.removeBasketItem(commands.get(1),
+							return(storeModelService.removeBasketItem(commands.get(1),
 									commands.get(3),
 									commands.get(5)));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "clear-basket":
 						if (commands.size() != 2) {
 							// throw exception if incorrect number of command line arguments
@@ -326,11 +305,10 @@ public class CommandProcessor {
 						}
 						try {
 							storeModelService.clearBasket(commands.get(1));
-							System.out.println("Basket has been cleared");
+							return("Basket has been cleared");
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "show-basket-items":
 						if (commands.size() != 2) {
 							// throw exception if incorrect number of command line arguments
@@ -338,11 +316,10 @@ public class CommandProcessor {
 									"\nshow-basket-items <basket_id>");
 						}
 						try {
-							System.out.println(storeModelService.showBasketItems(commands.get(1)));
+							return(storeModelService.showBasketItems(commands.get(1)));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "define-device":
 						if (commands.size() != 8) {
 							// throw exception if incorrect number of command line arguments
@@ -357,22 +334,19 @@ public class CommandProcessor {
 								case "camera":
 									// create sensor if user enters sensor name
 									storeModelService.createSensor(commands.get(1), commands.get(3), commands.get(5), idArray[0], idArray[1]);
-									System.out.println("sensor id:" + commands.get(1));
-									break;
+									return("sensor id:" + commands.get(1));
 								case "robot":
 								case "turnstile":
 								case "speaker":
 									// create appliance if user enters appliance name
 									storeModelService.createAppliance(commands.get(1), commands.get(3), commands.get(5), idArray[0], idArray[1]);
-									System.out.println("appliance id:" + commands.get(1));
-									break;
+									return("appliance id:" + commands.get(1));
 								default:
 									throw new CommandProcessorException("invalid type of device, must be of set (microphone, camera, robot, turnstile, speaker)");
 							}
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "show-device":
 						if (commands.size() != 2) {
 							// throw exception if incorrect number of command line arguments
@@ -380,11 +354,10 @@ public class CommandProcessor {
 									"\nshow-device <device_id>");
 						}
 						try {
-							System.out.println(storeModelService.getDevice(commands.get(1)));
+							return(storeModelService.getDevice(commands.get(1)).toString());
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "create-event":
 						if (commands.size() != 4) {
 							// throw exception if incorrect number of command line arguments
@@ -392,11 +365,12 @@ public class CommandProcessor {
 									"\ncreate-event <device_id> event <event>");
 						}
 						try {
-							System.out.println(storeModelService.createEvent(commands.get(1), commands.get(3)));
+							return(storeModelService.createEvent(commands.get(1), commands.get(3)));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
+						} catch (com.cscie97.ledger.CommandProcessorException e) {
+							e.printStackTrace();
 						}
-						break;
 					case "create-command":
 						if (commands.size() != 4) {
 							// throw exception if incorrect number of command line arguments
@@ -404,11 +378,10 @@ public class CommandProcessor {
 									"\ncreate-command <device_id> message <command>");
 						}
 						try {
-							System.out.println(storeModelService.createCommand(commands.get(1), commands.get(3)));
+							return(storeModelService.createCommand(commands.get(1), commands.get(3)));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					case "calculate-basket-total":
 						if (commands.size() != 2){
 							// throw exception if incorrect number of command line arguments
@@ -416,12 +389,11 @@ public class CommandProcessor {
 									"\ncalculate-basket-total <basket_id>");
 						}
 						try{
-							System.out.println("Basket Total: " + storeModelService.getBasketTotal(commands.get(1)) +
+							return("Basket Total: " + storeModelService.getBasketTotal(commands.get(1)) +
 									" currency units");
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
-						break;
 					default:
 						// catch all invalid arguments
 						throw new CommandProcessorException("invalid argument");
@@ -452,7 +424,7 @@ public class CommandProcessor {
 				String data = myReader.nextLine();
 				i++;
 				try {
-					processCommand(data);
+					System.out.println(processCommand(data));
 				} catch (CommandProcessorException e) {
 					// catch error, setting line number in script file that error occurred on
 					e.setLineNumber(i);

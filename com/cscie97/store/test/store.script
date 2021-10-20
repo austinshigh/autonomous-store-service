@@ -78,7 +78,6 @@ show-device SPEAKER001
 show-device SPEAKER002
 
 
-
 # Create enter-store events for 3 customers
 create-event TURNSTILE001 event "enter-store CUSTOMER00001 TURNSTILE001 STORE001:1"
 create-event TURNSTILE002 event "enter-store CUSTOMER00002 TURNSTILE002 STORE001:2"

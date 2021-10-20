@@ -1,5 +1,7 @@
 package com.cscie97.store.model;
 
+import com.cscie97.ledger.CommandProcessorException;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -707,7 +709,7 @@ public class StoreModelService implements Client{
 	 * @see String
 	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
 	 */
-	public String createEvent(String deviceId, String event) throws StoreModelServiceException {
+	public String createEvent(String deviceId, String event) throws StoreModelServiceException, CommandProcessorException {
 		Device selectedDevice = getDevice(deviceId);
 		String[] eventArgs = event.split(" ");
 		Event createdEvent;
@@ -754,7 +756,7 @@ public class StoreModelService implements Client{
 
 		return selectedDevice.createEvent(event);
 	}
-	public void notifyObservers(Event event) {
+	public void notifyObservers(Event event) throws CommandProcessorException {
 		for (Observer curr : observerArrayList){
 			curr.update(event);
 		}
