@@ -27,10 +27,10 @@ public class EnterStore implements Command {
 		String[] customerInfo = CommandProcessor.processCommand("show-customer " + this.customerId).split("\n");
 		String[] addressLine = customerInfo[5].split("'");
 		String blockchainAddress = addressLine[1];
-		System.out.println(blockchainAddress);
 
 		String[] nameLine = customerInfo[2].split("'");
-		String customerName = addressLine[1];
+		String customerName = nameLine[1];
+
 
 		String[] store = storeId.split(":");
 		String[] storeId = CommandProcessor.processCommand("show-store " + store[0]).split("\n");
