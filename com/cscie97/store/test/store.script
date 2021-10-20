@@ -86,26 +86,26 @@ create-event TURNSTILE001 event "enter-store CUSTOMER00003 TURNSTILE001 STORE001
 
 
 # Create a basket-event event (leaving 9 out of the 11 milk products on the shelf)
-create-event CAMERA001 store-location STORE001 event "basket-event CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 2"
+create-event CAMERA001 event "basket-event CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 2"
 
 
 # Create a fetch-product event - expect a command to 1 robot to fetch the product
-create-event MICROPHONE001 store-location STORE001 event "fetch-product CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 3"
+create-event MICROPHONE001 event "fetch-product CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 3"
 
 
 # Create a fetch-product event - expect a command to 1 robot to restock because inventory count is 1 (less than 3)
-create-event MICROPHONE001 store-location STORE001 event "fetch-product CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 5"
+create-event MICROPHONE001 event "fetch-product CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 5"
 
 
 # Create an emergency event - all turnstiles open, 1 attends to emergency and the rest help
 # customers, while speakers announce for customers to leave store
-create-event CAMERA001 store-location STORE001 event "emergency ARMED_INTRUDER STORE001:1"
+create-event CAMERA001 event "emergency ARMED_INTRUDER STORE001:1"
 
 
 # 3 customers enter the STORE001 again
-create-event TURNSTILE001 store-location STORE001 event "enter-store CUSTOMER00001 TURNSTILE001 STORE001:1"
-create-event TURNSTILE002 store-location STORE001 event "enter-store CUSTOMER00002 TURNSTILE002 STORE001:2"
-create-event TURNSTILE002 store-location STORE001 event "enter-store CUSTOMER00003 TURNSTILE002 STORE001:2"
+create-event TURNSTILE001 event "enter-store CUSTOMER00001 TURNSTILE001 STORE001:1"
+create-event TURNSTILE002 event "enter-store CUSTOMER00002 TURNSTILE002 STORE001:2"
+create-event TURNSTILE002 event "enter-store CUSTOMER00003 TURNSTILE002 STORE001:2"
 
 
 # Show the details of the customers before updating location
@@ -113,35 +113,35 @@ show-customer CUSTOMER00001
 
 
 # Create a customer-seen event for CUSTOMER00003 - location should change to {STORE001=3}
-create-event CAMERA001 store-location STORE001 event "customer-seen CUSTOMER00003 STORE001:3"
+create-event CAMERA001 event "customer-seen CUSTOMER00003 STORE001:3"
 show-customer CUSTOMER00003
 
 
 # Create a broken-glass event - expect a robot to be assigned a new command to clean up glass
-create-event CAMERA002 store-location STORE001 event "broken-glass STORE001:1"
+create-event CAMERA002 event "broken-glass STORE001:1"
 
 
 # Create a product-spill event - expect a robot to be assigned a command to clean the milk
-create-event CAMERA002 store-location STORE001 event "product-spill STORE001:2 MILK001"
+create-event CAMERA002 event "product-spill STORE001:2 MILK001"
 
 
 # Create a missing-person event using a microphone - expect that the missing customer is in aisle 1
-create-event MICROPHONE001 store-location STORE001 event "missing-person STORE001 CUSTOMER00001"
+create-event MICROPHONE001 event "missing-person STORE001 CUSTOMER00001"
 
 
 # Create a basket-event event for CUSTOMER00001
-create-event CAMERA001 store-location STORE001 event "basket-event CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 2"
-create-event CAMERA002 store-location STORE001 event "basket-event CUSTOMER00001 HONEY001 INVENTORY002 STORE001:1:SHELF002 5"
-create-event CAMERA001 store-location STORE001 event "basket-event CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 2"
+create-event CAMERA001 event "basket-event CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 2"
+create-event CAMERA002 event "basket-event CUSTOMER00001 HONEY001 INVENTORY002 STORE001:1:SHELF002 5"
+create-event CAMERA001 event "basket-event CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 2"
 
 
 # Create a check-acc-bal event using a microphone - expect only one speaker to give response - total cost = 47
-create-event MICROPHONE001 store-location STORE001 event "check-acc-bal CUSTOMER00001 STORE001:2"
+create-event MICROPHONE001 event "check-acc-bal CUSTOMER00001 STORE001:2"
 
 
 # Create an assist-customer event using a turnstile location
-create-event TURNSTILE001 store-location STORE001 event "assist-customer CUSTOMER00001 STORE001:1"
+create-event TURNSTILE001 event "assist-customer CUSTOMER00001 STORE001:1"
 
 
 # Create a checkout event
-create-event TURNSTILE001 store-location STORE001 event "checkout CUSTOMER00001 STORE001:1"
+create-event TURNSTILE001 event "checkout CUSTOMER00001 STORE001:1"

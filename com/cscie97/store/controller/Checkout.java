@@ -20,7 +20,7 @@ public class Checkout implements Command {
 	 * @see Command#execute()
 	 */
 	public void execute() {
-
+		System.out.println("EUREKA!");
 	}
 
 	/**

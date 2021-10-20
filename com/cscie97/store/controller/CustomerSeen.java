@@ -19,7 +19,7 @@ public class CustomerSeen implements Command {
 	 * @see Command#execute()
 	 */
 	public void execute() {
-
+		System.out.println("EUREKA!");
 	}
 
 	/**

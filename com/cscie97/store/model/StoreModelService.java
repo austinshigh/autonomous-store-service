@@ -713,33 +713,34 @@ public class StoreModelService implements Client{
 		Event createdEvent;
 		switch(eventArgs[0]){
 			case "basket-event":
+			case "fetch-product":
 				if (eventArgs.length != 6){
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 				}else{
 					createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2], eventArgs[3], eventArgs[4], eventArgs[5]);
 				}
 				break;
-			case "fetch-product":
-				if (eventArgs.length != 5){
-					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
-				}else{
-					createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2], eventArgs[3], eventArgs[4]);
-				}
-				break;
-			case "emergency":
 			case "enter-store":
+			if (eventArgs.length != 4){
+				throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
+			}else{
+				createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2], eventArgs[3]);
+			}
+			break;
+			case "emergency":
 			case "missing-person":
 			case "customer-seen":
 			case "product-spill":
-				if (eventArgs.length != 4){
+			case "check-acc-bal":
+			case "assist-customer":
+			case "checkout":
+				if (eventArgs.length != 3){
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 				}else{
-					createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2], eventArgs[3]);
+					createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2]);
 				}
 				break;
 			case "broken-glass":
-			case "assist-customer":
-			case "checkout":
 				if (eventArgs.length != 2){
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 				}else{
