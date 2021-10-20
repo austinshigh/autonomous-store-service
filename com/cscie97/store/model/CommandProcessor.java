@@ -11,9 +11,9 @@ import java.util.regex.Pattern;
 
 public class CommandProcessor {
 
-	private StoreModelService storeModelService;
-	private StoreController storeController;
-	private String[] idArray;
+	private static StoreModelService storeModelService;
+	private static StoreController storeController;
+	private static String[] idArray;
 
 		/**
 		 * Compares CLI input to available methods, runs appropriate method.
@@ -28,7 +28,7 @@ public class CommandProcessor {
 		 * @param command command
 		 * @throws CommandProcessorException cscie97.store.command processor exception
 		 */
-		public String processCommand(String command) throws CommandProcessorException {
+		public static String processCommand(String command) throws CommandProcessorException {
 			try {
 				// separate input on whitespace, unless whitespace within quotations
 				ArrayList< String > commands = new ArrayList < String > ();
@@ -55,9 +55,9 @@ public class CommandProcessor {
 									"\ndefine-store <identifier> name <name> address <address>" +
 									"\n address should follow form 'street city state'");
 						}
-						this.storeModelService = new StoreModelService(commands.get(1));
-						this.storeController = new StoreController();
-						this.storeModelService.attach(storeController);
+						storeModelService = new StoreModelService(commands.get(1));
+						storeController = new StoreController();
+						storeModelService.attach(storeController);
 						// split store location into array for input
 						idArray = commands.get(5).split(", ");
 						try {
@@ -368,8 +368,6 @@ public class CommandProcessor {
 							return(storeModelService.createEvent(commands.get(1), commands.get(3)));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
-						} catch (com.cscie97.ledger.CommandProcessorException e) {
-							e.printStackTrace();
 						}
 					case "create-command":
 						if (commands.size() != 4) {

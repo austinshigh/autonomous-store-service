@@ -7,6 +7,6 @@ public interface Command {
 
 	CommandProcessor commandProcessor = new CommandProcessor();
 
-	public abstract void execute() throws CommandProcessorException;
+	public abstract void execute() throws CommandProcessorException, com.cscie97.store.model.CommandProcessorException;
 
 }

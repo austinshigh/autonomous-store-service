@@ -1,9 +1,8 @@
 package com.cscie97.store.controller;
 
 
-import com.cscie97.ledger.CommandProcessor;
-import com.cscie97.ledger.CommandProcessorException;
-import com.cscie97.ledger.Ledger;
+import com.cscie97.store.model.CommandProcessor;
+import com.cscie97.store.model.CommandProcessorException;
 import com.cscie97.store.model.StoreModelServiceException;
 
 public class EnterStore implements Command {
@@ -14,22 +13,17 @@ public class EnterStore implements Command {
 
 	private String turnstileId;
 
-	private Ledger ledgerService;
-
-	private CommandProcessor commandProcessor;
-
 	public EnterStore(String customerId, String turnstileId, String storeId) {
 		this.customerId = customerId;
 		this.turnstileId = turnstileId;
 		this.storeId = storeId;
-		this.commandProcessor = new CommandProcessor();
 	}
 
 	/**
 	 * @see Command#execute()
 	 */
 	public void execute() throws CommandProcessorException {
-		String customerId = commandProcessor.processCommand("show-customer " + this.customerId);
+		CommandProcessor.processCommand("show-customer " + this.customerId);
 		System.out.println("Look at this: \n" + customerId);
 	}
 
@@ -85,23 +79,5 @@ public class EnterStore implements Command {
 	 */
 	public void setTurnstileId(String turnstileId) {
 		this.turnstileId = turnstileId;
-	}
-
-	/**
-	 * get field
-	 *
-	 * @return ledgerService
-	 */
-	public Ledger getLedgerService() {
-		return this.ledgerService;
-	}
-
-	/**
-	 * set field
-	 *
-	 * @param ledgerService
-	 */
-	public void setLedgerService(Ledger ledgerService) {
-		this.ledgerService = ledgerService;
 	}
 }
