@@ -14,6 +14,7 @@ public class CommandProcessor {
 	private static StoreModelService storeModelService;
 	private static StoreController storeController;
 	private static String[] idArray;
+	private static com.cscie97.ledger.CommandProcessor ledgerCommandProcessor;
 
 		/**
 		 * Compares CLI input to available methods, runs appropriate method.
@@ -210,9 +211,12 @@ public class CommandProcessor {
 							registered = true;
 						}
 						try {
+							com.cscie97.ledger.CommandProcessor.processCommand("create-account " + commands.get(11));
 							return("customer id: " + storeModelService.createCustomer(commands.get(1), commands.get(3), commands.get(5), registered, commands.get(9), commands.get(11)));
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
+						} catch (com.cscie97.ledger.CommandProcessorException e) {
+							e.printStackTrace();
 						}
 					case "show-customer":
 						if (commands.size() != 2) {
@@ -368,6 +372,8 @@ public class CommandProcessor {
 							return(storeModelService.createEvent(commands.get(1), commands.get(3)));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
+						} catch (com.cscie97.ledger.CommandProcessorException e) {
+							e.printStackTrace();
 						}
 					case "create-command":
 						if (commands.size() != 4) {
@@ -413,6 +419,8 @@ public class CommandProcessor {
 	 */
 	public void processCommandFile(String file) {
 		try {
+			ledgerCommandProcessor = new com.cscie97.ledger.CommandProcessor();
+			ledgerCommandProcessor.processCommand("create-ledger test description storeLedger seed harvardExt");
 			// get script file in test folder specified as parameter
 			File myObj = new File("com/cscie97/store/test/" + file);
 			Scanner myReader = new Scanner(myObj);
@@ -432,7 +440,7 @@ public class CommandProcessor {
 			}
 			// close reader
 			myReader.close();
-		} catch (FileNotFoundException e) {
+		} catch (FileNotFoundException | com.cscie97.ledger.CommandProcessorException e) {
 			// if file not found, print exception
 			System.out.println(e);
 		}

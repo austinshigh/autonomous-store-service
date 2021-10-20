@@ -22,9 +22,10 @@ public class EnterStore implements Command {
 	/**
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException {
-		CommandProcessor.processCommand("show-customer " + this.customerId);
-		System.out.println("Look at this: \n" + customerId);
+	public void execute() throws CommandProcessorException, com.cscie97.ledger.CommandProcessorException {
+		String customerId = CommandProcessor.processCommand("show-customer " + this.customerId);
+		System.out.println(customerId);
+		//int accountBalance = com.cscie97.ledger.CommandProcessor.processCommand("get-account-balance " + customerId)
 	}
 
 	/**

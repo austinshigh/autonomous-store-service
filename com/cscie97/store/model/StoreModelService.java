@@ -709,7 +709,7 @@ public class StoreModelService implements Client{
 	 * @see String
 	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
 	 */
-	public String createEvent(String deviceId, String event) throws StoreModelServiceException, com.cscie97.store.model.CommandProcessorException {
+	public String createEvent(String deviceId, String event) throws StoreModelServiceException, com.cscie97.store.model.CommandProcessorException, CommandProcessorException {
 		Device selectedDevice = getDevice(deviceId);
 		String[] eventArgs = event.split(" ");
 		Event createdEvent;
@@ -756,7 +756,7 @@ public class StoreModelService implements Client{
 
 		return selectedDevice.createEvent(event);
 	}
-	public void notifyObservers(Event event) throws com.cscie97.store.model.CommandProcessorException {
+	public void notifyObservers(Event event) throws com.cscie97.store.model.CommandProcessorException, CommandProcessorException {
 		for (Observer curr : observerArrayList){
 			curr.update(event);
 		}

@@ -14,8 +14,8 @@ import java.util.regex.Pattern;
  */
 public class CommandProcessor {
 
-    private Ledger currentLedger;
-    private String accessType;
+    private static Ledger currentLedger;
+    private static String accessType;
 
     /**
      * Compares CLI input to available methods, runs appropriate method.
@@ -31,7 +31,7 @@ public class CommandProcessor {
      * @throws CommandProcessorException com.cscie97.ledger. command processor exception
      * @return
      */
-    public String processCommand(String command) throws CommandProcessorException {
+    public static String processCommand(String command) throws CommandProcessorException {
         try {
             // separate input on whitespace, unless whitespace within quotations
             ArrayList < String > commands = new ArrayList < String > ();
@@ -48,38 +48,35 @@ public class CommandProcessor {
                 case "#":
                     // print comments
                     System.out.println(command);
-                case "access-type":
-                    String access = commands.get(1);
-                    if (access.equals("admin") || (access.equals("user"))) {
-                        // if valid input, set class variable to appropriate access type
-                        this.accessType = access;
-                    } else {
-                        // throw exception displaying appropriate input form
-                        throw new CommandProcessorException("command should follow form:" +
-                                "\naccess-type <admin | user>");
-                    }
+//                case "access-type":
+//                    String access = commands.get(1);
+//                    if (access.equals("admin") || (access.equals("user"))) {
+//                        // if valid input, set class variable to appropriate access type
+//                        accessType = access;
+//                    } else {
+//                        // throw exception displaying appropriate input form
+//                        throw new CommandProcessorException("command should follow form:" +
+//                                "\naccess-type <admin | user>");
+//                    }
                 case "create-ledger":
                     if (commands.size() != 6) {
                         // throw exception if incorrect number of command line arguments
                         throw new CommandProcessorException("command should follow form:" +
                                 "\ncreate-ledger <name> description <description> seed <seed>");
                     }
-                    if (this.accessType.equals("admin")) {
                         // if admin access is set, instantiate current ledger class variable
                         currentLedger = new Ledger(commands.get(1), commands.get(3), commands.get(5));
                         try {
                             currentLedger.fundLedger();
+                            return("ledger created");
                         } catch (LedgerException e) {
                             throw new CommandProcessorException(e);
                         }
-                    } else {
-                        // throw exception if admin access not set
-                        throw new CommandProcessorException("admin access required");
-                    }
                 case "create-account":
                     // create new account in current ledger
                     try {
                         currentLedger.createAccount(commands.get(1));
+                        return("account created");
                     } catch (LedgerException e) {
                         throw new CommandProcessorException(e);
                     }
