@@ -710,7 +710,6 @@ public class StoreModelService implements Client{
 	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
 	 */
 	public String createEvent(String deviceId, String event) throws StoreModelServiceException, com.cscie97.store.model.CommandProcessorException, CommandProcessorException {
-		Device selectedDevice = getDevice(deviceId);
 		String[] eventArgs = event.split(" ");
 		Event createdEvent;
 		switch(eventArgs[0]){
@@ -750,11 +749,14 @@ public class StoreModelService implements Client{
 				}
 				break;
 			default:
+				if (eventArgs.length == 1){
+					Device selectedDevice = getDevice(deviceId);
+					return selectedDevice.createEvent(event);
+				}
 				throw new StoreModelServiceException("event type does not exit", "command invalid");
 		}
 		notifyObservers(createdEvent);
-
-		return selectedDevice.createEvent(event);
+		return("Observers notified");
 	}
 	public void notifyObservers(Event event) throws com.cscie97.store.model.CommandProcessorException, CommandProcessorException {
 		for (Observer curr : observerArrayList){

@@ -23,9 +23,28 @@ public class EnterStore implements Command {
 	 * @see Command#execute()
 	 */
 	public void execute() throws CommandProcessorException, com.cscie97.ledger.CommandProcessorException {
-		String customerId = CommandProcessor.processCommand("show-customer " + this.customerId);
-		System.out.println(customerId);
-		//int accountBalance = com.cscie97.ledger.CommandProcessor.processCommand("get-account-balance " + customerId)
+		// get customer from storemodelservice, parse blockchain address
+		String[] customerInfo = CommandProcessor.processCommand("show-customer " + this.customerId).split("\n");
+		String[] addressLine = customerInfo[5].split("'");
+		String blockchainAddress = addressLine[1];
+		System.out.println(blockchainAddress);
+
+		String[] nameLine = customerInfo[2].split("'");
+		String customerName = addressLine[1];
+
+		String[] store = storeId.split(":");
+		String[] storeId = CommandProcessor.processCommand("show-store " + store[0]).split("\n");
+		String[] storeNameLine = storeId[2].split("=");
+		String storeName = storeNameLine[1];
+
+		// check customer's balance
+		int accountBalance = Integer.parseInt(com.cscie97.ledger.CommandProcessor.processCommand("get-account-balance " + blockchainAddress));
+		if (!(accountBalance > 0)){
+			throw new CommandProcessorException(customerId + " account balance is not positive");
+		}
+		System.out.println(accountBalance);
+		System.out.println(CommandProcessor.processCommand("create-event " + turnstileId + " event open-turnstile"));
+		System.out.println(CommandProcessor.processCommand("create-command " + turnstileId + " command \"Hello " + customerName + ", welcome to " + storeName + "!\""));
 	}
 
 	/**

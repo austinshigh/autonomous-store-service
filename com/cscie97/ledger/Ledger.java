@@ -79,7 +79,7 @@ public class Ledger {
             }else{
                 // create account set balance to 0
                 newAcct = new Account(address);
-                newAcct.setBalance(0);
+                newAcct.setBalance(100);
             }
             // if valid address, create new account
             HashMap<String, Account> genAcctBalanceMap = currentBlock.getAccountBalanceMap();
@@ -106,7 +106,12 @@ public class Ledger {
         try {
             // retrieve the account balance map from block preceding last entry
             // this block has been committed and therefore reflects current account balances
-            HashMap<String, Account> acctBalanceMap = currentBlock.getPreviousBlock().getAccountBalanceMap();
+            HashMap<String, Account> acctBalanceMap = null;
+            if (blockMap.size() > 1) {
+                acctBalanceMap = currentBlock.getPreviousBlock().getAccountBalanceMap();
+            }else{
+                acctBalanceMap = currentBlock.getAccountBalanceMap();
+            }
             // return account with given address
             Account acct = acctBalanceMap.get(address);
             return acct.getBalance();
