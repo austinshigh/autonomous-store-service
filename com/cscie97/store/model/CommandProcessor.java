@@ -62,9 +62,12 @@ public class CommandProcessor {
 						// split store location into array for input
 						idArray = commands.get(5).split(", ");
 						try {
+							com.cscie97.ledger.CommandProcessor.processCommand("create-account " + commands.get(1));
 							return ("new store id: " + storeModelService.createStore(commands.get(1), commands.get(3), idArray[0], idArray[1], idArray[2]));
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
+						} catch (com.cscie97.ledger.CommandProcessorException e) {
+							e.printStackTrace();
 						}
 					case "show-store":
 						if (commands.size() != 2) {

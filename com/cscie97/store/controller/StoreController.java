@@ -55,7 +55,7 @@ public class StoreController implements Observer {
 				break;
 			}
 			case "checkout":{
-				Checkout checkout = new Checkout(event.getArg0(), event.getArg1());
+				Checkout checkout = new Checkout(event.getArg0(), event.getArg1(), event.getArg2());
 				checkout.execute();
 				break;
 			}
