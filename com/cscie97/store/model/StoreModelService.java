@@ -301,7 +301,7 @@ public class StoreModelService implements Client{
 	public Customer getCustomer(String customerId) throws StoreModelServiceException {
 		if (customerMap.isEmpty() || !customerMap.containsKey(customerId)) {
 			throw new StoreModelServiceException("get customer", "customer with id: [" +
-					customerId + " ] does not exist");
+					customerId + "] does not exist");
 		}
 		return customerMap.get(customerId);
 	}
@@ -332,6 +332,7 @@ public class StoreModelService implements Client{
 		Customer nextCustomer = new Customer(customerId, firstName, lastName, email, accountAddress, registered);
 		// add customer to map
 		customerMap.put(customerId, nextCustomer);
+		associateBasket(defineBasket(customerId + "b"), customerId);
 		return nextCustomer.getId();
 	}
 
@@ -718,7 +719,8 @@ public class StoreModelService implements Client{
 				if (eventArgs.length != 6){
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 				}else{
-					createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2], eventArgs[3], eventArgs[4], eventArgs[5]);
+					String[] storeAisleShelf = eventArgs[4].split(":");
+					createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2], eventArgs[3], storeAisleShelf[0], storeAisleShelf[1], storeAisleShelf[2], eventArgs[5]);
 				}
 				break;
 			case "enter-store":

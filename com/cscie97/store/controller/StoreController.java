@@ -20,7 +20,7 @@ public class StoreController implements Observer {
 				break;
 			}
 			case "basket-event":{
-				BasketEvent basketEvent = new BasketEvent(event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3(), event.getArg4());
+				BasketEvent basketEvent = new BasketEvent(event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3(), event.getArg4(), event.getArg5(), event.getArg6());
 				basketEvent.execute();
 				break;
 			}

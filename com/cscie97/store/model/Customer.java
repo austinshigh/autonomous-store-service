@@ -72,7 +72,7 @@ public class Customer {
 				"blockchainAddress='" + blockchainAddress + '\'' + "\n" +
 				"registered=" + registered + "\n" +
 				"timeLastSeen=" + timeLastSeen + "\n" +
-				"basket=" + basket + "\n" +
+				"basket=" + basket.getId() + "\n" +
 				"location=" + location.toString() + "\n";
 	}
 

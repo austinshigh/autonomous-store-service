@@ -22,6 +22,7 @@ public class Basket {
 
 	private Customer customer;
 
+
 	/**
 	 * Constructor used to generate new basket with specified id
 	 * @param id

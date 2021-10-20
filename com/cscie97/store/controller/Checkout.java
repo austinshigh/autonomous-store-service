@@ -45,13 +45,13 @@ public class Checkout implements Command {
 		String basketTotal = CommandProcessor.processCommand("calculate-basket-total " + basketId);
 
 		// create blockchain transaction
-		Integer.parseInt(com.cscie97.ledger.CommandProcessor.processCommand("process-transaction " +
+		System.out.println(Integer.parseInt(com.cscie97.ledger.CommandProcessor.processCommand("process-transaction " +
 				java.util.UUID.randomUUID() +
 				" amount " + basketTotal +
 				" fee 10 " +
 				" note checkout " +
 				"payer " + blockchainAddress +
-				" receiver " + storeId));
+				" receiver " + storeId)));
 		//process-transaction <transaction-id> amount <amount> fee <fee> note <note> payer <account-address> receiver <account-address>
 
 		// get store from storemodelservice, parse storename

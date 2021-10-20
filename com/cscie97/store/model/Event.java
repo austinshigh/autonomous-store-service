@@ -8,6 +8,8 @@ public class Event {
     private String arg2;
     private String arg3;
     private String arg4;
+    private String arg5;
+    private String arg6;
 
 
     public Event() {
@@ -17,6 +19,8 @@ public class Event {
         this.arg2 = null;
         this.arg3 = null;
         this.arg4 = null;
+        this.arg5 = null;
+        this.arg6 = null;
     }
 
     public Event(String eventType, String arg0) {
@@ -54,7 +58,26 @@ public class Event {
         this.arg4 = arg4;
     }
 
+    public Event(String eventType, String arg0, String arg1, String arg2, String arg3, String arg4, String arg5) {
+        this.eventType = eventType;
+        this.arg0 = arg0;
+        this.arg1 = arg1;
+        this.arg2 = arg2;
+        this.arg3 = arg3;
+        this.arg4 = arg4;
+        this.arg5 = arg5;
+    }
 
+    public Event(String eventType, String arg0, String arg1, String arg2, String arg3, String arg4, String arg5, String arg6) {
+        this.eventType = eventType;
+        this.arg0 = arg0;
+        this.arg1 = arg1;
+        this.arg2 = arg2;
+        this.arg3 = arg3;
+        this.arg4 = arg4;
+        this.arg5 = arg5;
+        this.arg6 = arg6;
+    }
 
     /**
      * get field
@@ -163,4 +186,44 @@ public class Event {
     public void setArg4(String arg4) {
         this.arg4 = arg4;
     }
+
+
+    /**
+     * get field
+     *
+     * @return arg5
+     */
+    public String getArg5() {
+        return this.arg5;
+    }
+
+    /**
+     * set field
+     *
+     * @param arg5
+     */
+    public void setArg5(String arg5) {
+        this.arg5 = arg5;
+    }
+
+
+    /**
+     * get field
+     *
+     * @return arg6
+     */
+    public String getArg6() {
+        return this.arg6;
+    }
+
+    /**
+     * set field
+     *
+     * @param arg6
+     */
+    public void setArg6(String arg6) {
+        this.arg6 = arg6;
+    }
 }
+
+
