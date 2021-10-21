@@ -8,10 +8,15 @@ public class CheckAccountBalance implements Command {
 
 	private String customerId;
 
-	public CheckAccountBalance(String customerId) {
-		this.customerId = customerId;
-	}
+	private String storeId;
 
+	private String aisleId;
+
+	public CheckAccountBalance(String customerId, String storeId, String aisleId) {
+		this.customerId = customerId;
+		this.storeId = storeId;
+		this.aisleId = aisleId;
+	}
 
 	/**
 	 * @see Command#execute()
@@ -21,11 +26,14 @@ public class CheckAccountBalance implements Command {
 		String[] customerInfo = CommandProcessor.processCommand("show-customer " + this.customerId).split("\n");
 
 		// parse customer basketId from customer info
-		String[] basketLine = customerInfo[8].split("'");
+		String[] basketLine = customerInfo[8].split("=");
 		String basketId = basketLine[1];
 
 		// compute total cost of items in the customer's basket
 		String basketTotal = CommandProcessor.processCommand("calculate-basket-total " + basketId);
+
+		System.out.println(basketTotal);
+		//System.out.println(CommandProcessor.processCommand("create-event " + deviceId + " event \"basket total is " + basketTotal + "\""));
 
 
 	}
@@ -48,4 +56,22 @@ public class CheckAccountBalance implements Command {
 		this.customerId = customerId;
 	}
 
+
+	/**
+	 * get field
+	 *
+	 * @return deviceId
+	 */
+	public String getDeviceId() {
+		return this.aisleId;
+	}
+
+	/**
+	 * set field
+	 *
+	 * @param deviceId
+	 */
+	public void setDeviceId(String deviceId) {
+		this.aisleId = deviceId;
+	}
 }

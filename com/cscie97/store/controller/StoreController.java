@@ -49,8 +49,8 @@ public class StoreController implements Observer {
 				enterStore.execute();
 				break;
 			}
-			case "check-acc-balance":{
-				CheckAccountBalance checkAccountBalance = new CheckAccountBalance(event.getArg0());
+			case "check-acc-bal":{
+				CheckAccountBalance checkAccountBalance = new CheckAccountBalance(event.getArg0(), event.getArg1(), event.getArg2());
 				checkAccountBalance.execute();
 				break;
 			}

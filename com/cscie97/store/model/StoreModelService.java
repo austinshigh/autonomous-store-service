@@ -740,6 +740,7 @@ public class StoreModelService implements Client{
 				}
 				break;
 			case "customer-seen":
+			case "check-acc-bal":
 				if (eventArgs.length != 3){
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 				}else{
@@ -749,7 +750,6 @@ public class StoreModelService implements Client{
 				break;
 			case "emergency":
 			case "product-spill":
-			case "check-acc-bal":
 			case "assist-customer":
 				if (eventArgs.length != 3){
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
