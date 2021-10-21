@@ -1,0 +1,58 @@
+# specify access-type user
+access-type user
+# expect error since user does not have permission to create ledger
+create-ledger fail description "user does not have proper permissions" seed "fail"
+# specify access type as "none"
+# expect error since "none" is not a valid access type, should display correct access-type options
+access-type none
+# create ledger with invalid command
+# expect error since "seed" keyword is missing, should display correct ledger-creation format
+create-ledger test description "test ledger 2020" "harvard"
+# specify access-type admin
+access-type admin
+# create-ledger <name> description <description> seed <seed>
+create-ledger test description "test ledger 2020" seed "harvard"
+# create-account <account-id>
+create-account mary
+# expect error since the account mary has already been initialized
+create-account mary
+create-account bob
+create-account bill
+create-account frank
+create-account jane
+process-transaction 1 amount 1000 fee 10 note "fund account" payer master receiver mary
+# expect error unique transaction id required
+process-transaction 1 amount 1000 fee 10 note "fund account" payer master receiver bob
+process-transaction 2 amount 1000 fee 10 note "fund account" payer master receiver bob
+process-transaction 3 amount 1000 fee 10 note "fund account" payer master receiver bill
+process-transaction 4 amount 1000 fee 10 note "fund account" payer master receiver frank
+process-transaction 5 amount 1000 fee 10 note "fund account" payer master receiver mary
+process-transaction 6 amount 1000 fee 10 note "fund account" payer master receiver bob
+process-transaction 7 amount 1000 fee 10 note "fund account" payer master receiver bill
+process-transaction 8 amount 1000 fee 10 note "fund account" payer master receiver frank
+process-transaction 9 amount 1000 fee 10 note "fund account" payer master receiver mary
+process-transaction 10 amount 1000 fee 10 note "fund account" payer master receiver bob
+# expect error, block does not exist
+get-block 10
+# expect error, block exists but has not been committed
+get-block 2
+# show the details of block #1
+get-block 1
+# set block 1 hash to "error"
+set-block-hash 1 error
+# get block hash, expect original hash "harvard", blocks are immutable
+get-block 1
+# show the details of transaction 10
+get-transaction 10
+# set-transaction-amount of transaction 10 to 2000
+set-transaction-amount 10 2000
+# expect amount did not change, expect amount still 1000, transactions are immutable
+get-transaction 10
+# expect error, receiver pete does not exist
+process-transaction 12 amount 20 fee 10 note "uber" payer bob receiver pete
+# expect error, payer pete does not exist
+process-transaction 12 amount 20 fee 10 note "uber" payer pete receiver bob
+# expect error due to missing "fee" keyword, should display correct transaction format
+process-transaction 1 amount 1000 10 note "fund account" payer master receiver mary
+# validate blockchain
+validate

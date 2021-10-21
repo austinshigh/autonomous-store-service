@@ -737,9 +737,16 @@ public class StoreModelService implements Client{
 					createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2], deviceId);
 				}
 				break;
+			case "customer-seen":
+				if (eventArgs.length != 3){
+					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
+				}else{
+					String[] storeAisleShelf = eventArgs[2].split(":");
+					createdEvent = new Event(eventArgs[0], eventArgs[1], storeAisleShelf[0], storeAisleShelf[1]);
+				}
+				break;
 			case "emergency":
 			case "missing-person":
-			case "customer-seen":
 			case "product-spill":
 			case "check-acc-bal":
 			case "assist-customer":
@@ -753,7 +760,8 @@ public class StoreModelService implements Client{
 				if (eventArgs.length != 2){
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 				}else{
-					createdEvent = new Event(eventArgs[0], eventArgs[1]);
+					String[] storeAisleShelf = eventArgs[1].split(":");
+					createdEvent = new Event(eventArgs[0], storeAisleShelf[0], storeAisleShelf[1], deviceId);
 				}
 				break;
 			default:

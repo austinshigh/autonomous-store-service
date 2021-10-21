@@ -1,25 +1,28 @@
 package com.cscie97.store.controller;
 
+import com.cscie97.store.model.CommandProcessor;
+import com.cscie97.store.model.CommandProcessorException;
+
 public class CustomerSeen implements Command {
+
+	private String customerId;
 
 	private String storeId;
 
 	private String aisleId;
 
-	private String customerId;
-
-	public CustomerSeen(String storeId, String aisleId, String customerId) {
+	public CustomerSeen(String customerId, String storeId, String aisleId) {
+		this.customerId = customerId;
 		this.storeId = storeId;
 		this.aisleId = aisleId;
-		this.customerId = customerId;
 	}
 
 
 	/**
 	 * @see Command#execute()
 	 */
-	public void execute() {
-		System.out.println("EUREKA!");
+	public void execute() throws CommandProcessorException {
+		System.out.println(CommandProcessor.processCommand("update-customer " + customerId + " location " + storeId + ":" + aisleId));
 	}
 
 	/**

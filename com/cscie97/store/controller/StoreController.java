@@ -15,7 +15,7 @@ public class StoreController implements Observer {
 				break;
 			}
 			case "missing-person":{
-				MissingPerson missingPerson = new MissingPerson(event.getArg0(), event.getArg1(), event.getArg2());
+				MissingPerson missingPerson = new MissingPerson(event.getArg0(), event.getArg1());
 				missingPerson.execute();
 				break;
 			}
@@ -30,7 +30,7 @@ public class StoreController implements Observer {
 				break;
 			}
 			case "broken-glass":{
-				BrokenGlass brokenGlass = new BrokenGlass(event.getArg0(), event.getArg1());
+				BrokenGlass brokenGlass = new BrokenGlass(event.getArg0(), event.getArg1(), event.getArg2());
 				brokenGlass.execute();
 				break;
 			}
