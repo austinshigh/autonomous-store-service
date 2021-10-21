@@ -1,12 +1,12 @@
 package com.cscie97.store.controller;
 
 import com.cscie97.ledger.Ledger;
+import com.cscie97.store.model.CommandProcessor;
+import com.cscie97.store.model.CommandProcessorException;
 
 public class CheckAccountBalance implements Command {
 
 	private String customerId;
-
-	private Ledger ledgerService;
 
 	public CheckAccountBalance(String customerId) {
 		this.customerId = customerId;
@@ -16,8 +16,18 @@ public class CheckAccountBalance implements Command {
 	/**
 	 * @see Command#execute()
 	 */
-	public void execute() {
-		System.out.println("EUREKA!");
+	public void execute() throws CommandProcessorException {
+		// get customer info from storemodelservice, parse blockchain address
+		String[] customerInfo = CommandProcessor.processCommand("show-customer " + this.customerId).split("\n");
+
+		// parse customer basketId from customer info
+		String[] basketLine = customerInfo[8].split("'");
+		String basketId = basketLine[1];
+
+		// compute total cost of items in the customer's basket
+		String basketTotal = CommandProcessor.processCommand("calculate-basket-total " + basketId);
+
+
 	}
 
 	/**
@@ -38,21 +48,4 @@ public class CheckAccountBalance implements Command {
 		this.customerId = customerId;
 	}
 
-	/**
-	 * get field
-	 *
-	 * @return ledgerService
-	 */
-	public Ledger getLedgerService() {
-		return this.ledgerService;
-	}
-
-	/**
-	 * set field
-	 *
-	 * @param ledgerService
-	 */
-	public void setLedgerService(Ledger ledgerService) {
-		this.ledgerService = ledgerService;
-	}
 }

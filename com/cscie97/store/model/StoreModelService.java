@@ -712,6 +712,7 @@ public class StoreModelService implements Client{
 	 */
 	public String createEvent(String deviceId, String event) throws StoreModelServiceException, com.cscie97.store.model.CommandProcessorException, CommandProcessorException {
 		String[] eventArgs = event.split(" ");
+		Device selectedDevice = getDevice(deviceId);
 		Event createdEvent;
 		switch(eventArgs[0]){
 			case "basket-event":
@@ -730,6 +731,7 @@ public class StoreModelService implements Client{
 				createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2], eventArgs[3]);
 			}
 			break;
+			case "missing-person":
 			case "checkout":
 				if (eventArgs.length != 3){
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
@@ -746,7 +748,6 @@ public class StoreModelService implements Client{
 				}
 				break;
 			case "emergency":
-			case "missing-person":
 			case "product-spill":
 			case "check-acc-bal":
 			case "assist-customer":
@@ -764,9 +765,10 @@ public class StoreModelService implements Client{
 					createdEvent = new Event(eventArgs[0], storeAisleShelf[0], storeAisleShelf[1], deviceId);
 				}
 				break;
+			case "customer-found":
+					return selectedDevice.createEvent(event);
 			default:
 				if (eventArgs.length == 1){
-					Device selectedDevice = getDevice(deviceId);
 					return selectedDevice.createEvent(event);
 				}
 				throw new StoreModelServiceException("event type does not exit", "command invalid");
