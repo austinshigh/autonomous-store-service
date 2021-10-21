@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.Math.abs;
+
 /**
  * Manages Stores, Products, Baskets, Customers, Devices, and Inventory that make up the 24X7 Store.
  * Stores manage their own Aisles, which in turn manage their own shelves.
@@ -466,6 +468,36 @@ public class StoreModelService implements Client{
 		Store deviceOwner = getStore(deviceIdMap.get(deviceId));
 		// get device from store that owns device and return device
 		return deviceOwner.getDeviceMap().get(deviceId);
+	}
+
+	public String findNearestRobot(String storeId, String aisleId) throws StoreModelServiceException {
+		Map<String, Device> deviceMap = getStore(storeId).getDeviceMap();
+		int inputAisle = Integer.parseInt(aisleId);
+		int closestAisle = Integer.MAX_VALUE;
+		String closestId = null;
+		for (Device value : deviceMap.values()){
+			int currentAisle = Integer.parseInt(value.getLocation().getAisleNumber());
+			if ((abs(currentAisle - inputAisle) < abs(closestAisle - inputAisle)) && value.showDeviceType().equals("robot")){
+				closestAisle = currentAisle;
+				closestId = value.getId();
+			}
+		}
+		return closestId + ":" + closestAisle;
+	}
+
+	public String findNearestSpeaker(String storeId, String aisleId) throws StoreModelServiceException {
+		Map<String, Device> deviceMap = getStore(storeId).getDeviceMap();
+		int inputAisle = Integer.parseInt(aisleId);
+		int closestAisle = Integer.MAX_VALUE;
+		String closestId = null;
+		for (Device value : deviceMap.values()){
+			int currentAisle = Integer.parseInt(value.getLocation().getAisleNumber());
+			if ((abs(currentAisle - inputAisle) < abs(closestAisle - inputAisle)) && value.showDeviceType().equals("speaker")){
+				closestAisle = currentAisle;
+				closestId = value.getId();
+			}
+		}
+		return closestId + ":" + closestAisle;
 	}
 
 	/**

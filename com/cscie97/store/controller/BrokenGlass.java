@@ -23,7 +23,8 @@ public class BrokenGlass implements Command {
 	public void execute() throws CommandProcessorException {
 
 		// find robot in aisle nearest to broken glass
-		//System.out.println(CommandProcessor.processCommand("find-nearest-robot-id " + storeId + " " + aisleId));
+		System.out.println("find-nearest-robot " + storeId + " aisle " + aisleId);
+		System.out.println(CommandProcessor.processCommand("find-nearest-robot " + storeId + " aisle " + aisleId));
 		// instruct robot to clean broken glass
 		//CommandProcessor.processCommand("create-command " + turnstileId + " command \"Hello " + customerName + ", welcome to " + storeName + "!\"")
 

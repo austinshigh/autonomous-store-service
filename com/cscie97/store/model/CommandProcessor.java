@@ -365,6 +365,28 @@ public class CommandProcessor {
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
+					case "find-nearest-robot":
+						if (commands.size() != 4) {
+							// throw exception if incorrect number of command line arguments
+							throw new CommandProcessorException("command should follow form:" +
+									"\nfind-nearest-robot <store_id> aisle <aisle_id>");
+						}
+						try {
+							return(storeModelService.findNearestRobot(commands.get(1), commands.get(3)));
+						}catch (StoreModelServiceException e){
+							throw new CommandProcessorException(e);
+						}
+					case "find-nearest-speaker":
+						if (commands.size() != 4) {
+							// throw exception if incorrect number of command line arguments
+							throw new CommandProcessorException("command should follow form:" +
+									"\nfind-nearest-robot <store_id> aisle <aisle_id>");
+						}
+						try {
+							return(storeModelService.findNearestSpeaker(commands.get(1), commands.get(3)));
+						}catch (StoreModelServiceException e){
+							throw new CommandProcessorException(e);
+						}
 					case "create-event":
 						if (commands.size() != 4) {
 							// throw exception if incorrect number of command line arguments

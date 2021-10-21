@@ -31,9 +31,10 @@ public class CheckAccountBalance implements Command {
 
 		// compute total cost of items in the customer's basket
 		String basketTotal = CommandProcessor.processCommand("calculate-basket-total " + basketId);
-
-		System.out.println(basketTotal);
-		//System.out.println(CommandProcessor.processCommand("create-event " + deviceId + " event \"basket total is " + basketTotal + "\""));
+		String[] nearestSpeakerInfo = CommandProcessor.processCommand("find-nearest-speaker " + storeId + " aisle " + aisleId).split(":");
+		String speakerId = nearestSpeakerInfo[0];
+		
+		System.out.println(CommandProcessor.processCommand("create-event " + speakerId + " event \"basket total is " + basketTotal + "\""));
 
 
 	}

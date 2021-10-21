@@ -47,5 +47,11 @@ public interface Device {
 	 */
 	public abstract String createCommand(String command) throws StoreModelServiceException;
 
+	/**
+	 * get field
+	 *
+	 * @return location
+	 */
+	public Location getLocation();
 
 }
