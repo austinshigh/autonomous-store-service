@@ -4,6 +4,8 @@ import com.cscie97.ledger.Ledger;
 import com.cscie97.store.model.CommandProcessor;
 import com.cscie97.store.model.CommandProcessorException;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class Checkout implements Command {
 
 	private String storeId;
@@ -58,13 +60,12 @@ public class Checkout implements Command {
 		// compute total cost of items in the customer's basket
 		String basketTotal = CommandProcessor.processCommand("calculate-basket-total " + basketId);
 
+		int txId = ThreadLocalRandom.current().nextInt(0, 99999999 + 1);
 		// create blockchain transaction
-		System.out.println(Integer.parseInt(com.cscie97.ledger.CommandProcessor.processCommand("process-transaction " +
-				java.util.UUID.randomUUID() +
+		System.out.println(Integer.parseInt(com.cscie97.ledger.CommandProcessor.processCommand(
+				"process-transaction " + txId +
 				" amount " + basketTotal +
-				" fee 10 " +
-				" note checkout " +
-				"payer " + blockchainAddress +
+				" fee 10 note checkout payer " + blockchainAddress +
 				" receiver " + storeId)));
 		//process-transaction <transaction-id> amount <amount> fee <fee> note <note> payer <account-address> receiver <account-address>
 

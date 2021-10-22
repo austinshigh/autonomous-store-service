@@ -431,8 +431,7 @@ public class CommandProcessor {
 									"\ncalculate-basket-total <basket_id>");
 						}
 						try{
-							return("Basket Total: " + storeModelService.getBasketTotal(commands.get(1)) +
-									" currency units");
+							return(String.valueOf(storeModelService.getBasketTotal(commands.get(1))));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
