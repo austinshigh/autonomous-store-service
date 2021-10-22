@@ -781,6 +781,7 @@ public class StoreModelService implements Client{
 			}
 			break;
 			case "checkout":
+			case "assist-customer":
 				if (eventArgs.length != 3){
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 				}else{
@@ -821,7 +822,7 @@ public class StoreModelService implements Client{
 				}
 				break;
 			case "clean-up":
-			case "Customer found":
+			case "customer-found":
 					return selectedDevice.createEvent(event);
 			default:
 				if (eventArgs.length == 1){

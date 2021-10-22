@@ -45,7 +45,7 @@ public class EnterStore implements Command {
 			return;
 		}
 		System.out.println(accountBalance);
-		System.out.println(CommandProcessor.processCommand("create-event " + turnstileId + " event open-turnstile"));
+		System.out.println(CommandProcessor.processCommand("open-turnstile " + turnstileId));
 		System.out.println(CommandProcessor.processCommand("create-command " + turnstileId + " command \"Hello " + customerName + ", welcome to " + storeName + "!\""));
 	}
 

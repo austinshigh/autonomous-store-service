@@ -21,20 +21,33 @@ public class CheckAccountBalance implements Command {
 	/**
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException {
+	public void execute() throws CommandProcessorException, com.cscie97.ledger.CommandProcessorException {
 		// get customer info from storemodelservice, parse blockchain address
 		String[] customerInfo = CommandProcessor.processCommand("show-customer " + this.customerId).split("\n");
+		String[] addressLine = customerInfo[5].split("'");
+		String blockchainAddress = addressLine[1];
 
 		// parse customer basketId from customer info
 		String[] basketLine = customerInfo[8].split("=");
 		String basketId = basketLine[1];
 
 		// compute total cost of items in the customer's basket
-		String basketTotal = CommandProcessor.processCommand("calculate-basket-total " + basketId);
+		int basketTotal = Integer.parseInt(CommandProcessor.processCommand("calculate-basket-total " + basketId));
 		String[] nearestSpeakerInfo = CommandProcessor.processCommand("find-nearest-speaker " + storeId + " aisle " + aisleId).split(":");
 		String speakerId = nearestSpeakerInfo[0];
 
-		System.out.println(CommandProcessor.processCommand("create-command " + speakerId + " message \"basket total is " + basketTotal + "\""));
+		// query user's account balance
+		int accountBalance = Integer.parseInt(com.cscie97.ledger.CommandProcessor.processCommand("get-account-balance " + blockchainAddress));
+
+		String moreOrLess = "more";
+
+		if (accountBalance >= basketTotal){
+			moreOrLess = "less";
+		}
+
+		System.out.println(CommandProcessor.processCommand("create-command " + speakerId + " message \"basket total is " +
+				basketTotal + " which is " +
+				moreOrLess + " than your account balance\""));
 
 
 	}

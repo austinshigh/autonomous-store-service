@@ -11,10 +11,10 @@ public class AssistCustomerToCar implements Command {
 
 	private String customerId;
 
-	public AssistCustomerToCar(String storeId, String aisleId, String customerId) {
+	public AssistCustomerToCar(String customerId, String storeId, String aisleId) {
+		this.customerId = customerId;
 		this.storeId = storeId;
 		this.aisleId = aisleId;
-		this.customerId = customerId;
 	}
 
 	/**

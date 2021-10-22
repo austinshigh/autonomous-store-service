@@ -49,6 +49,10 @@ public class StoreController implements Observer {
 				Checkout checkout = new Checkout(event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3());
 				checkout.execute();
 				break;
+			case "assist-customer":
+				AssistCustomerToCar assistCustomerToCar = new AssistCustomerToCar(event.getArg0(), event.getArg1(), event.getArg2());
+				assistCustomerToCar.execute();
+				break;
 		}
 	}
 }
