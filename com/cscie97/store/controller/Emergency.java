@@ -1,5 +1,8 @@
 package com.cscie97.store.controller;
 
+import com.cscie97.store.model.CommandProcessor;
+import com.cscie97.store.model.CommandProcessorException;
+
 public class Emergency implements Command {
 
 	private String storeId;
@@ -8,17 +11,17 @@ public class Emergency implements Command {
 
 	private String aisleId;
 
-	public Emergency(String storeId, String emergencyType, String aisleId) {
-		this.storeId = storeId;
+	public Emergency(String emergencyType, String storeId, String aisleId) {
 		this.emergencyType = emergencyType;
+		this.storeId = storeId;
 		this.aisleId = aisleId;
 	}
 
 	/**
 	 * @see Command#execute()
 	 */
-	public void execute() {
-		System.out.println("EUREKA!");
+	public void execute() throws CommandProcessorException {
+		System.out.println(CommandProcessor.processCommand("open-all-turnstiles " + storeId));
 	}
 
 	/**

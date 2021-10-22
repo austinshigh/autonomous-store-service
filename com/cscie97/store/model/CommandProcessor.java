@@ -423,6 +423,28 @@ public class CommandProcessor {
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}
+					case "open-turnstile":
+						if (commands.size() != 2){
+							// throw exception if incorrect number of command line arguments
+							throw new CommandProcessorException("command should follow form:" +
+									"\nopen-turnstile <turnstile_id>");
+						}
+						try{
+							return(storeModelService.openTurnstile(commands.get(1)));
+						}catch (StoreModelServiceException e){
+							throw new CommandProcessorException(e);
+						}
+					case "open-all-turnstiles":
+						if (commands.size() != 2){
+							// throw exception if incorrect number of command line arguments
+							throw new CommandProcessorException("command should follow form:" +
+									"\nopen-all-turnstiles <store_id>");
+						}
+						try{
+							return(storeModelService.openAllTurnstiles(commands.get(1)));
+						}catch (StoreModelServiceException e){
+							throw new CommandProcessorException(e);
+						}
 					default:
 						// catch all invalid arguments
 						throw new CommandProcessorException("invalid argument");

@@ -50,6 +50,10 @@ public class Turnstile implements Appliance {
 		return "";
 	}
 
+	public String openTurnstile() {
+		return("Turnstile: " + this.id + " Opened");
+	}
+
 	/**
 	 * show device type
 	 *

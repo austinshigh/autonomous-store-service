@@ -66,7 +66,8 @@ public class Checkout implements Command {
 			System.out.println(CommandProcessor.processCommand("create-command " + turnstileId + " command \"Hello " + customerName + ", your blockchain balance is not sufficient to enter the store."));
 			return;
 		}
-		System.out.println(accountBalance);
+		//System.out.println(accountBalance);
+		System.out.println(CommandProcessor.processCommand("open-turnstile " + turnstileId));
 		System.out.println(CommandProcessor.processCommand("create-command " + turnstileId + " command \"Hello " + customerName + ", welcome to " + storeName + "!\""));
 	}
 

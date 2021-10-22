@@ -773,6 +773,7 @@ public class StoreModelService implements Client{
 				break;
 			case "customer-seen":
 			case "check-acc-bal":
+			case "emergency":
 				if (eventArgs.length != 3){
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 				}else{
@@ -780,7 +781,6 @@ public class StoreModelService implements Client{
 					createdEvent = new Event(eventArgs[0], eventArgs[1], storeAisleShelf[0], storeAisleShelf[1]);
 				}
 				break;
-			case "emergency":
 			case "product-spill":
 			case "assist-customer":
 				if (eventArgs.length != 3){
@@ -797,6 +797,7 @@ public class StoreModelService implements Client{
 					createdEvent = new Event(eventArgs[0], storeAisleShelf[0], storeAisleShelf[1], deviceId);
 				}
 				break;
+			case "clean-up":
 			case "customer-found":
 					return selectedDevice.createEvent(event);
 			default:
@@ -808,10 +809,42 @@ public class StoreModelService implements Client{
 		notifyObservers(createdEvent);
 		return("Observers notified");
 	}
+	/**
+	 * notify observers
+	 *
+	 * @param event event
+	 * @throws com.cscie97.store.model.CommandProcessorException com.cscie97.store.model. command processor exception
+	 * @throws CommandProcessorException com.cscie97.ledger. command processor exception
+	 */
 	public void notifyObservers(Event event) throws com.cscie97.store.model.CommandProcessorException, CommandProcessorException {
 		for (Observer curr : observerArrayList){
 			curr.update(event);
 		}
+	}
+
+	/**
+	 * open turnstile
+	 *
+	 * @param turnstileId turnstileId
+	 * @return {@link String}
+	 * @see String
+	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
+	 */
+	public String openTurnstile(String turnstileId) throws StoreModelServiceException {
+		Turnstile selected = (Turnstile) getDevice(turnstileId);
+		return selected.openTurnstile();
+	}
+
+	public String openAllTurnstiles(String storeId) throws StoreModelServiceException {
+		Map<String, Device> devicesInStore = getStore(storeId).getDeviceMap();
+		StringBuilder results = new StringBuilder();
+		for (Device currentDevice : devicesInStore.values()){
+			if (currentDevice.showDeviceType().equals("turnstile")){
+				Turnstile selected = (Turnstile) currentDevice;
+				results.append(selected.openTurnstile() + "\n");
+			}
+		}
+		return results.toString();
 	}
 
 	/**

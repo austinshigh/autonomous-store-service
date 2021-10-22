@@ -22,11 +22,14 @@ public class BrokenGlass implements Command {
 	 */
 	public void execute() throws CommandProcessorException {
 
-		// find robot in aisle nearest to broken glass
-		System.out.println("find-nearest-robot " + storeId + " aisle " + aisleId);
-		System.out.println(CommandProcessor.processCommand("find-nearest-robot " + storeId + " aisle " + aisleId));
+		//System.out.println(CommandProcessor.processCommand("find-nearest-robot " + storeId + " aisle " + aisleId));
+
+		// find robot closest to broken glass incident
+		String[] nearestRobotInfo = CommandProcessor.processCommand("find-nearest-robot " + storeId + " aisle " + aisleId).split(":");
+		String robotId = nearestRobotInfo[0];
+
 		// instruct robot to clean broken glass
-		//CommandProcessor.processCommand("create-command " + turnstileId + " command \"Hello " + customerName + ", welcome to " + storeName + "!\"")
+		System.out.println(CommandProcessor.processCommand("create-command " + robotId + " command \"clean-up glass aisle " + aisleId + "\""));
 
 	}
 
