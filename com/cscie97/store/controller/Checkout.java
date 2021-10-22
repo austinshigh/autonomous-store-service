@@ -10,12 +10,15 @@ public class Checkout implements Command {
 
 	private String customerId;
 
+	private String aisleId;
+
 	private String turnstileId;
 
 	private Ledger ledgerService;
 
-	public Checkout(String customerId, String storeId, String turnstileId) {
+	public Checkout(String customerId, String storeId, String aisleId, String turnstileId) {
 		this.customerId = customerId;
+		this.aisleId = aisleId;
 		this.storeId = storeId;
 		this.turnstileId = turnstileId;
 	}
@@ -35,12 +38,23 @@ public class Checkout implements Command {
 		String customerName = nameLine[1];
 
 		// parse customer basketId from customer info
-		String[] basketLine = customerInfo[8].split("'");
+		String[] basketLine = customerInfo[8].split("=");
 		String basketId = basketLine[1];
 
 		// identify customer
-		System.out.println(CommandProcessor.processCommand("create-command " + turnstileId + " command \"Hello " + customerName));
+		System.out.println(CommandProcessor.processCommand("create-command " + turnstileId + " command \"Hello " + customerName + ".\""));
 
+		// determine if customer needs assistance carrying bags to car
+		// query basket items, add product weights
+
+		int basketWeight = Integer.parseInt(CommandProcessor.processCommand("compute-basket-weight " + basketId));
+		if (basketWeight > 10) {
+			AssistCustomerToCar assistCustomerToCar = new AssistCustomerToCar(storeId, aisleId, customerId);
+			assistCustomerToCar.execute();
+		}
+//		String[] basketInfo = CommandProcessor.processCommand("show-basket-contents " + basketId).split("\n");
+//		String[] addressLine = customerInfo[5].split("'");
+//		String blockchainAddress = addressLine[1];
 		// compute total cost of items in the customer's basket
 		String basketTotal = CommandProcessor.processCommand("calculate-basket-total " + basketId);
 
@@ -60,15 +74,7 @@ public class Checkout implements Command {
 		String[] storeNameLine = storeId[2].split("=");
 		String storeName = storeNameLine[1];
 
-		// check customer's balance, if balance not positive, alert customer, customer cannot enter turnstile
-		int accountBalance = Integer.parseInt(com.cscie97.ledger.CommandProcessor.processCommand("get-account-balance " + blockchainAddress));
-		if (!(accountBalance > 0)){
-			System.out.println(CommandProcessor.processCommand("create-command " + turnstileId + " command \"Hello " + customerName + ", your blockchain balance is not sufficient to enter the store."));
-			return;
-		}
-		//System.out.println(accountBalance);
 		System.out.println(CommandProcessor.processCommand("open-turnstile " + turnstileId));
-		System.out.println(CommandProcessor.processCommand("create-command " + turnstileId + " command \"Hello " + customerName + ", welcome to " + storeName + "!\""));
 	}
 
 	/**
@@ -123,5 +129,41 @@ public class Checkout implements Command {
 	 */
 	public void setLedgerService(Ledger ledgerService) {
 		this.ledgerService = ledgerService;
+	}
+
+	/**
+	 * get field
+	 *
+	 * @return aisleId
+	 */
+	public String getAisleId() {
+		return this.aisleId;
+	}
+
+	/**
+	 * set field
+	 *
+	 * @param aisleId
+	 */
+	public void setAisleId(String aisleId) {
+		this.aisleId = aisleId;
+	}
+
+	/**
+	 * get field
+	 *
+	 * @return turnstileId
+	 */
+	public String getTurnstileId() {
+		return this.turnstileId;
+	}
+
+	/**
+	 * set field
+	 *
+	 * @param turnstileId
+	 */
+	public void setTurnstileId(String turnstileId) {
+		this.turnstileId = turnstileId;
 	}
 }

@@ -718,6 +718,23 @@ public class StoreModelService implements Client{
 	}
 
 	/**
+	 * compute basket weight
+	 *
+	 * @param basketId basketId
+	 * @return {@link String}
+	 * @see String
+	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
+	 */
+	public String computeBasketWeight (String basketId) throws StoreModelServiceException{
+		Map<String, Integer> selectedBasket = getBasket(basketId).getProductCountMap();
+		int totalWeight = 0;
+		for (Map.Entry<String, Integer> entry : selectedBasket.entrySet()){
+			totalWeight += getProduct(entry.getKey()).getSize().getWeight() * entry.getValue();
+		}
+		return String.valueOf(totalWeight);
+	}
+
+	/**
 	 * Retrieves a basket from the StoreModelService's basket map.
 	 *
 	 * @param basketId basketId
@@ -763,8 +780,15 @@ public class StoreModelService implements Client{
 				createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2], eventArgs[3]);
 			}
 			break;
-			case "missing-person":
 			case "checkout":
+				if (eventArgs.length != 3){
+					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
+				}else{
+					String[] storeAisleShelf = eventArgs[2].split(":");
+					createdEvent = new Event(eventArgs[0], eventArgs[1], storeAisleShelf[0], storeAisleShelf[1], deviceId);
+				}
+				break;
+			case "missing-person":
 				if (eventArgs.length != 3){
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 				}else{
@@ -782,7 +806,6 @@ public class StoreModelService implements Client{
 				}
 				break;
 			case "product-spill":
-			case "assist-customer":
 				if (eventArgs.length != 3){
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 				}else{
@@ -798,7 +821,7 @@ public class StoreModelService implements Client{
 				}
 				break;
 			case "clean-up":
-			case "customer-found":
+			case "Customer found":
 					return selectedDevice.createEvent(event);
 			default:
 				if (eventArgs.length == 1){

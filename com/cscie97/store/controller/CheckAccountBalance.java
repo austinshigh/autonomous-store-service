@@ -34,7 +34,7 @@ public class CheckAccountBalance implements Command {
 		String[] nearestSpeakerInfo = CommandProcessor.processCommand("find-nearest-speaker " + storeId + " aisle " + aisleId).split(":");
 		String speakerId = nearestSpeakerInfo[0];
 
-		System.out.println(CommandProcessor.processCommand("create-event " + speakerId + " event \"basket total is " + basketTotal + "\""));
+		System.out.println(CommandProcessor.processCommand("create-command " + speakerId + " message \"basket total is " + basketTotal + "\""));
 
 
 	}

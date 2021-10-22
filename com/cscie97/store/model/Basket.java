@@ -117,9 +117,9 @@ public class Basket {
 		if (productCountMap == null){
 			return "basket: [" + getId() +"] is empty";
 		}
-		String output = "Basket [" + getId() + "] Contains: \n";
+		String output = "";
 		for (Map.Entry<String,Integer> entry : productCountMap.entrySet()) {
-			output += "Product Id: " + entry.getKey() + " Quantity: " + entry.getValue() + "\n";
+			output += entry.getKey() + ":" + entry.getValue() + "\n";
 		}
 		return output;
 	}

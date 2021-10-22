@@ -58,7 +58,7 @@ public class Microphone implements Sensor {
 	 * @see String
 	 */
 	public String createEvent(String event){
-		return "Event Completed " + event;
+		return this.id + " event: " + event;
 	}
 
 	/**

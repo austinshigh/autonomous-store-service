@@ -44,11 +44,13 @@ public class CommandProcessor {
 					return ("\n");
 				}
 				String firstArg = commands.get(0);
+				if (firstArg.equals("#")){
+					// print comments
+					return(command);
+				}
+				System.out.println(">>> " + command);
 				switch (firstArg) {
 					// compare first word in line to determine method to call
-					case "#":
-							// print comments
-							return(command);
 					case "define-store":
 						if (commands.size() != 6) {
 							// throw exception if incorrect number of command line arguments
@@ -324,6 +326,17 @@ public class CommandProcessor {
 						}
 						try {
 							return(storeModelService.showBasketItems(commands.get(1)));
+						}catch (StoreModelServiceException e){
+							throw new CommandProcessorException(e);
+						}
+					case "compute-basket-weight":
+						if (commands.size() != 2) {
+							// throw exception if incorrect number of command line arguments
+							throw new CommandProcessorException("command should follow form:" +
+									"\ncompute-basket-weight <basket_id>");
+						}
+						try {
+							return(storeModelService.computeBasketWeight(commands.get(1)));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}

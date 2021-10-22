@@ -48,7 +48,7 @@ public class Speaker implements Appliance {
 	 * @see String
 	 */
 	public String createCommand(String command){
-		return "Command Created " + command;
+		return this.id + " response: " + command;
 	}
 
 	/**
