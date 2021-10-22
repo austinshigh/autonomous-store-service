@@ -62,7 +62,7 @@ public class Checkout implements Command {
 
 		int txId = ThreadLocalRandom.current().nextInt(0, 99999999 + 1);
 		// create blockchain transaction
-		System.out.println(Integer.parseInt(com.cscie97.ledger.CommandProcessor.processCommand(
+		System.out.println("Successful Transaction, Transaction ID: " + Integer.parseInt(com.cscie97.ledger.CommandProcessor.processCommand(
 				"process-transaction " + txId +
 				" amount " + basketTotal +
 				" fee 10 note checkout payer " + blockchainAddress +

@@ -43,11 +43,13 @@ public class CommandProcessor {
                 commands.add(regexMatcher.group());
             }
             String firstArg = commands.get(0);
+            if (firstArg.equals("#")){
+                // print comments
+                return(command);
+            }
+            System.out.println(">>> " + command);
             switch (firstArg) {
                 // compare first word in line to determine method to call
-                case "#":
-                    // print comments
-                    System.out.println(command);
 //                case "access-type":
 //                    String access = commands.get(1);
 //                    if (access.equals("admin") || (access.equals("user"))) {
@@ -104,7 +106,7 @@ public class CommandProcessor {
                             commands.get(11));
                     // process transaction
                     try {
-                        currentLedger.processTransaction(tx);
+                        return(currentLedger.processTransaction(tx));
                     } catch (LedgerException e) {
                         throw new CommandProcessorException(e);
                     }

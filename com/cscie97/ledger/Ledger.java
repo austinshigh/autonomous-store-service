@@ -279,7 +279,6 @@ public class Ledger {
         }
         // add transaction to list on latest block in the ledger
         currentBlock.getTransactionList().add(transaction);
-
         // adjust payer balance
         HashMap<String, Account> accountBalances = currentBlock.getAccountBalanceMap();
         accountBalances.get(payerAddress).setBalance(payerBalance - (fee + amount));
