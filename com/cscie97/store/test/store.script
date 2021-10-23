@@ -41,13 +41,13 @@ show-inventory INVENTORY002
 # Define 12 customers (9 registered who have 200 Units transferred from the master account = 10 transactions now)
 define-customer CUSTOMER00001 first_name ann last_name fred type registered email_address "afred@gmail.com" account ann01
 define-customer CUSTOMER00002 first_name ted last_name hill type registered email_address "thill@yahoo.com" account ted01
-define-customer CUSTOMER00003 first_name jane last_name dan type registered email_address "jdan@gmail.com" account jane01
+define-customer CUSTOMER00003 first_name jane last_name dan type guest email_address "jdan@gmail.com" account jane01
 define-customer CUSTOMER00004 first_name tami last_name donny type registered email_address "tdonny@gmail.com" account tami01
 define-customer CUSTOMER00005 first_name tayo last_name akin type registered email_address "takin@yahoo.com" account tayo01
-define-customer CUSTOMER00006 first_name dami last_name davis type registered email_address "ddavis@gmail.com" account dami01
+define-customer CUSTOMER00006 first_name dami last_name davis type guest email_address "ddavis@gmail.com" account dami01
 define-customer CUSTOMER00007 first_name ahmed last_name usman type registered email_address "ausman@gmail.com" account ahmed01
 define-customer CUSTOMER00008 first_name jake last_name farm type registered email_address "jfarm@yahoo.com" account jake01
-define-customer CUSTOMER00009 first_name hanna last_name alla type registered email_address "halla@gmail.com" account hanna01
+define-customer CUSTOMER00009 first_name hanna last_name alla type guest email_address "halla@gmail.com" account hanna01
 define-customer CUSTOMER00010 first_name ruth last_name bosch type registered email_address "rbosch@gmail.com" account ruth01
 define-customer CUSTOMER00011 first_name rose last_name lily type registered email_address "rlily@gmail.com" account rose01
 define-customer CUSTOMER00012 first_name abby last_name gotham type registered email_address "agotham@gmail.com" account abby01

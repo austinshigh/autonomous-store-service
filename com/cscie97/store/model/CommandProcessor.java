@@ -212,20 +212,21 @@ public class CommandProcessor {
 									"define-customer <customer_id> first_name <first_name> last_name <last_name> type (registered|guest) email_address <email> account <account_address>\n");
 						}
 						boolean registered = false;
-						if (commands.get(7).equals("registered")) {
-							// if customer is registered, pass true to storeModelService.createCustomer()
-							registered = true;
-						}
 						try {
-							ledgerService.createAccount(commands.get(11));
-							// transfer 200 units from master account
-							Transaction tx = new Transaction(ThreadLocalRandom.current().nextInt(0, 99999999 + 1),
-									200,
-									10,
-									"new account",
-									"master",
-									commands.get(11));
-							ledgerService.processTransaction(tx);
+							if (commands.get(7).equals("registered")) {
+								// if customer is registered, transfer 200 credits to their account.
+								registered = true;
+								ledgerService.createAccount(commands.get(11));
+								Transaction tx = new Transaction(ThreadLocalRandom.current().nextInt(0, 99999999 + 1),
+										200,
+										10,
+										"new account",
+										"master",
+										commands.get(11));
+								ledgerService.processTransaction(tx);
+							}else{
+								ledgerService.createAccount(commands.get(11));
+							}
 							return("customer id: " + storeModelService.createCustomer(commands.get(1), commands.get(3), commands.get(5), registered, commands.get(9), commands.get(11)));
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);

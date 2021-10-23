@@ -833,19 +833,8 @@ public class StoreModelService implements Client{
 				}
 				throw new StoreModelServiceException("event type does not exit", "command invalid");
 		}
-		return("Observers notified");
-	}
-	/**
-	 * notify observers
-	 *
-	 * @param event event
-	 * @throws com.cscie97.store.model.CommandProcessorException com.cscie97.store.model. command processor exception
-	 * @throws CommandProcessorException com.cscie97.ledger. command processor exception
-	 */
-	public void notifyObservers(Event event) throws com.cscie97.store.model.CommandProcessorException, CommandProcessorException, StoreModelServiceException, LedgerException {
-		for (Observer curr : observerArrayList){
-			curr.update(event);
-		}
+		notify(createdEvent);
+		return("");
 	}
 
 	/**
@@ -1011,6 +1000,7 @@ public class StoreModelService implements Client{
 		this.deviceIdMap = deviceIdMap;
 	}
 
+
 	@Override
 	public void detach(Observer observer) {
 		this.observerArrayList.remove(observer);
@@ -1018,4 +1008,17 @@ public class StoreModelService implements Client{
 
 	@Override
 	public void attach(Observer observer) { this.observerArrayList.add(observer); }
+
+	/**
+	 * notify observers
+	 *
+	 * @param event event
+	 * @throws com.cscie97.store.model.CommandProcessorException com.cscie97.store.model. command processor exception
+	 * @throws CommandProcessorException com.cscie97.ledger. command processor exception
+	 */
+	public void notify(Event event) throws com.cscie97.store.model.CommandProcessorException, CommandProcessorException, StoreModelServiceException, LedgerException {
+		for (Observer curr : observerArrayList){
+			curr.update(event);
+		}
+	}
 }
