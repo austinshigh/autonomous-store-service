@@ -50,15 +50,9 @@ public class Microphone implements Sensor {
 	 */
 	public String createCommand(String command){ return "ALERT: sensors cannot receive commands"; }
 
-	/**
-	 * create event
-	 *
-	 * @param event event
-	 * @return {@link String}
-	 * @see String
-	 */
-	public String createEvent(String event){
-		return this.id + " event: " + event;
+
+	public String createAnnouncement(String event){
+		return "Sensors cannot create announcements";
 	}
 
 	/**

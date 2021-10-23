@@ -51,15 +51,9 @@ public class Speaker implements Appliance {
 		return this.id + " response: " + command;
 	}
 
-	/**
-	 * create event
-	 *
-	 * @param event event
-	 * @return {@link String}
-	 * @see String
-	 */
-	public String createEvent(String event){
-		return "Event Completed " + event;
+
+	public String createAnnouncement(String event){
+		return this.id + ": Announcement: " + event;
 	}
 
 	/**

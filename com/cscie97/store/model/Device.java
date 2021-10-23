@@ -8,14 +8,13 @@ package com.cscie97.store.model;
 public interface Device {
 
 	/**
-	 * Simulates a sensor or appliance event,
-	 * such as recognizing a customer's location with a store
+	 * Simulates a sensor or appliance announcement.
 	 *
 	 * @param event event
 	 * @return {@link String}
 	 * @see String
 	 */
-	public abstract String createEvent(String event);
+	public abstract String createAnnouncement(String event);
 
 	/**
 	 * Returns the id of a given Device

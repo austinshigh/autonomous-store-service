@@ -1,10 +1,9 @@
 package com.cscie97.store.controller;
 
 import com.cscie97.ledger.Ledger;
-import com.cscie97.store.model.CommandProcessor;
-import com.cscie97.store.model.CommandProcessorException;
-import com.cscie97.store.model.StoreModelService;
-import com.cscie97.store.model.StoreModelServiceException;
+import com.cscie97.store.model.*;
+
+import java.util.Map;
 
 public class Emergency implements Command {
 
@@ -27,12 +26,39 @@ public class Emergency implements Command {
 	 * @see Command#execute()
 	 */
 	public void execute() throws CommandProcessorException, StoreModelServiceException {
+		// open all turnstiles
+		System.out.println(storeModelService.openAllTurnstiles(storeId));
+
 		// find nearest robot
 		String[] robotLocation = storeModelService.findNearestRobot(storeId, aisleId).split(":");
 		String robotId = robotLocation[0];
 
-		storeModelService.createCommand(robotId, "command tend to emergency in aisle " + aisleId);
+		// get device map for store with emergency
+		Map<String, Device> deviceMap = storeModelService.getStore(storeId).getDeviceMap();
+
+		// send alert on all speakers, turnstiles and robots
+		for (Map.Entry<String, Device> entry : deviceMap.entrySet()){
+			String type = entry.getValue().showDeviceType();
+			if (type.equals("speaker")||type.equals("robot")||type.equals("turnstile")){
+				System.out.println(storeModelService.getDevice(entry.getKey()).createAnnouncement("There is a " +
+						emergencyType + " in " +
+						aisleId + ", please leave " +
+						storeId + " immediately"));
+			}
+		}
+		System.out.println("\n");
+
+		// command nearest robot to attend to emergency
+		System.out.println(storeModelService.createCommand(robotId, "address " + emergencyType + " in " + aisleId));
+
+		System.out.println("\n");
+
 		// command rest to assist customers
+		for (Device device : deviceMap.values()){
+			if (!device.getId().equals(robotId) && device.showDeviceType().equals("robot")){
+				System.out.println(storeModelService.createCommand(device.getId(), "assist customers leaving the store: " + storeId));
+			}
+		}
 	}
 
 	/**

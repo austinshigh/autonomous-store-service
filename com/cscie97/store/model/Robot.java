@@ -40,15 +40,9 @@ public class Robot implements Appliance {
 				'}';
 	}
 
-	/**
-	 * create event
-	 *
-	 * @param event event
-	 * @return {@link String}
-	 * @see String
-	 */
-	public String createEvent(String event){
-		return "Event Completed " + event;
+
+	public String createAnnouncement(String event){
+		return this.id + ": Announcement: " + event;
 	}
 
 
@@ -56,7 +50,7 @@ public class Robot implements Appliance {
 	 * @see Appliance#createCommand(String)
 	 */
 	public String createCommand(String command) {
-		return "Command Created " + command;
+		return this.id + ": command received " + command;
 	}
 
 	/**

@@ -42,18 +42,9 @@ public class Camera implements Sensor {
 				'}';
 	}
 
-	/**
-	 *  Creates a sensor event
-	 *
-	 *  this method returns an opaque string,
-	 *  in the next iteration of this program this method will have increased functionality
-	 *
-	 * @param event event
-	 * @return {@link String}
-	 * @see String
-	 */
-	public String createEvent(String event){
-		return "Event Completed " + event;
+
+	public String createAnnouncement(String event){
+		return "Sensors cannot create announcements";
 	}
 
 	/**

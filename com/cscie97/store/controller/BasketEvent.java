@@ -1,10 +1,7 @@
 package com.cscie97.store.controller;
 
 import com.cscie97.ledger.Ledger;
-import com.cscie97.store.model.CommandProcessor;
-import com.cscie97.store.model.CommandProcessorException;
-import com.cscie97.store.model.StoreModelService;
-import com.cscie97.store.model.StoreModelServiceException;
+import com.cscie97.store.model.*;
 
 public class BasketEvent implements Command {
 
@@ -39,30 +36,32 @@ public class BasketEvent implements Command {
 	 * @see Command#execute()
 	 */
 	public void execute() throws CommandProcessorException, com.cscie97.ledger.CommandProcessorException, StoreModelServiceException {
-		// get customer info from storemodelservice, parse blockchain address
-		String basketId = storeModelService.getCustomer(customerId).getBasketId();
+		// get customer from storemodelservice
+		Customer customer = storeModelService.getCustomer(customerId);
 
+		// get basket id
+		String basketId = customer.getBasketId();
+
+		// add or remove item to customer's basket
 		System.out.println(storeModelService.addBasketItem(basketId, productId, quantity));
 
-//		// parse customer name from customer info
-//		String[] nameLine = customerInfo[2].split("'");
-//		String customerName = nameLine[1];
-//
-//		// get store from storemodelservice, parse storename
-//		String[] store = storeId.split(":");
-//		String[] storeId = CommandProcessor.processCommand("show-store " + store[0]).split("\n");
-//		String[] storeNameLine = storeId[2].split("=");
-//		String storeName = storeNameLine[1];
-//
-//		// check customer's balance, if balance not positive, alert customer, customer cannot enter turnstile
-//		int accountBalance = Integer.parseInt(com.cscie97.ledger.CommandProcessor.processCommand("get-account-balance " + blockchainAddress));
-//		if (!(accountBalance > 0)){
-//			System.out.println(CommandProcessor.processCommand("create-command " + turnstileId + " command \"Hello " + customerName + ", your blockchain balance is not sufficient to enter the store."));
-//			return;
-//		}
-//		System.out.println(accountBalance);
-//		System.out.println(CommandProcessor.processCommand("create-event " + turnstileId + " event open-turnstile"));
-//		System.out.println(CommandProcessor.processCommand("create-command " + turnstileId + " command \"Hello " + customerName + ", welcome to " + storeName + "!\""));
+		String shelfQuantityChange = String.valueOf(Integer.parseInt(quantity) * -1);
+
+		// add or remove inventory from shelf
+		System.out.println(storeModelService.updateInventory(inventoryId, shelfQuantityChange));
+
+		// find robot closest to aisle that needs restocking
+		String[] robotLocation = storeModelService.findNearestRobot(storeId, aisleId).split(":");
+		String robotId = robotLocation[0];
+
+		// check shelf inventory
+		double count = storeModelService.getInventoryItem(inventoryId).getCount() * 1.0;
+		double capacity = storeModelService.getInventoryItem(inventoryId).getCapacity() * 1.0;
+
+		if (count / capacity < .50){
+			System.out.println(storeModelService.createCommand(robotId,"perform task restock for " + aisleId + ":" + shelfId + " and " + productId));
+		}
+
 	}
 
 	/**

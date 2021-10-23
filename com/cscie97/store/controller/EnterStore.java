@@ -45,11 +45,11 @@ public class EnterStore implements Command {
 		// check customer's balance, if balance not positive, alert customer, customer cannot enter turnstile
 		int accountBalance = ledger.getAccountBalance(blockchainAddress);
 		if (!(accountBalance > 0)){
-			storeModelService.createCommand(turnstileId, "command Hello " + customerName + ", your blockchain balance is not sufficient to enter the store.");
+			System.out.println(storeModelService.createCommand(turnstileId, "\"Hello " + customerName + ", your blockchain balance is not sufficient to enter the store.\""));
 			return;
 		}
 		System.out.println(storeModelService.openTurnstile(turnstileId));
-		storeModelService.createCommand(turnstileId, " command \"Hello " + customerName + ", welcome to " + storeName + "!\"");
+		System.out.println(storeModelService.createCommand(turnstileId, " \"Hello " + customerName + ", welcome to " + storeName + "!\""));
 
 	}
 

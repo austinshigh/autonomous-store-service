@@ -826,10 +826,10 @@ public class StoreModelService implements Client{
 				break;
 			case "clean-up":
 			case "customer-found":
-					return selectedDevice.createEvent(event);
+					return selectedDevice.createAnnouncement(event);
 			default:
 				if (eventArgs.length == 1){
-					return selectedDevice.createEvent(event);
+					return selectedDevice.createAnnouncement(event);
 				}
 				throw new StoreModelServiceException("event type does not exit", "command invalid");
 		}
