@@ -1,56 +1,64 @@
 package com.cscie97.store.controller;
 
-import com.cscie97.ledger.CommandProcessorException;
-import com.cscie97.store.model.Event;
-import com.cscie97.store.model.Observer;
+import com.cscie97.ledger.Ledger;
+import com.cscie97.ledger.LedgerException;
+import com.cscie97.store.model.*;
 
 public class StoreController implements Observer {
 
+	private StoreModelService storeModelService;
+	private Ledger ledger;
+
+	public StoreController(StoreModelService storeModelService, Ledger ledger) {
+		this.storeModelService = storeModelService;
+		this.ledger = ledger;
+	}
+
 	@Override
-	public void update(Event event) throws com.cscie97.store.model.CommandProcessorException, CommandProcessorException {
+	public void update(Event event) throws StoreModelServiceException, CommandProcessorException, LedgerException, com.cscie97.ledger.CommandProcessorException {
 		switch(event.getEventType()){
 			case "emergency":
-				Emergency emergency = new Emergency(event.getArg0(), event.getArg1(), event.getArg2());
+				Emergency emergency = new Emergency(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService);
 				emergency.execute();
 				break;
 			case "missing-person":
-				MissingPerson missingPerson = new MissingPerson(event.getArg0(), event.getArg1(), event.getArg2());
+				MissingPerson missingPerson = new MissingPerson(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService);
 				missingPerson.execute();
 				break;
 			case "fetch-product":
-				FetchProduct fetchProduct = new FetchProduct(event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3(), event.getArg4(), event.getArg5(), event.getArg6());
+				FetchProduct fetchProduct = new FetchProduct(event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3(), event.getArg4(), event.getArg5(), event.getArg6(), storeModelService);
 				fetchProduct.execute();
 				break;
 			case "basket-event":
-				BasketEvent basketEvent = new BasketEvent(event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3(), event.getArg4(), event.getArg5(), event.getArg6());
+				BasketEvent basketEvent = new BasketEvent(event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3(), event.getArg4(), event.getArg5(), event.getArg6(), storeModelService);
 				basketEvent.execute();
 				break;
 			case "customer-seen":
-				CustomerSeen customerSeen = new CustomerSeen(event.getArg0(), event.getArg1(), event.getArg2());
+				CustomerSeen customerSeen = new CustomerSeen(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService);
 				customerSeen.execute();
 				break;
 			case "broken-glass":
-				BrokenGlass brokenGlass = new BrokenGlass(event.getArg0(), event.getArg1(), event.getArg2());
+				BrokenGlass brokenGlass = new BrokenGlass(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService);
 				brokenGlass.execute();
 				break;
 			case "product-spill":
-				CleaningEvent cleaningEvent = new CleaningEvent(event.getArg0(), event.getArg1(), event.getArg2());
+				CleaningEvent cleaningEvent = new CleaningEvent(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService);
 				cleaningEvent.execute();
 				break;
 			case "enter-store":
-				EnterStore enterStore = new EnterStore(event.getArg0(), event.getArg1(), event.getArg2());
+				EnterStore enterStore = new EnterStore(event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3(), storeModelService, ledger);
 				enterStore.execute();
 				break;
 			case "check-acc-bal":
-				CheckAccountBalance checkAccountBalance = new CheckAccountBalance(event.getArg0(), event.getArg1(), event.getArg2());
+				CheckAccountBalance checkAccountBalance = new CheckAccountBalance(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService, ledger);
 				checkAccountBalance.execute();
 				break;
 			case "checkout":
-				Checkout checkout = new Checkout(event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3());
+				Checkout checkout = new Checkout(event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3(), storeModelService, ledger);
 				checkout.execute();
 				break;
 			case "assist-customer":
-				AssistCustomerToCar assistCustomerToCar = new AssistCustomerToCar(event.getArg0(), event.getArg1(), event.getArg2());
+				AssistCustomerToCar assistCustomerToCar = new AssistCustomerToCar(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService);
 				assistCustomerToCar.execute();
 				break;
 		}

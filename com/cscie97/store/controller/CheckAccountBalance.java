@@ -3,6 +3,7 @@ package com.cscie97.store.controller;
 import com.cscie97.ledger.Ledger;
 import com.cscie97.store.model.CommandProcessor;
 import com.cscie97.store.model.CommandProcessorException;
+import com.cscie97.store.model.StoreModelService;
 
 public class CheckAccountBalance implements Command {
 
@@ -12,10 +13,16 @@ public class CheckAccountBalance implements Command {
 
 	private String aisleId;
 
-	public CheckAccountBalance(String customerId, String storeId, String aisleId) {
+	private StoreModelService storeModelService;
+
+	private Ledger ledger;
+
+	public CheckAccountBalance(String customerId, String storeId, String aisleId, StoreModelService storeModelService, Ledger ledger) {
 		this.customerId = customerId;
 		this.storeId = storeId;
 		this.aisleId = aisleId;
+		this.storeModelService = storeModelService;
+		this.ledger = ledger;
 	}
 
 	/**

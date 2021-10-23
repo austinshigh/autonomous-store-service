@@ -1,6 +1,7 @@
 package com.cscie97.store.model;
 
 import com.cscie97.ledger.CommandProcessorException;
+import com.cscie97.ledger.LedgerException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -759,7 +760,7 @@ public class StoreModelService implements Client{
 	 * @see String
 	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
 	 */
-	public String createEvent(String deviceId, String event) throws StoreModelServiceException, com.cscie97.store.model.CommandProcessorException, CommandProcessorException {
+	public String createEvent(String deviceId, String event) throws StoreModelServiceException, com.cscie97.store.model.CommandProcessorException, CommandProcessorException, LedgerException {
 		String[] eventArgs = event.split(" ");
 		Device selectedDevice = getDevice(deviceId);
 		Event createdEvent;
@@ -777,7 +778,8 @@ public class StoreModelService implements Client{
 			if (eventArgs.length != 4){
 				throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 			}else{
-				createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2], eventArgs[3]);
+				String[] storeAisle = eventArgs[3].split(":");
+				createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2], storeAisle[0], storeAisle[1]);
 			}
 			break;
 			case "checkout":
@@ -840,7 +842,7 @@ public class StoreModelService implements Client{
 	 * @throws com.cscie97.store.model.CommandProcessorException com.cscie97.store.model. command processor exception
 	 * @throws CommandProcessorException com.cscie97.ledger. command processor exception
 	 */
-	public void notifyObservers(Event event) throws com.cscie97.store.model.CommandProcessorException, CommandProcessorException {
+	public void notifyObservers(Event event) throws com.cscie97.store.model.CommandProcessorException, CommandProcessorException, StoreModelServiceException, LedgerException {
 		for (Observer curr : observerArrayList){
 			curr.update(event);
 		}

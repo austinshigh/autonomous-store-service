@@ -1,9 +1,9 @@
 package com.cscie97.store.controller;
 
 
-import com.cscie97.store.model.CommandProcessor;
-import com.cscie97.store.model.CommandProcessorException;
-import com.cscie97.store.model.StoreModelServiceException;
+import com.cscie97.ledger.Ledger;
+import com.cscie97.ledger.LedgerException;
+import com.cscie97.store.model.*;
 
 public class EnterStore implements Command {
 
@@ -13,40 +13,44 @@ public class EnterStore implements Command {
 
 	private String turnstileId;
 
-	public EnterStore(String customerId, String turnstileId, String storeId) {
+	private StoreModelService storeModelService;
+
+	private Ledger ledger;
+
+	public EnterStore(String customerId, String turnstileId, String storeId, String aisleId, StoreModelService storeModelService, Ledger ledger) {
 		this.customerId = customerId;
 		this.turnstileId = turnstileId;
 		this.storeId = storeId;
+		this.storeModelService = storeModelService;
+		this.ledger = ledger;
+
 	}
 
 	/**
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException, com.cscie97.ledger.CommandProcessorException {
+	public void execute() throws CommandProcessorException, StoreModelServiceException, LedgerException {
+		// get customer from storemodelservice
+		Customer customer = storeModelService.getCustomer(customerId);
 		// get customer info from storemodelservice, parse blockchain address
-		String[] customerInfo = CommandProcessor.processCommand("show-customer " + this.customerId).split("\n");
-		String[] addressLine = customerInfo[5].split("'");
-		String blockchainAddress = addressLine[1];
+		String blockchainAddress = customer.getBlockchainAddress();
 
-		// parse customer name from customer info
-		String[] nameLine = customerInfo[2].split("'");
-		String customerName = nameLine[1];
+		// get customer name
+		String customerName = customer.getFirstName();
 
-		// get store from storemodelservice, parse storename
-		String[] store = storeId.split(":");
-		String[] storeId = CommandProcessor.processCommand("show-store " + store[0]).split("\n");
-		String[] storeNameLine = storeId[2].split("=");
-		String storeName = storeNameLine[1];
+		// get store from storemodelservice, get storename
+		Store store = storeModelService.getStore(storeId);
+		String storeName = store.getName();
 
 		// check customer's balance, if balance not positive, alert customer, customer cannot enter turnstile
-		int accountBalance = Integer.parseInt(com.cscie97.ledger.CommandProcessor.processCommand("get-account-balance " + blockchainAddress));
+		int accountBalance = ledger.getAccountBalance(blockchainAddress);
 		if (!(accountBalance > 0)){
-			System.out.println(CommandProcessor.processCommand("create-command " + turnstileId + " command \"Hello " + customerName + ", your blockchain balance is not sufficient to enter the store."));
+			storeModelService.createCommand(turnstileId, "command Hello " + customerName + ", your blockchain balance is not sufficient to enter the store.");
 			return;
 		}
-		System.out.println(accountBalance);
-		System.out.println(CommandProcessor.processCommand("open-turnstile " + turnstileId));
-		System.out.println(CommandProcessor.processCommand("create-command " + turnstileId + " command \"Hello " + customerName + ", welcome to " + storeName + "!\""));
+		System.out.println(storeModelService.openTurnstile(turnstileId));
+		storeModelService.createCommand(turnstileId, " command \"Hello " + customerName + ", welcome to " + storeName + "!\"");
+
 	}
 
 	/**

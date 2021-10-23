@@ -1,7 +1,10 @@
 package com.cscie97.store.controller;
 
+import com.cscie97.ledger.Ledger;
 import com.cscie97.store.model.CommandProcessor;
 import com.cscie97.store.model.CommandProcessorException;
+import com.cscie97.store.model.StoreModelService;
+import com.cscie97.store.model.StoreModelServiceException;
 
 public class CustomerSeen implements Command {
 
@@ -11,18 +14,20 @@ public class CustomerSeen implements Command {
 
 	private String aisleId;
 
-	public CustomerSeen(String customerId, String storeId, String aisleId) {
+	private StoreModelService storeModelService;
+
+	public CustomerSeen(String customerId, String storeId, String aisleId, StoreModelService storeModelService) {
 		this.customerId = customerId;
 		this.storeId = storeId;
 		this.aisleId = aisleId;
+		this.storeModelService = storeModelService;
 	}
-
 
 	/**
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException {
-		System.out.println(CommandProcessor.processCommand("update-customer " + customerId + " location " + storeId + ":" + aisleId));
+	public void execute() throws CommandProcessorException, StoreModelServiceException {
+		System.out.println(storeModelService.updateCustomerLocation(customerId, storeId, aisleId));
 	}
 
 	/**

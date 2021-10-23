@@ -1,7 +1,9 @@
 package com.cscie97.store.controller;
 
+import com.cscie97.ledger.Ledger;
 import com.cscie97.store.model.CommandProcessor;
 import com.cscie97.store.model.CommandProcessorException;
+import com.cscie97.store.model.StoreModelService;
 
 public class AssistCustomerToCar implements Command {
 
@@ -11,10 +13,13 @@ public class AssistCustomerToCar implements Command {
 
 	private String customerId;
 
-	public AssistCustomerToCar(String customerId, String storeId, String aisleId) {
-		this.customerId = customerId;
+	private StoreModelService storeModelService;
+
+	public AssistCustomerToCar(String storeId, String aisleId, String customerId, StoreModelService storeModelService) {
 		this.storeId = storeId;
 		this.aisleId = aisleId;
+		this.customerId = customerId;
+		this.storeModelService = storeModelService;
 	}
 
 	/**

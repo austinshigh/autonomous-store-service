@@ -1,7 +1,10 @@
 package com.cscie97.store.controller;
 
+import com.cscie97.ledger.Ledger;
 import com.cscie97.store.model.CommandProcessor;
 import com.cscie97.store.model.CommandProcessorException;
+import com.cscie97.store.model.StoreModelService;
+import com.cscie97.store.model.StoreModelServiceException;
 
 public class BasketEvent implements Command {
 
@@ -19,7 +22,9 @@ public class BasketEvent implements Command {
 
 	private String quantity;
 
-	public BasketEvent(String customerId, String productId, String inventoryId, String storeId, String aisleId, String shelfId, String quantity) {
+	private StoreModelService storeModelService;
+
+	public BasketEvent(String customerId, String productId, String inventoryId, String storeId, String aisleId, String shelfId, String quantity, StoreModelService storeModelService) {
 		this.customerId = customerId;
 		this.productId = productId;
 		this.inventoryId = inventoryId;
@@ -27,23 +32,17 @@ public class BasketEvent implements Command {
 		this.aisleId = aisleId;
 		this.shelfId = shelfId;
 		this.quantity = quantity;
+		this.storeModelService = storeModelService;
 	}
-
 
 	/**
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException, com.cscie97.ledger.CommandProcessorException {
+	public void execute() throws CommandProcessorException, com.cscie97.ledger.CommandProcessorException, StoreModelServiceException {
 		// get customer info from storemodelservice, parse blockchain address
-		String[] customerInfo = CommandProcessor.processCommand("show-customer " + this.customerId).split("\n");
-		String[] addressLine = customerInfo[5].split("'");
-		String blockchainAddress = addressLine[1];
+		String basketId = storeModelService.getCustomer(customerId).getBasketId();
 
-		// parse customer basketId from customer info
-		String[] basketLine = customerInfo[8].split("=");
-		String basketId = basketLine[1];
-
-		System.out.println(CommandProcessor.processCommand("add-basket-item " + basketId + " product " + productId + " item_count " + quantity));
+		System.out.println(storeModelService.addBasketItem(basketId, productId, quantity));
 
 //		// parse customer name from customer info
 //		String[] nameLine = customerInfo[2].split("'");

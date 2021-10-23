@@ -1,8 +1,9 @@
 package com.cscie97.store.controller;
 
 import com.cscie97.ledger.Ledger;
-import com.cscie97.store.model.CommandProcessor;
-import com.cscie97.store.model.CommandProcessorException;
+import com.cscie97.ledger.LedgerException;
+import com.cscie97.ledger.Transaction;
+import com.cscie97.store.model.*;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -16,68 +17,63 @@ public class Checkout implements Command {
 
 	private String turnstileId;
 
-	private Ledger ledgerService;
+	private StoreModelService storeModelService;
 
-	public Checkout(String customerId, String storeId, String aisleId, String turnstileId) {
+	private Ledger ledger;
+
+	public Checkout(String storeId, String customerId, String aisleId, String turnstileId, StoreModelService storeModelService, Ledger ledger) {
+		this.storeId = storeId;
 		this.customerId = customerId;
 		this.aisleId = aisleId;
-		this.storeId = storeId;
 		this.turnstileId = turnstileId;
+		this.storeModelService = storeModelService;
+		this.ledger = ledger;
 	}
-
 
 	/**
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException, com.cscie97.ledger.CommandProcessorException {
-		// get customer info from storemodelservice, parse blockchain address
-		String[] customerInfo = CommandProcessor.processCommand("show-customer " + this.customerId).split("\n");
-		String[] addressLine = customerInfo[5].split("'");
-		String blockchainAddress = addressLine[1];
+	public void execute() throws CommandProcessorException, com.cscie97.ledger.CommandProcessorException, StoreModelServiceException, LedgerException {
+		// get customer from storemodelservice
+		Customer customer = storeModelService.getCustomer(customerId);
 
-		// parse customer name from customer info
-		String[] nameLine = customerInfo[2].split("'");
-		String customerName = nameLine[1];
+		// get blockchain address
+		String blockchainAddress = customer.getBlockchainAddress();
 
-		// parse customer basketId from customer info
-		String[] basketLine = customerInfo[8].split("=");
-		String basketId = basketLine[1];
+		// get customer name
+		String customerName = customer.getFirstName();
+
+		// get customer basket id
+		String basketId = customer.getBasketId();
 
 		// identify customer
-		System.out.println(CommandProcessor.processCommand("create-command " + turnstileId + " command \"Hello " + customerName + ".\""));
+		storeModelService.createCommand(turnstileId, " command \"Hello " + customerName + ".\"");
 
 		// determine if customer needs assistance carrying bags to car
 		// query basket items, add product weights
 
-		int basketWeight = Integer.parseInt(CommandProcessor.processCommand("compute-basket-weight " + basketId));
+		int basketWeight = Integer.parseInt(storeModelService.computeBasketWeight(basketId));
 		if (basketWeight > 10) {
-			AssistCustomerToCar assistCustomerToCar = new AssistCustomerToCar(storeId, aisleId, customerId);
+			AssistCustomerToCar assistCustomerToCar = new AssistCustomerToCar(storeId, aisleId, customerId, storeModelService);
 			assistCustomerToCar.execute();
 		}
 
 		// compute total cost of items in the customer's basket
-		int basketTotal = Integer.parseInt(CommandProcessor.processCommand("calculate-basket-total " + basketId));
+		int basketTotal = storeModelService.getBasketTotal(basketId);
 
-		int accountBalance = Integer.parseInt(com.cscie97.ledger.CommandProcessor.processCommand("get-account-balance " + blockchainAddress));
+		int accountBalance = ledger.getAccountBalance(blockchainAddress);
 
 		if (basketTotal <= accountBalance) {
 
 			int txId = ThreadLocalRandom.current().nextInt(0, 99999999 + 1);
 			// create blockchain transaction
-			System.out.println("Successful Transaction, Transaction ID: " + Integer.parseInt(com.cscie97.ledger.CommandProcessor.processCommand(
-					"process-transaction " + txId +
-							" amount " + basketTotal +
-							" fee 10 note checkout payer " + blockchainAddress +
-							" receiver " + storeId)));
-			//process-transaction <transaction-id> amount <amount> fee <fee> note <note> payer <account-address> receiver <account-address>
+			Transaction tx = new Transaction(txId, basketTotal, 10, "checkout", blockchainAddress, storeId);
+			ledger.processTransaction(tx);
 
-			// get store from storemodelservice, parse storename
-			String[] store = storeId.split(":");
-			String[] storeId = CommandProcessor.processCommand("show-store " + store[0]).split("\n");
-			String[] storeNameLine = storeId[2].split("=");
-			String storeName = storeNameLine[1];
+			// get storeName from storemodelservice
+			storeModelService.getStore(storeId).getName();
 
-			System.out.println(CommandProcessor.processCommand("open-turnstile " + turnstileId));
+			storeModelService.openTurnstile(turnstileId);
 		}
 		else{
 
@@ -118,24 +114,6 @@ public class Checkout implements Command {
 	 */
 	public void setCustomerId(String customerId) {
 		this.customerId = customerId;
-	}
-
-	/**
-	 * get field
-	 *
-	 * @return ledgerService
-	 */
-	public Ledger getLedgerService() {
-		return this.ledgerService;
-	}
-
-	/**
-	 * set field
-	 *
-	 * @param ledgerService
-	 */
-	public void setLedgerService(Ledger ledgerService) {
-		this.ledgerService = ledgerService;
 	}
 
 	/**

@@ -1,11 +1,15 @@
 package com.cscie97.store.model;
 
+import com.cscie97.ledger.Ledger;
+import com.cscie97.ledger.LedgerException;
+import com.cscie97.ledger.Transaction;
 import com.cscie97.store.controller.StoreController;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +18,7 @@ public class CommandProcessor {
 	private static StoreModelService storeModelService;
 	private static StoreController storeController;
 	private static String[] idArray;
-	private static com.cscie97.ledger.CommandProcessor ledgerCommandProcessor;
+	private static Ledger ledgerService;
 
 		/**
 		 * Compares CLI input to available methods, runs appropriate method.
@@ -58,17 +62,14 @@ public class CommandProcessor {
 									"\ndefine-store <identifier> name <name> address <address>" +
 									"\n address should follow form 'street city state'");
 						}
-						storeModelService = new StoreModelService(commands.get(1));
-						storeController = new StoreController();
-						storeModelService.attach(storeController);
 						// split store location into array for input
 						idArray = commands.get(5).split(", ");
 						try {
-							com.cscie97.ledger.CommandProcessor.processCommand("create-account " + commands.get(1));
+							ledgerService.createAccount(commands.get(1));
 							return ("new store id: " + storeModelService.createStore(commands.get(1), commands.get(3), idArray[0], idArray[1], idArray[2]));
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
-						} catch (com.cscie97.ledger.CommandProcessorException e) {
+						} catch (LedgerException e) {
 							e.printStackTrace();
 						}
 					case "show-store":
@@ -216,11 +217,19 @@ public class CommandProcessor {
 							registered = true;
 						}
 						try {
-							com.cscie97.ledger.CommandProcessor.processCommand("create-account " + commands.get(11));
+							ledgerService.createAccount(commands.get(11));
+							// transfer 200 units from master account
+							Transaction tx = new Transaction(ThreadLocalRandom.current().nextInt(0, 99999999 + 1),
+									200,
+									10,
+									"new account",
+									"master",
+									commands.get(11));
+							ledgerService.processTransaction(tx);
 							return("customer id: " + storeModelService.createCustomer(commands.get(1), commands.get(3), commands.get(5), registered, commands.get(9), commands.get(11)));
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
-						} catch (com.cscie97.ledger.CommandProcessorException e) {
+						} catch (LedgerException e) {
 							e.printStackTrace();
 						}
 					case "show-customer":
@@ -410,7 +419,7 @@ public class CommandProcessor {
 							return(storeModelService.createEvent(commands.get(1), commands.get(3)));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
-						} catch (com.cscie97.ledger.CommandProcessorException e) {
+						} catch (com.cscie97.ledger.CommandProcessorException | LedgerException e) {
 							e.printStackTrace();
 						}
 					case "create-command":
@@ -478,8 +487,11 @@ public class CommandProcessor {
 	 */
 	public void processCommandFile(String file) {
 		try {
-			ledgerCommandProcessor = new com.cscie97.ledger.CommandProcessor();
-			ledgerCommandProcessor.processCommand("create-ledger test description storeLedger seed harvardExt");
+			ledgerService = new Ledger("test", "testService", "controller");
+			ledgerService.fundLedger();
+			storeModelService = new StoreModelService("authToken");
+			storeController = new StoreController(storeModelService,ledgerService);
+			storeModelService.attach(storeController);
 			// get script file in test folder specified as parameter
 			File myObj = new File("com/cscie97/store/test/" + file);
 			Scanner myReader = new Scanner(myObj);
@@ -499,7 +511,7 @@ public class CommandProcessor {
 			}
 			// close reader
 			myReader.close();
-		} catch (FileNotFoundException | com.cscie97.ledger.CommandProcessorException e) {
+		} catch (FileNotFoundException | LedgerException e) {
 			// if file not found, print exception
 			System.out.println(e);
 		}

@@ -1,5 +1,8 @@
 package com.cscie97.store.controller;
 
+import com.cscie97.ledger.Ledger;
+import com.cscie97.store.model.StoreModelService;
+
 public class CleaningEvent implements Command {
 
 	private String storeId;
@@ -8,10 +11,13 @@ public class CleaningEvent implements Command {
 
 	private String aisleId;
 
-	public CleaningEvent(String storeId, String productId, String aisleId) {
+	private StoreModelService storeModelService;
+
+	public CleaningEvent(String storeId, String productId, String aisleId, StoreModelService storeModelService) {
 		this.storeId = storeId;
 		this.productId = productId;
 		this.aisleId = aisleId;
+		this.storeModelService = storeModelService;
 	}
 
 	/**

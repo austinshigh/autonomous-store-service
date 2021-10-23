@@ -1,16 +1,12 @@
 package com.cscie97.store.controller;
 
+import com.cscie97.ledger.Ledger;
 import com.cscie97.store.model.CommandProcessor;
 import com.cscie97.store.model.CommandProcessorException;
+import com.cscie97.store.model.StoreModelService;
+import com.cscie97.store.model.StoreModelServiceException;
 
 public class MissingPerson implements Command {
-
-	public MissingPerson(String storeId, String customerId, String deviceId) {
-		this.storeId = storeId;
-		this.customerId = customerId;
-		this.deviceId = deviceId;
-	}
-
 
 	private String storeId;
 
@@ -18,16 +14,22 @@ public class MissingPerson implements Command {
 
 	private String deviceId;
 
+	private StoreModelService storeModelService;
+
+	public MissingPerson(String storeId, String customerId, String deviceId, StoreModelService storeModelService) {
+		this.storeId = storeId;
+		this.customerId = customerId;
+		this.deviceId = deviceId;
+		this.storeModelService = storeModelService;
+	}
 
 	/**
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException {
-		String[] customerInfo = CommandProcessor.processCommand("show-customer " + this.customerId).split("\n");
-		String[] aisleLine = customerInfo[11].split("'");
-		String aisleNumber = aisleLine[1];
+	public void execute() throws CommandProcessorException, StoreModelServiceException {
+		String aisleNumber = storeModelService.getCustomer(customerId).getLocation().getAisleNumber();
 
-		System.out.println(CommandProcessor.processCommand("create-event " + deviceId + " event \"customer-found in aisle: " + aisleNumber + "\""));
+		storeModelService.createCommand(deviceId, " event \"customer-found in aisle: " + aisleNumber + "\"");
 	}
 
 	/**

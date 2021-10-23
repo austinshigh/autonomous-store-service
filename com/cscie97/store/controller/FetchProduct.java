@@ -1,18 +1,9 @@
 package com.cscie97.store.controller;
 
-import com.cscie97.store.model.CommandProcessor;
-import com.cscie97.store.model.CommandProcessorException;
+import com.cscie97.ledger.Ledger;
+import com.cscie97.store.model.*;
 
 public class FetchProduct implements Command {
-	public FetchProduct(String customerId, String productId, String inventoryId, String storeId, String aisleId, String shelfId, String quantity) {
-		this.customerId = customerId;
-		this.productId = productId;
-		this.inventoryId = inventoryId;
-		this.storeId = storeId;
-		this.aisleId = aisleId;
-		this.shelfId = shelfId;
-		this.quantity = quantity;
-	}
 
 	private String customerId;
 
@@ -28,26 +19,31 @@ public class FetchProduct implements Command {
 
 	private String quantity;
 
+	private StoreModelService storeModelService;
+
+	public FetchProduct(String customerId, String productId, String inventoryId, String storeId, String aisleId, String shelfId, String quantity, StoreModelService storeModelService) {
+		this.customerId = customerId;
+		this.productId = productId;
+		this.inventoryId = inventoryId;
+		this.storeId = storeId;
+		this.aisleId = aisleId;
+		this.shelfId = shelfId;
+		this.quantity = quantity;
+		this.storeModelService = storeModelService;
+	}
 
 	/**
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException {
-//		create-event MICROPHONE001 store-location STORE001 event "fetch-product
-//		CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 3"
+	public void execute() throws CommandProcessorException, StoreModelServiceException {
 
-		// get customer info from storemodelservice, parse blockchain address
-		String[] customerInfo = CommandProcessor.processCommand("show-customer " + this.customerId).split("\n");
-		String[] aisleNumber = customerInfo[11].split("'");
-		String customerAisle = aisleNumber[1];
+		String customerAisle = storeModelService.getCustomer(customerId).getLocation().getAisleNumber();
 
-		// find robot closest to product being fetched
-		String[] nearestRobotInfo = CommandProcessor.processCommand("find-nearest-robot " + storeId + " aisle " + aisleId).split(":");
-		String robotId = nearestRobotInfo[0];
+		String robotId = storeModelService.findNearestRobot(storeId, aisleId);
 
-		System.out.println(CommandProcessor.processCommand("create-command " + robotId + " message \"fetch " + quantity + " of " + productId +
+		storeModelService.createCommand(robotId, " message \"fetch " + quantity + " of " + productId +
 				" from aisle " + aisleId + " and shelf " + shelfId + " and bring to customer " +
-				"" + customerId + " in aisle " + customerAisle + "\""));
+				"" + customerId + " in aisle " + customerAisle + "\"");
 
 	}
 

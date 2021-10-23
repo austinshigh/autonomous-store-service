@@ -79,7 +79,7 @@ public class Ledger {
             }else{
                 // create account set balance to 0
                 newAcct = new Account(address);
-                newAcct.setBalance(100);
+                newAcct.setBalance(0);
             }
             // if valid address, create new account
             HashMap<String, Account> genAcctBalanceMap = currentBlock.getAccountBalanceMap();

@@ -1,14 +1,11 @@
 package com.cscie97.store.controller;
 
+import com.cscie97.ledger.Ledger;
 import com.cscie97.store.model.CommandProcessor;
 import com.cscie97.store.model.CommandProcessorException;
+import com.cscie97.store.model.StoreModelService;
 
 public class BrokenGlass implements Command {
-	public BrokenGlass(String storeId, String aisleId, String deviceId) {
-		this.storeId = storeId;
-		this.aisleId = aisleId;
-		this.deviceId = deviceId;
-	}
 
 	private String storeId;
 
@@ -16,6 +13,14 @@ public class BrokenGlass implements Command {
 
 	private String deviceId;
 
+	private StoreModelService storeModelService;
+
+	public BrokenGlass(String storeId, String aisleId, String deviceId, StoreModelService storeModelService) {
+		this.storeId = storeId;
+		this.aisleId = aisleId;
+		this.deviceId = deviceId;
+		this.storeModelService = storeModelService;
+	}
 
 	/**
 	 * @see Command#execute()

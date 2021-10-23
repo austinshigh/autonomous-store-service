@@ -1,27 +1,37 @@
 package com.cscie97.store.controller;
 
+import com.cscie97.ledger.Ledger;
 import com.cscie97.store.model.CommandProcessor;
 import com.cscie97.store.model.CommandProcessorException;
+import com.cscie97.store.model.StoreModelService;
+import com.cscie97.store.model.StoreModelServiceException;
 
 public class Emergency implements Command {
 
-	private String storeId;
-
 	private String emergencyType;
+
+	private String storeId;
 
 	private String aisleId;
 
-	public Emergency(String emergencyType, String storeId, String aisleId) {
+	private StoreModelService storeModelService;
+
+	public Emergency(String emergencyType, String storeId, String aisleId, StoreModelService storeModelService) {
 		this.emergencyType = emergencyType;
 		this.storeId = storeId;
 		this.aisleId = aisleId;
+		this.storeModelService = storeModelService;
 	}
 
 	/**
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException {
-		System.out.println(CommandProcessor.processCommand("open-all-turnstiles " + storeId));
+	public void execute() throws CommandProcessorException, StoreModelServiceException {
+		storeModelService.openAllTurnstiles(storeId);
+		String robotId = storeModelService.findNearestRobot(storeId, aisleId);
+
+		storeModelService.createCommand(robotId, "command tend to emergency in aisle " + aisleId);
+		// command rest to assist customers
 	}
 
 	/**
