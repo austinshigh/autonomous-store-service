@@ -7,18 +7,18 @@ import com.cscie97.store.model.StoreModelService;
 
 public class AssistCustomerToCar implements Command {
 
+	private String customerId;
+
 	private String storeId;
 
 	private String aisleId;
 
-	private String customerId;
-
 	private StoreModelService storeModelService;
 
-	public AssistCustomerToCar(String storeId, String aisleId, String customerId, StoreModelService storeModelService) {
+	public AssistCustomerToCar(String customerId, String storeId, String aisleId, StoreModelService storeModelService) {
+		this.customerId = customerId;
 		this.storeId = storeId;
 		this.aisleId = aisleId;
-		this.customerId = customerId;
 		this.storeModelService = storeModelService;
 	}
 

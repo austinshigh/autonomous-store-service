@@ -1,9 +1,8 @@
 package com.cscie97.store.controller;
 
 import com.cscie97.ledger.Ledger;
-import com.cscie97.store.model.CommandProcessor;
-import com.cscie97.store.model.CommandProcessorException;
-import com.cscie97.store.model.StoreModelService;
+import com.cscie97.ledger.LedgerException;
+import com.cscie97.store.model.*;
 
 public class CheckAccountBalance implements Command {
 
@@ -28,23 +27,25 @@ public class CheckAccountBalance implements Command {
 	/**
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException, com.cscie97.ledger.CommandProcessorException {
-		// get customer info from storemodelservice, parse blockchain address
-		String[] customerInfo = CommandProcessor.processCommand("show-customer " + this.customerId).split("\n");
-		String[] addressLine = customerInfo[5].split("'");
-		String blockchainAddress = addressLine[1];
+	public void execute() throws CommandProcessorException, com.cscie97.ledger.CommandProcessorException, StoreModelServiceException, LedgerException {
+		// get customer from store model service
+		Customer customer = storeModelService.getCustomer(customerId);
 
-		// parse customer basketId from customer info
-		String[] basketLine = customerInfo[8].split("=");
-		String basketId = basketLine[1];
+		// get blockchain address
+		String blockchainAddress = customer.getBlockchainAddress();
+
+		// get customer basket id
+		String basketId = customer.getBasketId();
 
 		// compute total cost of items in the customer's basket
-		int basketTotal = Integer.parseInt(CommandProcessor.processCommand("calculate-basket-total " + basketId));
-		String[] nearestSpeakerInfo = CommandProcessor.processCommand("find-nearest-speaker " + storeId + " aisle " + aisleId).split(":");
-		String speakerId = nearestSpeakerInfo[0];
+		int basketTotal = storeModelService.getBasketTotal(basketId);
+
+		// findd nearest speaker
+		String[] speakerInfo = storeModelService.findNearestSpeaker(storeId, aisleId).split(":");
+		String speakerId = speakerInfo[0];
 
 		// query user's account balance
-		int accountBalance = Integer.parseInt(com.cscie97.ledger.CommandProcessor.processCommand("get-account-balance " + blockchainAddress));
+		int accountBalance = ledger.getAccountBalance(blockchainAddress);
 
 		String moreOrLess = "more";
 
@@ -52,10 +53,9 @@ public class CheckAccountBalance implements Command {
 			moreOrLess = "less";
 		}
 
-		System.out.println(CommandProcessor.processCommand("create-command " + speakerId + " message \"basket total is " +
+		System.out.println(storeModelService.createCommand(speakerId, " message \"basket total is " +
 				basketTotal + " which is " +
 				moreOrLess + " than your account balance\""));
-
 
 	}
 

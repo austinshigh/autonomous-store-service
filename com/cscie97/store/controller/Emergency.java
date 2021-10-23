@@ -27,8 +27,9 @@ public class Emergency implements Command {
 	 * @see Command#execute()
 	 */
 	public void execute() throws CommandProcessorException, StoreModelServiceException {
-		storeModelService.openAllTurnstiles(storeId);
-		String robotId = storeModelService.findNearestRobot(storeId, aisleId);
+		// find nearest robot
+		String[] robotLocation = storeModelService.findNearestRobot(storeId, aisleId).split(":");
+		String robotId = robotLocation[0];
 
 		storeModelService.createCommand(robotId, "command tend to emergency in aisle " + aisleId);
 		// command rest to assist customers

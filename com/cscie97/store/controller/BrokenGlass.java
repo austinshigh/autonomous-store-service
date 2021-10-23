@@ -4,6 +4,7 @@ import com.cscie97.ledger.Ledger;
 import com.cscie97.store.model.CommandProcessor;
 import com.cscie97.store.model.CommandProcessorException;
 import com.cscie97.store.model.StoreModelService;
+import com.cscie97.store.model.StoreModelServiceException;
 
 public class BrokenGlass implements Command {
 
@@ -25,16 +26,14 @@ public class BrokenGlass implements Command {
 	/**
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException {
+	public void execute() throws CommandProcessorException, StoreModelServiceException {
 
-		//System.out.println(CommandProcessor.processCommand("find-nearest-robot " + storeId + " aisle " + aisleId));
-
-		// find robot closest to broken glass incident
-		String[] nearestRobotInfo = CommandProcessor.processCommand("find-nearest-robot " + storeId + " aisle " + aisleId).split(":");
-		String robotId = nearestRobotInfo[0];
+		// find nearest robot
+		String[] robotLocation = storeModelService.findNearestRobot(storeId, aisleId).split(":");
+		String robotId = robotLocation[0];
 
 		// instruct robot to clean broken glass
-		System.out.println(CommandProcessor.processCommand("create-command " + robotId + " command \"clean-up glass aisle " + aisleId + "\""));
+		System.out.println(storeModelService.createCommand(robotId, " command \"clean-up glass aisle " + aisleId + "\""));
 
 	}
 

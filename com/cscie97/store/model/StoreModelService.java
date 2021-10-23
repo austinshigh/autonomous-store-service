@@ -812,7 +812,8 @@ public class StoreModelService implements Client{
 				if (eventArgs.length != 3){
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 				}else{
-					createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2]);
+					String[] storeAisleShelf = eventArgs[1].split(":");
+					createdEvent = new Event(eventArgs[0], storeAisleShelf[0], storeAisleShelf[1], eventArgs[2]);
 				}
 				break;
 			case "broken-glass":
@@ -832,7 +833,6 @@ public class StoreModelService implements Client{
 				}
 				throw new StoreModelServiceException("event type does not exit", "command invalid");
 		}
-		notifyObservers(createdEvent);
 		return("Observers notified");
 	}
 	/**

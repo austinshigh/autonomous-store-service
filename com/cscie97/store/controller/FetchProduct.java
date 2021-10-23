@@ -39,11 +39,13 @@ public class FetchProduct implements Command {
 
 		String customerAisle = storeModelService.getCustomer(customerId).getLocation().getAisleNumber();
 
-		String robotId = storeModelService.findNearestRobot(storeId, aisleId);
+		// find nearest robot
+		String[] robotLocation = storeModelService.findNearestRobot(storeId, aisleId).split(":");
+		String robotId = robotLocation[0];
 
-		storeModelService.createCommand(robotId, " message \"fetch " + quantity + " of " + productId +
+		System.out.println(storeModelService.createCommand(robotId, " message \"fetch " + quantity + " of " + productId +
 				" from aisle " + aisleId + " and shelf " + shelfId + " and bring to customer " +
-				"" + customerId + " in aisle " + customerAisle + "\"");
+				"" + customerId + " in aisle " + customerAisle + "\""));
 
 	}
 

@@ -9,9 +9,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Checkout implements Command {
 
-	private String storeId;
-
 	private String customerId;
+
+	private String storeId;
 
 	private String aisleId;
 
@@ -21,7 +21,7 @@ public class Checkout implements Command {
 
 	private Ledger ledger;
 
-	public Checkout(String storeId, String customerId, String aisleId, String turnstileId, StoreModelService storeModelService, Ledger ledger) {
+	public Checkout(String customerId, String storeId, String aisleId, String turnstileId, StoreModelService storeModelService, Ledger ledger) {
 		this.storeId = storeId;
 		this.customerId = customerId;
 		this.aisleId = aisleId;
@@ -54,7 +54,7 @@ public class Checkout implements Command {
 
 		int basketWeight = Integer.parseInt(storeModelService.computeBasketWeight(basketId));
 		if (basketWeight > 10) {
-			AssistCustomerToCar assistCustomerToCar = new AssistCustomerToCar(storeId, aisleId, customerId, storeModelService);
+			AssistCustomerToCar assistCustomerToCar = new AssistCustomerToCar(customerId, storeId, aisleId, storeModelService);
 			assistCustomerToCar.execute();
 		}
 

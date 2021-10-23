@@ -27,9 +27,14 @@ public class MissingPerson implements Command {
 	 * @see Command#execute()
 	 */
 	public void execute() throws CommandProcessorException, StoreModelServiceException {
+		// get customer aisle
 		String aisleNumber = storeModelService.getCustomer(customerId).getLocation().getAisleNumber();
 
-		storeModelService.createCommand(deviceId, " event \"customer-found in aisle: " + aisleNumber + "\"");
+		// get speaker closest to customer
+		String[] speakerLocation = storeModelService.findNearestSpeaker(storeId, aisleNumber).split(":");
+		String speakerId = speakerLocation[0];
+
+		storeModelService.createCommand(speakerId, "  \"customer-found in aisle: " + aisleNumber + "\"");
 	}
 
 	/**
