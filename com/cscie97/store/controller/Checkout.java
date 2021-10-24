@@ -7,6 +7,11 @@ import com.cscie97.store.model.*;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ *  Checks out customer,
+ *  if balance is sufficient,
+ *  transaction is performed and turnstile is opened
+ */
 public class Checkout implements Command {
 
 	private String customerId;
@@ -31,9 +36,22 @@ public class Checkout implements Command {
 	}
 
 	/**
+	 * Executes the rule logic for the command
+	 *
+	 *  Identifies customer <customer>
+	 *  2. computes the total cost of
+	 *  items in the basket
+	 *  3. creates transaction
+	 *  4. submits the transaction to the
+	 *  blockchain
+	 *  5. opens turnstile
+	 *  6. creates goodbye message :"goodbye
+	 *  <customer_name>, thanks for shopping at
+	 *  <store_name>!"
+	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException, com.cscie97.ledger.CommandProcessorException, StoreModelServiceException, LedgerException {
+	public void execute() throws StoreModelServiceException, LedgerException {
 		// get customer from storemodelservice
 		Customer customer = storeModelService.getCustomer(customerId);
 
@@ -47,7 +65,7 @@ public class Checkout implements Command {
 		String basketId = customer.getBasketId();
 
 		// identify customer
-		storeModelService.createCommand(turnstileId, " command \"Hello " + customerName + ".\"");
+		storeModelService.createAnnouncement(turnstileId, "Hello " + customerName + ".");
 
 		// determine if customer needs assistance carrying bags to car
 		// query basket items, add product weights
@@ -71,12 +89,15 @@ public class Checkout implements Command {
 			ledger.processTransaction(tx);
 
 			// get storeName from storemodelservice
-			storeModelService.getStore(storeId).getName();
+			String storeName = storeModelService.getStore(storeId).getName();
 
-			storeModelService.openTurnstile(turnstileId);
+			System.out.println(storeModelService.openTurnstile(turnstileId));
+
+			System.out.println(storeModelService.createAnnouncement(turnstileId, "goodbye " + customerName + ", thanks for shopping at " + storeName + "!"));
 		}
 		else{
-
+			System.out.println(storeModelService.createAnnouncement(turnstileId, "sorry " + customerName + ", you have insufficient funds, please " +
+					"return " + (basketTotal - accountBalance) + " currency units worth of items order to checkout."));
 		}
 	}
 

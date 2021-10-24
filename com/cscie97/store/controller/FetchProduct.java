@@ -1,8 +1,13 @@
 package com.cscie97.store.controller;
 
-import com.cscie97.ledger.Ledger;
+
 import com.cscie97.store.model.*;
 
+/**
+ *  Commmands robot to fetch product for customer,
+ *  triggered when customer speaks into microphone and asks for product
+ *
+ */
 public class FetchProduct implements Command {
 
 	private String customerId;
@@ -33,9 +38,16 @@ public class FetchProduct implements Command {
 	}
 
 	/**
+	 * Executes the rule logic for the command
+	 *
+	 * robot command: fetch <number> of
+	 * <product> from <aisle> and <shelf>
+	 * and bring to customer <customer> in
+	 * aisle <customer_location>
+	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException, StoreModelServiceException {
+	public void execute() throws StoreModelServiceException {
 
 		String customerAisle = storeModelService.getCustomer(customerId).getLocation().getAisleNumber();
 

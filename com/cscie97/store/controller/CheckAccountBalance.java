@@ -4,6 +4,11 @@ import com.cscie97.ledger.Ledger;
 import com.cscie97.ledger.LedgerException;
 import com.cscie97.store.model.*;
 
+/**
+ *  Checks the account balance of a customer,
+ *  returns an announcement with the customer's balance to the nearest speaker
+ *
+ */
 public class CheckAccountBalance implements Command {
 
 	private String customerId;
@@ -25,9 +30,20 @@ public class CheckAccountBalance implements Command {
 	}
 
 	/**
+	 * Executes the rule logic for the command
+	 *
+	 * 1. computes the value of items in
+	 * the basket
+	 * 2. checks account balance
+	 * 3. speaker announces: "total value of
+	 * basket items is <value>
+	 * which is (more | less) than
+	 * you account balance of
+	 * <balance>
+	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException, com.cscie97.ledger.CommandProcessorException, StoreModelServiceException, LedgerException {
+	public void execute() throws StoreModelServiceException, LedgerException {
 		// get customer from store model service
 		Customer customer = storeModelService.getCustomer(customerId);
 
@@ -40,22 +56,25 @@ public class CheckAccountBalance implements Command {
 		// compute total cost of items in the customer's basket
 		int basketTotal = storeModelService.getBasketTotal(basketId);
 
-		// findd nearest speaker
+		// find nearest speaker
 		String[] speakerInfo = storeModelService.findNearestSpeaker(storeId, aisleId).split(":");
 		String speakerId = speakerInfo[0];
 
 		// query user's account balance
 		int accountBalance = ledger.getAccountBalance(blockchainAddress);
 
-		String moreOrLess = "more";
+		String moreOrLess;
 
-		if (accountBalance >= basketTotal){
+		// if users account balance is greater than total pass string less
+		if (accountBalance >= basketTotal)
 			moreOrLess = "less";
-		}
+		else
+			moreOrLess = "more";
 
-		System.out.println(storeModelService.createCommand(speakerId, " message \"basket total is " +
+
+		System.out.println(storeModelService.createAnnouncement(speakerId, "basket total is " +
 				basketTotal + " which is " +
-				moreOrLess + " than your account balance\""));
+				moreOrLess + " than your account balance"));
 
 	}
 

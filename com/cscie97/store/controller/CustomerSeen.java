@@ -1,11 +1,12 @@
 package com.cscie97.store.controller;
 
-import com.cscie97.ledger.Ledger;
-import com.cscie97.store.model.CommandProcessor;
-import com.cscie97.store.model.CommandProcessorException;
 import com.cscie97.store.model.StoreModelService;
 import com.cscie97.store.model.StoreModelServiceException;
 
+/**
+ *  Triggered when a camera sees a customer, triggers an update to the customer's location
+ *
+ */
 public class CustomerSeen implements Command {
 
 	private String customerId;
@@ -24,9 +25,13 @@ public class CustomerSeen implements Command {
 	}
 
 	/**
+	 * Executes the rule logic for the command
+	 *
+	 * Update customer location <aisle>
+	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException, StoreModelServiceException {
+	public void execute() throws StoreModelServiceException {
 		System.out.println(storeModelService.updateCustomerLocation(customerId, storeId, aisleId));
 	}
 

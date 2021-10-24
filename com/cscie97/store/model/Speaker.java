@@ -1,5 +1,7 @@
 package com.cscie97.store.model;
 
+import java.util.ArrayList;
+
 /**
  *  Represents a speaker in a store.
  *
@@ -17,11 +19,14 @@ public class Speaker implements Appliance {
 
 	private Location location;
 
+	private ArrayList<Event> eventLogger;
+
 	public Speaker(String id, String name, String deviceType, Location location) {
 		this.id = id;
 		this.name = name;
 		this.deviceType = deviceType;
 		this.location = location;
+		this.eventLogger = new ArrayList<Event>();
 	}
 
 	/**
@@ -122,6 +127,28 @@ public class Speaker implements Appliance {
 	 */
 	public Location getLocation() {
 		return this.location;
+	}
+
+	/**
+	 * get event logger
+	 *
+	 * @return {@link ArrayList}
+	 * @see ArrayList
+	 * @see Event
+	 */
+	@Override
+	public ArrayList<Event> getEventLogger() {
+		return eventLogger;
+	}
+
+	/**
+	 * set event logger
+	 *
+	 * @param eventLogger eventLogger
+	 */
+	@Override
+	public void setEventLogger(ArrayList<Event> eventLogger) {
+		this.eventLogger = eventLogger;
 	}
 
 	/**

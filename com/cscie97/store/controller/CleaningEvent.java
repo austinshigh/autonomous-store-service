@@ -3,6 +3,10 @@ package com.cscie97.store.controller;
 import com.cscie97.store.model.StoreModelService;
 import com.cscie97.store.model.StoreModelServiceException;
 
+/**
+ *  Commands robot to execute cleaning event in specified aisle
+ *
+ */
 public class CleaningEvent implements Command {
 
 	private String storeId;
@@ -21,6 +25,11 @@ public class CleaningEvent implements Command {
 	}
 
 	/**
+	 * Executes the rule logic for the command
+	 *
+	 * Robot: "clean up <product> in
+	 * <aisle>"
+	 *
 	 * @see Command#execute()
 	 */
 	public void execute() throws StoreModelServiceException {
@@ -29,10 +38,11 @@ public class CleaningEvent implements Command {
 		String[] robotLocation = storeModelService.findNearestRobot(storeId, aisleId).split(":");
 		String robotId = robotLocation[0];
 
+		// get store name
 		String productName = storeModelService.getProduct(productId).getName();
 
 		// instruct robot to clean broken glass
-		System.out.println(storeModelService.createCommand(robotId, " command \"clean-up " + productName + " spill in aisle " + aisleId + "\""));
+		System.out.println(storeModelService.createAnnouncement(robotId, "clean-up " + productName + " spill in aisle " + aisleId));
 	}
 
 	/**
@@ -87,5 +97,23 @@ public class CleaningEvent implements Command {
 	 */
 	public void setAisleId(String aisleId) {
 		this.aisleId = aisleId;
+	}
+
+	/**
+	 * get field
+	 *
+	 * @return storeModelService
+	 */
+	public StoreModelService getStoreModelService() {
+		return this.storeModelService;
+	}
+
+	/**
+	 * set field
+	 *
+	 * @param storeModelService
+	 */
+	public void setStoreModelService(StoreModelService storeModelService) {
+		this.storeModelService = storeModelService;
 	}
 }

@@ -1,6 +1,11 @@
 package com.cscie97.store.model;
 
+import java.util.ArrayList;
+
 /**
+ *   Represents a device   Implemented by Sensors and Appliances
+ *
+ */ /**
  *  Represents a device
  *
  *  Implemented by Sensors and Appliances
@@ -52,5 +57,21 @@ public interface Device {
 	 * @return location
 	 */
 	public Location getLocation();
+
+	/**
+	 * get event logger
+	 *
+	 * @return {@link ArrayList}
+	 * @see ArrayList
+	 * @see Event
+	 */
+	public abstract ArrayList<Event> getEventLogger();
+
+	/**
+	 * set event logger
+	 *
+	 * @param eventLogger eventLogger
+	 */
+	public abstract void setEventLogger(ArrayList<Event> eventLogger);
 
 }

@@ -420,7 +420,7 @@ public class CommandProcessor {
 							return(storeModelService.createEvent(commands.get(1), commands.get(3)));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
-						} catch (com.cscie97.ledger.CommandProcessorException | LedgerException e) {
+						} catch (LedgerException e) {
 							e.printStackTrace();
 						}
 					case "create-command":

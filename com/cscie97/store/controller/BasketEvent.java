@@ -3,6 +3,11 @@ package com.cscie97.store.controller;
 import com.cscie97.ledger.Ledger;
 import com.cscie97.store.model.*;
 
+/**
+ *  Command which updates the quantity in a user's basket,
+ *  and the shelf in which they added or removed a product from.
+ *
+ */
 public class BasketEvent implements Command {
 
 	private String customerId;
@@ -33,9 +38,19 @@ public class BasketEvent implements Command {
 	}
 
 	/**
+	 * Executes the rule logic for the command
+	 *
+	 *
+	 * 1. Add/remove the product
+	 * to/from <customer> basket
+	 * 2. Remove/Add product from
+	 * <aisle:shelf>
+	 * 3. robot: perform task restock
+	 * for <aisle:shelf> and <product>
+	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException, com.cscie97.ledger.CommandProcessorException, StoreModelServiceException {
+	public void execute() throws StoreModelServiceException {
 		// get customer from storemodelservice
 		Customer customer = storeModelService.getCustomer(customerId);
 

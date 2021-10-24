@@ -4,6 +4,11 @@ import com.cscie97.ledger.Ledger;
 import com.cscie97.ledger.LedgerException;
 import com.cscie97.store.model.*;
 
+/**
+ *  Observes the StoreModelService. When StoreModelService notify's StoreController of new event,
+ *  StoreController instantiates the appropriate command, and executes the command's logic
+ *
+ */
 public class StoreController implements Observer {
 
 	private StoreModelService storeModelService;
@@ -14,8 +19,18 @@ public class StoreController implements Observer {
 		this.ledger = ledger;
 	}
 
+
+	/**
+	 * Creates command and executes command's logic
+	 *
+	 * Called by Subject when Observers are notified
+	 *
+	 * @param event event
+	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
+	 * @throws LedgerException com.cscie97.ledger. ledger exception
+	 */
 	@Override
-	public void update(Event event) throws StoreModelServiceException, CommandProcessorException, LedgerException, com.cscie97.ledger.CommandProcessorException {
+	public void update(Event event) throws StoreModelServiceException, LedgerException {
 		switch(event.getEventType()){
 			case "emergency":
 				Emergency emergency = new Emergency(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService);

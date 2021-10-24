@@ -1,6 +1,11 @@
 package com.cscie97.store.model;
 
+import java.util.ArrayList;
+
 /**
+ *   Represents a microphone in a store   Cameras track user locations and listen to customer questions   microphone stores its own location, as well as its own type 'microphone'
+ *
+ */ /**
  *  Represents a microphone in a store
  *
  *  Cameras track user locations and listen to customer questions
@@ -18,11 +23,14 @@ public class Microphone implements Sensor {
 
 	private Location location;
 
+	private ArrayList<Event> eventLogger;
+
 	public Microphone(String id, String name, String deviceType, Location location) {
 		this.id = id;
 		this.name = name;
 		this.deviceType = deviceType;
 		this.location = location;
+		this.eventLogger = new ArrayList<Event>();
 	}
 
 	/**
@@ -127,6 +135,28 @@ public class Microphone implements Sensor {
 	 */
 	public Location getLocation() {
 		return this.location;
+	}
+
+	/**
+	 * get event logger
+	 *
+	 * @return {@link ArrayList}
+	 * @see ArrayList
+	 * @see Event
+	 */
+	@Override
+	public ArrayList<Event> getEventLogger() {
+		return this.eventLogger;
+	}
+
+	/**
+	 * set event logger
+	 *
+	 * @param eventLogger eventLogger
+	 */
+	@Override
+	public void setEventLogger(ArrayList<Event> eventLogger) {
+		this.eventLogger = eventLogger;
 	}
 
 	/**

@@ -1,5 +1,7 @@
 package com.cscie97.store.model;
 
+import java.util.ArrayList;
+
 /**
  *  Represents a camera in a store
  *
@@ -18,12 +20,15 @@ public class Camera implements Sensor {
 
 	private Location location;
 
+	private ArrayList<Event> eventLogger;
+
 
 	public Camera(String id, String name, String type, Location location) {
 		this.id = id;
 		this.name = name;
 		this.deviceType = type;
 		this.location = location;
+		this.eventLogger = new ArrayList<Event>();
 	}
 
 	/**
@@ -130,6 +135,28 @@ public class Camera implements Sensor {
 	 */
 	public Location getLocation() {
 		return this.location;
+	}
+
+	/**
+	 * get event logger
+	 *
+	 * @return {@link ArrayList}
+	 * @see ArrayList
+	 * @see Event
+	 */
+	@Override
+	public ArrayList<Event> getEventLogger() {
+		return this.eventLogger;
+	}
+
+	/**
+	 * set event logger
+	 *
+	 * @param eventLogger eventLogger
+	 */
+	@Override
+	public void setEventLogger(ArrayList<Event> eventLogger) {
+		this.eventLogger = eventLogger;
 	}
 
 	/**

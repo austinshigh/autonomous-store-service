@@ -750,17 +750,20 @@ public class StoreModelService implements Client{
 		return basketMap.get(basketId);
 	}
 
+
 	/**
-	 * Creates an event that is sent to a device,
-	 * helper method for device's createEvent()
+	 * Parses event string, instantiates event,
+	 * adds event to list in appropriate device for logging,
+	 * notifies observers that event has been created
 	 *
 	 * @param deviceId deviceId
 	 * @param event event
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
+	 * @throws LedgerException com.cscie97.ledger. ledger exception
 	 */
-	public String createEvent(String deviceId, String event) throws StoreModelServiceException, com.cscie97.store.model.CommandProcessorException, CommandProcessorException, LedgerException {
+	public String createEvent(String deviceId, String event) throws StoreModelServiceException, LedgerException {
 		String[] eventArgs = event.split(" ");
 		Device selectedDevice = getDevice(deviceId);
 		Event createdEvent;
@@ -824,17 +827,20 @@ public class StoreModelService implements Client{
 					createdEvent = new Event(eventArgs[0], storeAisleShelf[0], storeAisleShelf[1], deviceId);
 				}
 				break;
-			case "clean-up":
-			case "customer-found":
-					return selectedDevice.createAnnouncement(event);
 			default:
 				if (eventArgs.length == 1){
 					return selectedDevice.createAnnouncement(event);
 				}
 				throw new StoreModelServiceException("event type does not exit", "command invalid");
 		}
+		selectedDevice.getEventLogger().add(createdEvent);
 		notify(createdEvent);
 		return("");
+	}
+
+	public String createAnnouncement(String deviceId, String announcement) throws StoreModelServiceException {
+		Device device = getDevice(deviceId);
+		return device.createAnnouncement(announcement);
 	}
 
 	/**
@@ -1016,7 +1022,7 @@ public class StoreModelService implements Client{
 	 * @throws com.cscie97.store.model.CommandProcessorException com.cscie97.store.model. command processor exception
 	 * @throws CommandProcessorException com.cscie97.ledger. command processor exception
 	 */
-	public void notify(Event event) throws com.cscie97.store.model.CommandProcessorException, CommandProcessorException, StoreModelServiceException, LedgerException {
+	public void notify(Event event) throws StoreModelServiceException, LedgerException {
 		for (Observer curr : observerArrayList){
 			curr.update(event);
 		}

@@ -5,6 +5,16 @@ import com.cscie97.store.model.*;
 
 import java.util.Map;
 
+/**
+ *  Triggers an emergency in the specified aisle, where
+ *
+ * Where the emergency is one of:
+ * fire
+ * flood
+ * earthquake
+ * armed intruder
+ *
+ */
 public class Emergency implements Command {
 
 	private String emergencyType;
@@ -23,9 +33,23 @@ public class Emergency implements Command {
 	}
 
 	/**
+	 * Executes the rule logic for the command
+	 *
+	 * action for <store>
+	 * 1. Opens all turnstiles
+	 * 2. announces: "There is a
+	 * <emergency> in <aisle>,
+	 * please leave <store>
+	 * immediately"
+	 * 3. Commands a robot to : "address
+	 * <emergency> in <aisle>"
+	 * 4. remaining robots: "Assist
+	 * customers leaving the
+	 * <store>"
+	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException, StoreModelServiceException {
+	public void execute() throws StoreModelServiceException {
 		// open all turnstiles
 		System.out.println(storeModelService.openAllTurnstiles(storeId));
 

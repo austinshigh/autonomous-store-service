@@ -5,6 +5,11 @@ import com.cscie97.ledger.Ledger;
 import com.cscie97.ledger.LedgerException;
 import com.cscie97.store.model.*;
 
+/**
+ *  Performs logic to control who is admitted to store.
+ *  Triggered when a customer approaches a turnstile
+ *
+ */
 public class EnterStore implements Command {
 
 	private String storeId;
@@ -27,9 +32,20 @@ public class EnterStore implements Command {
 	}
 
 	/**
+	 * Executes the rule logic for the command
+	 *
+	 * 1. Lookup Customer <customer>
+	 * 2. Check for positive account
+	 * balance
+	 * 3. Assign Customer a basket
+	 * 4. open turnstile <turnstile>
+	 * 5. welcome message "Hello
+	 *  <customer_name>, welcome
+	 * to <store name>!"
+	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException, StoreModelServiceException, LedgerException {
+	public void execute() throws StoreModelServiceException, LedgerException {
 		// get customer from storemodelservice
 		Customer customer = storeModelService.getCustomer(customerId);
 		// get customer info from storemodelservice, parse blockchain address

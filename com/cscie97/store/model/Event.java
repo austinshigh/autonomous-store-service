@@ -1,5 +1,9 @@
 package com.cscie97.store.model;
 
+
+/**
+ *  Instantiated by StoreModelService (Subject) to pass event data to StoreController (Observer)
+ */
 public class Event {
 
     private String eventType;

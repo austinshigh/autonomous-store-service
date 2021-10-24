@@ -1,11 +1,13 @@
 package com.cscie97.store.controller;
 
-import com.cscie97.ledger.Ledger;
-import com.cscie97.store.model.CommandProcessor;
-import com.cscie97.store.model.CommandProcessorException;
 import com.cscie97.store.model.StoreModelService;
 import com.cscie97.store.model.StoreModelServiceException;
 
+/**
+ *  Performs logic to find missing person,
+ *  triggered when customer reports person missing to microphone
+ *
+ */
 public class MissingPerson implements Command {
 
 	private String storeId;
@@ -24,9 +26,14 @@ public class MissingPerson implements Command {
 	}
 
 	/**
+	 * Executes the rule logic for the command
+	 *
+	 * locate customer <name>
+	 * speaker: <name> is in aisle <aisle>
+	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException, StoreModelServiceException {
+	public void execute() throws StoreModelServiceException {
 		// get customer aisle
 		String aisleNumber = storeModelService.getCustomer(customerId).getLocation().getAisleNumber();
 
@@ -34,7 +41,7 @@ public class MissingPerson implements Command {
 		String[] speakerLocation = storeModelService.findNearestSpeaker(storeId, aisleNumber).split(":");
 		String speakerId = speakerLocation[0];
 
-		storeModelService.createCommand(speakerId, "  \"customer-found in aisle: " + aisleNumber + "\"");
+		System.out.println(storeModelService.createAnnouncement(speakerId, "  \"customer-found in aisle: " + aisleNumber + "\""));
 	}
 
 	/**

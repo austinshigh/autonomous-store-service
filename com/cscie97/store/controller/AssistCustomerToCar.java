@@ -1,10 +1,14 @@
 package com.cscie97.store.controller;
 
-import com.cscie97.ledger.Ledger;
-import com.cscie97.store.model.CommandProcessor;
 import com.cscie97.store.model.CommandProcessorException;
 import com.cscie97.store.model.StoreModelService;
+import com.cscie97.store.model.StoreModelServiceException;
 
+/**
+ *  Commands robot to assist customer to their car
+ *  Triggered during checkout process when user's total basket weight is > 10lbs
+ *
+ */
 public class AssistCustomerToCar implements Command {
 
 	private String customerId;
@@ -23,16 +27,21 @@ public class AssistCustomerToCar implements Command {
 	}
 
 	/**
+	 * Executes the rule logic
+	 *
+	 * request robot to assist customer
+	 * <customer> to car
+	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException {
+	public void execute() throws StoreModelServiceException {
 
 		// find robot closest to turnstile where checkout is occurring
-		String[] nearestRobotInfo = CommandProcessor.processCommand("find-nearest-robot " + storeId + " aisle " + aisleId).split(":");
-		String robotId = nearestRobotInfo[0];
+		String[] robotLocation = storeModelService.findNearestRobot(storeId, aisleId).split(":");
+		String robotId = robotLocation[0];
 
-		System.out.println(CommandProcessor.processCommand("create-command " + robotId + " command \"assist " + customerId + " to their car\""));
-
+		// create command, assist customer to their car
+		System.out.println(storeModelService.createCommand(robotId, "assist " + customerId + " to their car"));
 	}
 
 	/**

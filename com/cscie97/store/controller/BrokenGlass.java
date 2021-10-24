@@ -1,11 +1,13 @@
 package com.cscie97.store.controller;
 
-import com.cscie97.ledger.Ledger;
-import com.cscie97.store.model.CommandProcessor;
 import com.cscie97.store.model.CommandProcessorException;
 import com.cscie97.store.model.StoreModelService;
 import com.cscie97.store.model.StoreModelServiceException;
 
+/**
+ *  Assigns a robot to clean up broken glass in a specified aisle in the store
+ *
+ */
 public class BrokenGlass implements Command {
 
 	private String storeId;
@@ -24,16 +26,19 @@ public class BrokenGlass implements Command {
 	}
 
 	/**
+	 * Executes the rule logic for the command
+	 *
+	 * Commands robot to "clean up broken glass in <aisle>"
 	 * @see Command#execute()
 	 */
-	public void execute() throws CommandProcessorException, StoreModelServiceException {
+	public void execute() throws StoreModelServiceException {
 
 		// find nearest robot
 		String[] robotLocation = storeModelService.findNearestRobot(storeId, aisleId).split(":");
 		String robotId = robotLocation[0];
 
 		// instruct robot to clean broken glass
-		System.out.println(storeModelService.createCommand(robotId, " command \"clean-up glass aisle " + aisleId + "\""));
+		System.out.println(storeModelService.createCommand(robotId, "clean-up glass aisle " + aisleId));
 
 	}
 

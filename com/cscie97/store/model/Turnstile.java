@@ -1,5 +1,7 @@
 package com.cscie97.store.model;
 
+import java.util.ArrayList;
+
 /**
  *  Represents a physical Turnstile
  *
@@ -17,12 +19,16 @@ public class Turnstile implements Appliance {
 
 	private Location location;
 
+	private ArrayList<Event> eventLogger;
+
 	public Turnstile(String id, String name, String deviceType, Location location) {
 		this.id = id;
 		this.name = name;
 		this.deviceType = deviceType;
 		this.location = location;
+		this.eventLogger = new ArrayList<Event>();
 	}
+
 
 	/**
 	 * to string
@@ -38,6 +44,26 @@ public class Turnstile implements Appliance {
 				"deviceType='" + deviceType + '\'' + "\n" +
 				"location=" + location.getStoreId() +  ", " + location.getAisleNumber() + '\n' +
 				'}';
+	}
+
+	/**
+	 * get event logger
+	 *
+	 * @return {@link ArrayList}
+	 * @see ArrayList
+	 * @see Event
+	 */
+	public ArrayList<Event> getEventLogger() {
+		return eventLogger;
+	}
+
+	/**
+	 * set event logger
+	 *
+	 * @param eventLogger eventLogger
+	 */
+	public void setEventLogger(ArrayList<Event> eventLogger) {
+		this.eventLogger = eventLogger;
 	}
 
 	/**
@@ -66,6 +92,13 @@ public class Turnstile implements Appliance {
 	}
 
 
+	/**
+	 * create announcement
+	 *
+	 * @param event event
+	 * @return {@link String}
+	 * @see String
+	 */
 	public String createAnnouncement(String event){
 		return this.id + ": Announcement: " + event;
 	}
