@@ -111,7 +111,7 @@ public class Turnstile implements Appliance {
 	 * @see String
 	 */
 	public String createCommand(String command){
-		return "Command Created " + command;
+		return "Command Received: " + command;
 	}
 
 	/**

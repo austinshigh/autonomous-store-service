@@ -60,10 +60,10 @@ public class Emergency implements Command {
 		// get device map for store with emergency
 		Map<String, Device> deviceMap = storeModelService.getStore(storeId).getDeviceMap();
 
-		// send alert on all speakers, turnstiles and robots
+		// send alert on all speakers
 		for (Map.Entry<String, Device> entry : deviceMap.entrySet()){
 			String type = entry.getValue().showDeviceType();
-			if (type.equals("speaker")||type.equals("robot")||type.equals("turnstile")){
+			if (type.equals("speaker")){
 				System.out.println(storeModelService.getDevice(entry.getKey()).createAnnouncement("There is a " +
 						emergencyType + " in " +
 						aisleId + ", please leave " +
@@ -73,7 +73,7 @@ public class Emergency implements Command {
 		System.out.println("\n");
 
 		// command nearest robot to attend to emergency
-		System.out.println(storeModelService.createCommand(robotId, "address " + emergencyType + " in " + aisleId));
+		System.out.println(storeModelService.createCommand(robotId, "address " + emergencyType + " in aisle " + aisleId));
 
 		System.out.println("\n");
 

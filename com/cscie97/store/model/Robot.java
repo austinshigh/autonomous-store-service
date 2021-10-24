@@ -55,7 +55,7 @@ public class Robot implements Appliance {
 	 * @see Appliance#createCommand(String)
 	 */
 	public String createCommand(String command) {
-		return this.id + ": command received " + command;
+			return this.id + ": Command Received: " + command;
 	}
 
 	/**

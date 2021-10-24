@@ -55,10 +55,25 @@ public class FetchProduct implements Command {
 		String[] robotLocation = storeModelService.findNearestRobot(storeId, aisleId).split(":");
 		String robotId = robotLocation[0];
 
-		System.out.println(storeModelService.createCommand(robotId, " message \"fetch " + quantity + " of " + productId +
-				" from aisle " + aisleId + " and shelf " + shelfId + " and bring to customer " +
-				"" + customerId + " in aisle " + customerAisle + "\""));
+		// compare quantity desired vs total quantity available
+		int quantity = Integer.parseInt(this.quantity);
+		int totalAvailable = storeModelService.getInventoryItem(inventoryId).getCount();
 
+		if (quantity > totalAvailable){
+			String productName = storeModelService.getProduct(productId).getName();
+			System.out.println(storeModelService.createAnnouncement(robotId, quantity + " of " + productName +
+					" from aisle " + aisleId + " and shelf " + shelfId + " not available, shelf contains " +
+					totalAvailable));
+		}
+		else {
+			System.out.println(storeModelService.createCommand(robotId, "fetch " + quantity + " of " + productId +
+					" from aisle " + aisleId + " and shelf " + shelfId + " and bring to customer " +
+					"" + customerId + " in aisle " + customerAisle));
+			String basketId = storeModelService.getCustomerBasketId(customerId);
+			// make changes to inventory and customer's basket
+			BasketEvent basketEvent = new BasketEvent(customerId, productId, inventoryId, storeId, aisleId, shelfId, String.valueOf(quantity), storeModelService);
+			basketEvent.execute();
+		}
 	}
 
 	/**

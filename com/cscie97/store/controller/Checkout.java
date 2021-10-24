@@ -69,9 +69,9 @@ public class Checkout implements Command {
 
 		// determine if customer needs assistance carrying bags to car
 		// query basket items, add product weights
-
 		int basketWeight = Integer.parseInt(storeModelService.computeBasketWeight(basketId));
-		if (basketWeight > 10) {
+		// if product weight is more than 10lbs (in grams), assist customer to car
+		if (basketWeight > 4535) {
 			AssistCustomerToCar assistCustomerToCar = new AssistCustomerToCar(customerId, storeId, aisleId, storeModelService);
 			assistCustomerToCar.execute();
 		}
