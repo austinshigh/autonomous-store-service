@@ -53,7 +53,7 @@ public class Emergency implements Command {
 		if (!(emergencyType.equalsIgnoreCase("FIRE") ||
 				emergencyType.equalsIgnoreCase("EARTHQUAKE") ||
 				emergencyType.equalsIgnoreCase("FLOOD") ||
-				emergencyType.equalsIgnoreCase("ARMEDINTRUDER"))){
+				emergencyType.equalsIgnoreCase("ARMED_INTRUDER"))){
 			throw new StoreModelServiceException("Cancel emergency", "Event: " + emergencyType + " is not an emergency");
 		}
 

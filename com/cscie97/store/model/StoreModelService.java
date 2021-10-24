@@ -25,7 +25,7 @@ import static java.lang.Math.abs;
  *
  *
  */
-public class StoreModelService implements Client{
+public class StoreModelService implements Subject {
 
 	private String authToken;
 
@@ -828,9 +828,6 @@ public class StoreModelService implements Client{
 				}
 				break;
 			default:
-				if (eventArgs.length == 1){
-					return selectedDevice.createAnnouncement(event);
-				}
 				throw new StoreModelServiceException("event type does not exit", "command invalid");
 		}
 		selectedDevice.getEventLogger().add(createdEvent);

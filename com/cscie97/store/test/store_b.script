@@ -53,19 +53,15 @@ create-event TURNSTILE002 event "enter-store CUSTOMER00002 TURNSTILE002 STORE002
 # robot should not be instructed to fetch product
 create-event MICROPHONE001 event "fetch-product CUSTOMER00001 CHICKEN001 INVENTORY001 STORE002:1:SHELF001 20"
 
-# Create a fetch-product event - expect a command to 1 robot to restock because inventory count is 9 (less than half of capacity)
-create-event MICROPHONE001 event "fetch-product CUSTOMER00001 CHICKEN001 INVENTORY001 STORE002:1:SHELF001 10"
+# Create a fetch-product event - expect a command to 1 robot to restock because inventory count is 2 (less than 3)
+create-event MICROPHONE001 event "fetch-product CUSTOMER00001 CHICKEN001 INVENTORY001 STORE002:1:SHELF001 17"
 
-# Create a basket-event event (should show Alert message that sensor has malfunctioned because user cannot remove 20 products from shelf total quantity of 19)
+# Create a basket-event event (should show Alert message that sensor has malfunctioned because user cannot remove 21 products from shelf total quantity of 20)
 create-event CAMERA001 event "basket-event CUSTOMER00001 CHICKEN001 INVENTORY001 STORE002:1:SHELF001 20"
 
 # Create an emergency event - all turnstiles open, 1 attends to emergency and the rest help
 # customers, while speakers announce for customers to leave store
 create-event CAMERA001 event "emergency FIRE STORE002:1"
-
-# 2 customers enter the STORE002 again
-create-event TURNSTILE001 event "enter-store CUSTOMER00001 TURNSTILE001 STORE002:1"
-create-event TURNSTILE002 event "enter-store CUSTOMER00002 TURNSTILE002 STORE002:2"
 
 # Should throw incorrect number of arguments error
 create-event CAMERA002 "customer-seen CUSTOMER00003 STORE002:2"

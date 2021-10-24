@@ -41,7 +41,7 @@ public class MissingPerson implements Command {
 		String[] speakerLocation = storeModelService.findNearestSpeaker(storeId, aisleNumber).split(":");
 		String speakerId = speakerLocation[0];
 
-		System.out.println(storeModelService.createAnnouncement(speakerId, "  \"customer-found in aisle: " + aisleNumber + "\""));
+		System.out.println(storeModelService.createAnnouncement(speakerId, "customer-found in aisle: " + aisleNumber));
 	}
 
 	/**

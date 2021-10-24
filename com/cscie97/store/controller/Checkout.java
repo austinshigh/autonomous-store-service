@@ -94,6 +94,7 @@ public class Checkout implements Command {
 				AssistCustomerToCar assistCustomerToCar = new AssistCustomerToCar(customerId, storeId, aisleId, storeModelService);
 				assistCustomerToCar.execute();
 			}
+			storeModelService.getStore(storeId).getCustomerMap().remove(customerId);
 		}
 		else{
 			System.out.println(storeModelService.createAnnouncement(turnstileId, "sorry " + customerName + ", you have insufficient funds, please " +

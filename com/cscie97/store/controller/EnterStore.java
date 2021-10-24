@@ -5,6 +5,8 @@ import com.cscie97.ledger.Ledger;
 import com.cscie97.ledger.LedgerException;
 import com.cscie97.store.model.*;
 
+import java.util.Map;
+
 /**
  *  Performs logic to control who is admitted to store.
  *  Triggered when a customer approaches a turnstile
@@ -48,6 +50,15 @@ public class EnterStore implements Command {
 	public void execute() throws StoreModelServiceException, LedgerException {
 		// get customer from storemodelservice
 		Customer customer = storeModelService.getCustomer(customerId);
+
+		// get map of customers currently in store
+		Map<String, Customer> inStore = storeModelService.getStore(storeId).getCustomerMap();
+
+		// if customer already in store, throw error
+		if (inStore.containsKey(customerId)){
+			throw new StoreModelServiceException("Enter Store Error", "Customer is already in store");
+		}
+
 		// get customer info from storemodelservice, parse blockchain address
 		String blockchainAddress = customer.getBlockchainAddress();
 
@@ -66,6 +77,7 @@ public class EnterStore implements Command {
 		}
 		System.out.println(storeModelService.openTurnstile(turnstileId));
 		System.out.println(storeModelService.createCommand(turnstileId, " \"Hello " + customerName + ", welcome to " + storeName + "!\""));
+		inStore.put(customerId, customer);
 
 	}
 
