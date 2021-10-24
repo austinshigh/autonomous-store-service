@@ -72,7 +72,7 @@ public class BasketEvent implements Command {
 		// check shelf inventory
 		double count = storeModelService.getInventoryItem(inventoryId).getCount() * 1.0;
 		double capacity = storeModelService.getInventoryItem(inventoryId).getCapacity() * 1.0;
-		
+
 		if (count / capacity < .50){
 			System.out.println(storeModelService.createCommand(robotId,"perform task restock for " + aisleId + ":" + shelfId + " and " + productId));
 		}

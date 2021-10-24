@@ -66,6 +66,13 @@ public class CommandProcessor {
 						idArray = commands.get(5).split(", ");
 						try {
 							ledgerService.createAccount(commands.get(1));
+							Transaction tx = new Transaction(ThreadLocalRandom.current().nextInt(0, 99999999 + 1),
+									20000,
+									10,
+									"new store",
+									"master",
+									commands.get(1));
+							ledgerService.processTransaction(tx);
 							return ("new store id: " + storeModelService.createStore(commands.get(1), commands.get(3), idArray[0], idArray[1], idArray[2]));
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);

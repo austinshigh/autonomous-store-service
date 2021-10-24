@@ -67,15 +67,6 @@ public class Checkout implements Command {
 		// identify customer
 		storeModelService.createAnnouncement(turnstileId, "Hello " + customerName + ".");
 
-		// determine if customer needs assistance carrying bags to car
-		// query basket items, add product weights
-		int basketWeight = Integer.parseInt(storeModelService.computeBasketWeight(basketId));
-		// if product weight is more than 10lbs (in grams), assist customer to car
-		if (basketWeight > 4535) {
-			AssistCustomerToCar assistCustomerToCar = new AssistCustomerToCar(customerId, storeId, aisleId, storeModelService);
-			assistCustomerToCar.execute();
-		}
-
 		// compute total cost of items in the customer's basket
 		int basketTotal = storeModelService.getBasketTotal(basketId);
 
@@ -94,6 +85,15 @@ public class Checkout implements Command {
 			System.out.println(storeModelService.openTurnstile(turnstileId));
 
 			System.out.println(storeModelService.createAnnouncement(turnstileId, "goodbye " + customerName + ", thanks for shopping at " + storeName + "!"));
+
+			// determine if customer needs assistance carrying bags to car
+			// query basket items, add product weights
+			int basketWeight = Integer.parseInt(storeModelService.computeBasketWeight(basketId));
+			// if product weight is more than 10lbs (in grams), assist customer to car
+			if (basketWeight > 4535) {
+				AssistCustomerToCar assistCustomerToCar = new AssistCustomerToCar(customerId, storeId, aisleId, storeModelService);
+				assistCustomerToCar.execute();
+			}
 		}
 		else{
 			System.out.println(storeModelService.createAnnouncement(turnstileId, "sorry " + customerName + ", you have insufficient funds, please " +
