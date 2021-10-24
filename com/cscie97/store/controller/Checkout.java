@@ -95,6 +95,9 @@ public class Checkout implements Command {
 				assistCustomerToCar.execute();
 			}
 			storeModelService.getStore(storeId).getCustomerMap().remove(customerId);
+
+			// clear customer's basket
+			storeModelService.getBasketMap().get(basketId).clearBasket();
 		}
 		else{
 			System.out.println(storeModelService.createAnnouncement(turnstileId, "sorry " + customerName + ", you have insufficient funds, please " +

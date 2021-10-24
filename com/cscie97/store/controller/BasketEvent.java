@@ -54,8 +54,15 @@ public class BasketEvent implements Command {
 		// get customer from storemodelservice
 		Customer customer = storeModelService.getCustomer(customerId);
 
-		// get basket id
-		String basketId = customer.getBasketId();
+		String basketId;
+
+		// if customer does not have basket, create basket and associate with customer
+		if (customer.getBasketId() == null){
+			basketId = storeModelService.defineBasket(customerId + "b");
+			storeModelService.associateBasket(basketId, customerId);
+		}else{
+			basketId = customer.getBasketId();
+		}
 
 		// add or remove item to customer's basket
 		System.out.println(storeModelService.addBasketItem(basketId, productId, quantity));

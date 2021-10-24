@@ -3,6 +3,7 @@ package com.cscie97.store.controller;
 import com.cscie97.ledger.Ledger;
 import com.cscie97.store.model.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -90,6 +91,18 @@ public class Emergency implements Command {
 				System.out.println(storeModelService.createCommand(device.getId(), "assist customers leaving the store: " + storeId));
 			}
 		}
+
+		// get customer basket map for store
+		Map<String, Basket> basketMap = storeModelService.getStore(storeId).getBasketMap();
+
+		// clear all customer baskets
+		for (Basket basket : basketMap.values()){
+			basket.clearBasket();
+		}
+
+		// remove every customer from storeMap
+		Map<String, Customer> emptyMap = new HashMap<String, Customer>();
+		storeModelService.getStore(storeId).setCustomerMap(emptyMap);
 	}
 
 	/**
