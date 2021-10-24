@@ -1,0 +1,79 @@
+
+# Define a store - this creates a ledger and transfers 20000 Units to the store
+define-store STORE002 storeName "costco" storeAddress "77 Elma St, San Luis, CA"
+
+# Define an aisle within the store
+define-aisle STORE002:1 aisleName AISLE_A aisleDescr "frozen food" location "floor"
+define-aisle STORE002:2 aisleName AISLE_B aisleDescr "chocolate" location "floor"
+define-aisle STORE002:3 aisleName AISLE_C aisleDescr "wine" location "floor"
+
+
+# Define a new shelf within the store
+define-shelf STORE002:1:SHELF001 shelfName FROZEN_SHELF shelfLevel medium sheldDescr "frozen food" shelfTempEnum refrigerated
+define-shelf STORE002:1:SHELF002 shelfName SWEETS_SHELF shelfLevel medium sheldDescr "sweets" shelfTempEnum ambient
+define-shelf STORE002:2:SHELF001 shelfName CONDIMENTS_SHELF shelfLevel high sheldDescr "condiment" shelfTempEnum ambient
+
+
+# Define a new products
+define-product CHICKEN001 prodName chicken prodDescr "organic chicken" size 500g category "frozen food" unit_price 1 tempTempEnum refrigerated
+define-product PIZZA001 prodName pizza prodDescr "pizza" size 600g category "condiments" unit_price 2 tempTempEnum ambient
+
+
+# Define a new inventory item within the store
+define-inventory INVENTORY001 location STORE002:1:SHELF001 capacity 20 count 19 product CHICKEN001
+define-inventory INVENTORY002 location STORE002:1:SHELF002 capacity 30 count 23 product PIZZA001
+
+
+# Define 2 customers (2 registered who have 200 Units transferred from the master account)
+define-customer CUSTOMER00001 first_name ann last_name fred type registered email_address "afred@gmail.com" account ann01
+define-customer CUSTOMER00002 first_name ted last_name hill type registered email_address "thill@yahoo.com" account ted01
+
+
+# Define device of type camera, robot, speakers, microphones, and turnstile
+define-device CAMERA001 name front_door_camera type camera location STORE002:1
+define-device CAMERA002 name right_end_camera type camera location STORE002:2
+define-device ROBOT001 name r2d2 type robot location STORE002:1
+define-device ROBOT002 name r2d3 type robot location STORE002:2
+define-device ROBOT003 name r2d4 type robot location STORE002:2
+define-device TURNSTILE001 name cashier1 type turnstile location STORE002:1
+define-device TURNSTILE002 name cashier2 type turnstile location STORE002:2
+define-device MICROPHONE001 name front-microphone type microphone location STORE002:1
+define-device SPEAKER001 name middle-aisle-speaker type speaker location STORE002:2
+define-device SPEAKER002 name middle-aisle-speaker type speaker location STORE002:3
+
+
+# Create enter-store events for 2 customers
+create-event TURNSTILE001 event "enter-store CUSTOMER00001 TURNSTILE001 STORE002:1"
+create-event TURNSTILE002 event "enter-store CUSTOMER00002 TURNSTILE002 STORE002:2"
+
+# Create a fetch-product event - expect a command to 1 robot to fetch the product
+create-event MICROPHONE001 event "fetch-product CUSTOMER00001 CHICKEN001 INVENTORY001 STORE002:1:SHELF001 3"
+
+# Create a fetch-product event
+create-event MICROPHONE001 event "fetch-product CUSTOMER00001 CHICKEN001 INVENTORY001 STORE002:1:SHELF001 3"
+
+# Create a basket-event event
+create-event CAMERA001 event "basket-event CUSTOMER00001 CHICKEN001 INVENTORY001 STORE002:1:SHELF001 3"
+
+# <<<<<<<<<<<<<<<<<<< NEW TESTS BEGIN >>>>>>>>>>>>>>>>>>>
+
+# Create an emergency event - all turnstiles open, 1 attends to emergency and the rest help
+# customers, while speakers announce for customers to leave store
+create-event CAMERA001 event "emergency CRYINGBABY STORE002:1"
+
+# 2 customers enter the STORE002 again
+create-event TURNSTILE001 event "enter-store CUSTOMER00001 TURNSTILE001 STORE002:1"
+create-event TURNSTILE002 event "enter-store CUSTOMER00002 TURNSTILE002 STORE002:2"
+
+# Create a basket-event event for CUSTOMER00001
+create-event CAMERA001 event "basket-event CUSTOMER00001 CHICKEN001 INVENTORY001 STORE002:1:SHELF001 2"
+create-event CAMERA002 event "basket-event CUSTOMER00001 PIZZA001 INVENTORY002 STORE002:1:SHELF002 5"
+create-event CAMERA001 event "basket-event CUSTOMER00001 CHICKEN001 INVENTORY001 STORE002:1:SHELF001 2"
+
+
+# Create a check-acc-bal event using a microphone - expect response, basket total is 23 which is less than user's account balance
+create-event MICROPHONE001 event "check-acc-bal CUSTOMER00001 STORE002:2"
+
+# Create a checkout event
+# Customer should receive assistance to their car since basket amount is > 10lbs
+create-event TURNSTILE001 event "checkout CUSTOMER00001 STORE002:1"

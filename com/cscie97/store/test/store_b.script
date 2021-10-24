@@ -46,7 +46,9 @@ define-device SPEAKER002 name middle-aisle-speaker type speaker location STORE00
 create-event TURNSTILE001 event "enter-store CUSTOMER00001 TURNSTILE001 STORE002:1"
 create-event TURNSTILE002 event "enter-store CUSTOMER00002 TURNSTILE002 STORE002:2"
 
-# Create a fetch-product event - expect a command to 1 robot to fetch the product
+# <<<<<<<<<<<<<<<<<<< NEW TESTS BEGIN >>>>>>>>>>>>>>>>>>>
+
+# Create a fetch-product event
 # should return response to customer, max quantity available is 19
 # robot should not be instructed to fetch product
 create-event MICROPHONE001 event "fetch-product CUSTOMER00001 CHICKEN001 INVENTORY001 STORE002:1:SHELF001 20"
@@ -61,10 +63,9 @@ create-event CAMERA001 event "basket-event CUSTOMER00001 CHICKEN001 INVENTORY001
 # customers, while speakers announce for customers to leave store
 create-event CAMERA001 event "emergency FIRE STORE002:1"
 
-# 3 customers enter the STORE002 again
+# 2 customers enter the STORE002 again
 create-event TURNSTILE001 event "enter-store CUSTOMER00001 TURNSTILE001 STORE002:1"
 create-event TURNSTILE002 event "enter-store CUSTOMER00002 TURNSTILE002 STORE002:2"
-create-event TURNSTILE002 event "enter-store CUSTOMER00003 TURNSTILE002 STORE002:2"
 
 # Should throw incorrect number of arguments error
 create-event CAMERA002 "customer-seen CUSTOMER00003 STORE002:2"

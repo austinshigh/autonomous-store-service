@@ -50,6 +50,13 @@ public class Emergency implements Command {
 	 * @see Command#execute()
 	 */
 	public void execute() throws StoreModelServiceException {
+		if (!(emergencyType.equalsIgnoreCase("FIRE") ||
+				emergencyType.equalsIgnoreCase("EARTHQUAKE") ||
+				emergencyType.equalsIgnoreCase("FLOOD") ||
+				emergencyType.equalsIgnoreCase("ARMEDINTRUDER"))){
+			throw new StoreModelServiceException("Cancel emergency", "Event: " + emergencyType + " is not an emergency");
+		}
+
 		// open all turnstiles
 		System.out.println(storeModelService.openAllTurnstiles(storeId));
 
