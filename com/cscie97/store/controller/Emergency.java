@@ -49,12 +49,12 @@ public class Emergency implements Command {
 	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws StoreModelServiceException {
+	public void execute() throws StoreModelServiceException, ControllerException {
 		if (!(emergencyType.equalsIgnoreCase("FIRE") ||
 				emergencyType.equalsIgnoreCase("EARTHQUAKE") ||
 				emergencyType.equalsIgnoreCase("FLOOD") ||
 				emergencyType.equalsIgnoreCase("ARMED_INTRUDER"))){
-			throw new StoreModelServiceException("Cancel emergency", "Event: " + emergencyType + " is not an emergency");
+			throw new ControllerException("Cancel emergency", "Event: " + emergencyType + " is not an emergency");
 		}
 
 		// open all turnstiles

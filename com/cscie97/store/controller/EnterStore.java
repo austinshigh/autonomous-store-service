@@ -47,7 +47,7 @@ public class EnterStore implements Command {
 	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws StoreModelServiceException, LedgerException {
+	public void execute() throws StoreModelServiceException, LedgerException, ControllerException {
 		// get customer from storemodelservice
 		Customer customer = storeModelService.getCustomer(customerId);
 
@@ -56,7 +56,7 @@ public class EnterStore implements Command {
 
 		// if customer already in store, throw error
 		if (inStore.containsKey(customerId)){
-			throw new StoreModelServiceException("Enter Store Error", "Customer is already in store");
+			throw new ControllerException("Enter Store Error", "Customer is already in store");
 		}
 
 		// get customer info from storemodelservice, parse blockchain address

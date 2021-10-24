@@ -3,6 +3,7 @@ package com.cscie97.store.model;
 import com.cscie97.ledger.Ledger;
 import com.cscie97.ledger.LedgerException;
 import com.cscie97.ledger.Transaction;
+import com.cscie97.store.controller.ControllerException;
 import com.cscie97.store.controller.StoreController;
 
 import java.io.File;
@@ -427,8 +428,10 @@ public class CommandProcessor {
 							return(storeModelService.createEvent(commands.get(1), commands.get(3)));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
+						} catch (ControllerException e) {
+							throw new CommandProcessorException(e);
 						} catch (LedgerException e) {
-							e.printStackTrace();
+							throw new CommandProcessorException(e);
 						}
 					case "create-command":
 						if (commands.size() != 4) {

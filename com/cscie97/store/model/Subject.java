@@ -1,6 +1,7 @@
 package com.cscie97.store.model;
 
 import com.cscie97.ledger.LedgerException;
+import com.cscie97.store.controller.ControllerException;
 
 /**
  *  Works in conjunction with the Observer interface to pass event data from
@@ -21,7 +22,7 @@ public interface Subject {
      * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
      * @throws LedgerException com.cscie97.ledger. ledger exception
      */
-    public void notify(Event event) throws StoreModelServiceException, LedgerException;
+    public void notify(Event event) throws StoreModelServiceException, LedgerException, ControllerException;
 
     /**
      * Removes an observer from the subject's list of observers

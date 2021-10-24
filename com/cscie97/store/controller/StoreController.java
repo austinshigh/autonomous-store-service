@@ -30,7 +30,7 @@ public class StoreController implements Observer {
 	 * @throws LedgerException com.cscie97.ledger. ledger exception
 	 */
 	@Override
-	public void update(Event event) throws StoreModelServiceException, LedgerException {
+	public void update(Event event) throws StoreModelServiceException, LedgerException, ControllerException {
 		switch(event.getEventType()){
 			case "emergency":
 				Emergency emergency = new Emergency(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService);

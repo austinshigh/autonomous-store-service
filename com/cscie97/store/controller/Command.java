@@ -17,6 +17,6 @@ public interface Command {
 	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
 	 * @throws LedgerException com.cscie97.ledger. ledger exception
 	 */
-	public abstract void execute() throws StoreModelServiceException, LedgerException;
+	public abstract void execute() throws StoreModelServiceException, LedgerException, ControllerException;
 
 }

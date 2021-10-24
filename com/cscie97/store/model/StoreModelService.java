@@ -2,6 +2,7 @@ package com.cscie97.store.model;
 
 import com.cscie97.ledger.CommandProcessorException;
 import com.cscie97.ledger.LedgerException;
+import com.cscie97.store.controller.ControllerException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -763,7 +764,7 @@ public class StoreModelService implements Subject {
 	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
 	 * @throws LedgerException com.cscie97.ledger. ledger exception
 	 */
-	public String createEvent(String deviceId, String event) throws StoreModelServiceException, LedgerException {
+	public String createEvent(String deviceId, String event) throws StoreModelServiceException, LedgerException, ControllerException {
 		String[] eventArgs = event.split(" ");
 		Device selectedDevice = getDevice(deviceId);
 		Event createdEvent;
@@ -830,9 +831,42 @@ public class StoreModelService implements Subject {
 			default:
 				throw new StoreModelServiceException("event type does not exit", "command invalid");
 		}
+		// Add event to device's log list
 		selectedDevice.getEventLogger().add(createdEvent);
+		// notify observers of new event
 		notify(createdEvent);
 		return("");
+	}
+
+	/**
+	 * Removes an observer from the store model services's list of observers
+	 *
+	 * @param observer observer
+	 */
+	@Override
+	public void detach(Observer observer) {
+		this.observerArrayList.remove(observer);
+	}
+
+	/**
+	 * Adds an observer to the store model service's list of observers
+	 *
+	 * @param observer observer
+	 */
+	@Override
+	public void attach(Observer observer) { this.observerArrayList.add(observer); }
+
+	/**
+	 * notifies observers by calling update() method on each observer, passing the new event
+	 *
+	 * @param event event
+	 * @throws com.cscie97.store.model.CommandProcessorException com.cscie97.store.model. command processor exception
+	 * @throws CommandProcessorException com.cscie97.ledger. command processor exception
+	 */
+	public void notify(Event event) throws StoreModelServiceException, LedgerException, ControllerException {
+		for (Observer curr : observerArrayList){
+			curr.update(event);
+		}
 	}
 
 	/**
@@ -1019,27 +1053,5 @@ public class StoreModelService implements Subject {
 	 */
 	public void setDeviceIdMap(Map<String, String> deviceIdMap) {
 		this.deviceIdMap = deviceIdMap;
-	}
-
-
-	@Override
-	public void detach(Observer observer) {
-		this.observerArrayList.remove(observer);
-	}
-
-	@Override
-	public void attach(Observer observer) { this.observerArrayList.add(observer); }
-
-	/**
-	 * notify observers
-	 *
-	 * @param event event
-	 * @throws com.cscie97.store.model.CommandProcessorException com.cscie97.store.model. command processor exception
-	 * @throws CommandProcessorException com.cscie97.ledger. command processor exception
-	 */
-	public void notify(Event event) throws StoreModelServiceException, LedgerException {
-		for (Observer curr : observerArrayList){
-			curr.update(event);
-		}
 	}
 }
