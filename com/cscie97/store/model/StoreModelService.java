@@ -835,9 +835,18 @@ public class StoreModelService implements Subject {
 		return("");
 	}
 
+	/**
+	 * Used to make announcements on speakers or robots
+	 *
+	 * @param deviceId deviceId
+	 * @param announcement announcement
+	 * @return {@link String}
+	 * @see String
+	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
+	 */
 	public String createAnnouncement(String deviceId, String announcement) throws StoreModelServiceException {
-		Device device = getDevice(deviceId);
-		return device.createAnnouncement(announcement);
+		Appliance appliance = (Appliance) getDevice(deviceId);
+		return appliance.createAnnouncement(announcement);
 	}
 
 	/**
@@ -853,6 +862,14 @@ public class StoreModelService implements Subject {
 		return selected.openTurnstile();
 	}
 
+	/**
+	 * Used in the event of an emergency to open all turnstiles
+	 *
+	 * @param storeId storeId
+	 * @return {@link String}
+	 * @see String
+	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
+	 */
 	public String openAllTurnstiles(String storeId) throws StoreModelServiceException {
 		Map<String, Device> devicesInStore = getStore(storeId).getDeviceMap();
 		StringBuilder results = new StringBuilder();
@@ -870,11 +887,12 @@ public class StoreModelService implements Subject {
 	 *
 	 * @param deviceId deviceId
 	 * @param event event
+	 * @param storeModelService
 	 * @return {@link String}
 	 * @see String
 	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
 	 */
-	public String createCommand(String deviceId, String event) throws StoreModelServiceException {
+	public String createCommand(String deviceId, String event, StoreModelService storeModelService) throws StoreModelServiceException {
 		// get selected device
 		Device selectedDevice = getDevice(deviceId);
 		String deviceType = selectedDevice.showDeviceType();

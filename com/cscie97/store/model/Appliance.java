@@ -7,4 +7,12 @@ package com.cscie97.store.model;
  * that appliances are required to implement
  */
 public interface Appliance extends Device {
+    /**
+     * Simulates a customer announcement.
+     *
+     * @param event event
+     * @return {@link String}
+     * @see String
+     */
+    public abstract String createAnnouncement(String event);
 }

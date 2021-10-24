@@ -437,7 +437,7 @@ public class CommandProcessor {
 									"\ncreate-command <device_id> message <command>");
 						}
 						try {
-							return(storeModelService.createCommand(commands.get(1), commands.get(3)));
+							return(storeModelService.createCommand(commands.get(1), commands.get(3), storeModelService));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						}

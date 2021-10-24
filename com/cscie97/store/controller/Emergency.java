@@ -1,6 +1,5 @@
 package com.cscie97.store.controller;
 
-import com.cscie97.ledger.Ledger;
 import com.cscie97.store.model.*;
 
 import java.util.HashMap;
@@ -72,7 +71,7 @@ public class Emergency implements Command {
 		for (Map.Entry<String, Device> entry : deviceMap.entrySet()){
 			String type = entry.getValue().showDeviceType();
 			if (type.equals("speaker")){
-				System.out.println(storeModelService.getDevice(entry.getKey()).createAnnouncement("There is a " +
+				System.out.println(storeModelService.createAnnouncement(entry.getKey(),"There is a " +
 						emergencyType + " in " +
 						aisleId + ", please leave " +
 						storeId + " immediately"));
@@ -81,14 +80,14 @@ public class Emergency implements Command {
 		System.out.println("\n");
 
 		// command nearest robot to attend to emergency
-		System.out.println(storeModelService.createCommand(robotId, "address " + emergencyType + " in aisle " + aisleId));
+		System.out.println(storeModelService.createCommand(robotId, "address " + emergencyType + " in aisle " + aisleId, storeModelService));
 
 		System.out.println("\n");
 
 		// command rest to assist customers
 		for (Device device : deviceMap.values()){
 			if (!device.getId().equals(robotId) && device.showDeviceType().equals("robot")){
-				System.out.println(storeModelService.createCommand(device.getId(), "assist customers leaving the store: " + storeId));
+				System.out.println(storeModelService.createCommand(device.getId(), "assist customers leaving the store: " + storeId, storeModelService));
 			}
 		}
 

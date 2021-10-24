@@ -57,15 +57,10 @@ create-event CAMERA001 event "basket-event CUSTOMER00001 CHICKEN001 INVENTORY001
 
 # <<<<<<<<<<<<<<<<<<< NEW TESTS BEGIN >>>>>>>>>>>>>>>>>>>
 
-# Create an emergency event - all turnstiles open, 1 attends to emergency and the rest help
-# customers, while speakers announce for customers to leave store
-create-event CAMERA001 event "emergency CRYINGBABY STORE002:1"
-
 # Create a basket-event event for CUSTOMER00001
 create-event CAMERA001 event "basket-event CUSTOMER00001 CHICKEN001 INVENTORY001 STORE002:1:SHELF001 2"
 create-event CAMERA002 event "basket-event CUSTOMER00001 PIZZA001 INVENTORY002 STORE002:1:SHELF002 5"
 create-event CAMERA001 event "basket-event CUSTOMER00001 CHICKEN001 INVENTORY001 STORE002:1:SHELF001 2"
-
 
 # Create a check-acc-bal event using a microphone - expect response, basket total is 23 which is less than user's account balance
 create-event MICROPHONE001 event "check-acc-bal CUSTOMER00001 STORE002:2"
@@ -79,3 +74,7 @@ create-event TURNSTILE001 event "checkout CUSTOMER00001 STORE002:1"
 
 # Ann tries to enter store (should be able to because she has left the store)
 create-event TURNSTILE001 event "enter-store CUSTOMER00001 TURNSTILE001 STORE002:1"
+
+# Create an emergency event - all turnstiles open, 1 attends to emergency and the rest help
+# customers, while speakers announce for customers to leave store
+create-event CAMERA001 event "emergency CRYINGBABY STORE002:1"

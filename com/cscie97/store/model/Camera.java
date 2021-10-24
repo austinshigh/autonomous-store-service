@@ -47,11 +47,6 @@ public class Camera implements Sensor {
 				'}';
 	}
 
-
-	public String createAnnouncement(String event){
-		return "Sensors cannot create announcements";
-	}
-
 	/**
 	 * Returns device type
 	 *

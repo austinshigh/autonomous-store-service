@@ -82,7 +82,7 @@ public class BasketEvent implements Command {
 
 		if (count < 3){
 			// if count is less than 3, perform restock
-			System.out.println(storeModelService.createCommand(robotId,"perform task restock for " + aisleId + ":" + shelfId + " and " + productId));
+			System.out.println(storeModelService.createCommand(robotId,"perform task restock for " + aisleId + ":" + shelfId + " and " + productId, storeModelService));
 			storeModelService.getInventoryItem(inventoryId).setCount((int) capacity);
 		}
 

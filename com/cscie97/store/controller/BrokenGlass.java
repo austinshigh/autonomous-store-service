@@ -1,6 +1,5 @@
 package com.cscie97.store.controller;
 
-import com.cscie97.store.model.CommandProcessorException;
 import com.cscie97.store.model.StoreModelService;
 import com.cscie97.store.model.StoreModelServiceException;
 
@@ -38,7 +37,7 @@ public class BrokenGlass implements Command {
 		String robotId = robotLocation[0];
 
 		// instruct robot to clean broken glass
-		System.out.println(storeModelService.createCommand(robotId, "clean-up glass aisle " + aisleId));
+		System.out.println(storeModelService.createCommand(robotId, "clean-up glass aisle " + aisleId, storeModelService));
 
 	}
 

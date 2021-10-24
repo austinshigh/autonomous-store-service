@@ -58,11 +58,6 @@ public class Microphone implements Sensor {
 	 */
 	public String createCommand(String command){ return "ALERT: sensors cannot receive commands"; }
 
-
-	public String createAnnouncement(String event){
-		return "Sensors cannot create announcements";
-	}
-
 	/**
 	 * show device type
 	 *

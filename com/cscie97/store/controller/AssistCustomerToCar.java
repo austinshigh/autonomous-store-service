@@ -1,6 +1,5 @@
 package com.cscie97.store.controller;
 
-import com.cscie97.store.model.CommandProcessorException;
 import com.cscie97.store.model.StoreModelService;
 import com.cscie97.store.model.StoreModelServiceException;
 
@@ -41,7 +40,7 @@ public class AssistCustomerToCar implements Command {
 		String robotId = robotLocation[0];
 
 		// create command, assist customer to their car
-		System.out.println(storeModelService.createCommand(robotId, "assist " + customerId + " to their car"));
+		System.out.println(storeModelService.createCommand(robotId, "assist " + customerId + " to their car", storeModelService));
 	}
 
 	/**

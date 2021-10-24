@@ -13,15 +13,6 @@ import java.util.ArrayList;
 public interface Device {
 
 	/**
-	 * Simulates a sensor or appliance announcement.
-	 *
-	 * @param event event
-	 * @return {@link String}
-	 * @see String
-	 */
-	public abstract String createAnnouncement(String event);
-
-	/**
 	 * Returns the id of a given Device
 	 *
 	 * @return {@link String}
@@ -42,7 +33,7 @@ public interface Device {
 	/**
 	 * Simulates a command being sent to an appliance
 	 *
-	 * Sensors cannot receive
+	 * Sensors cannot receive commands
 	 *
 	 * @param command command
 	 * @return {@link String}

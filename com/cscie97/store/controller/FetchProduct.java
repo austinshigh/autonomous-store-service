@@ -68,7 +68,8 @@ public class FetchProduct implements Command {
 		else {
 			System.out.println(storeModelService.createCommand(robotId, "fetch " + quantity + " of " + productId +
 					" from aisle " + aisleId + " and shelf " + shelfId + " and bring to customer " +
-					"" + customerId + " in aisle " + customerAisle));
+					"" + customerId + " in aisle " + customerAisle, storeModelService));
+
 			String basketId = storeModelService.getCustomerBasketId(customerId);
 			// make changes to inventory and customer's basket
 			BasketEvent basketEvent = new BasketEvent(customerId, productId, inventoryId, storeId, aisleId, shelfId, String.valueOf(quantity), storeModelService);
