@@ -22,6 +22,8 @@ public class AuthenticationService extends Visitable {
 
 	private Map<String, Entitlement> entitlementMap;
 
+	private Map<String, Resource> resourceMap;
+
 	private void AuthenticationService() {
 		this.id = 1;
 		this.tokenTimeout = 10;
@@ -76,15 +78,29 @@ public class AuthenticationService extends Visitable {
 	}
 
 	public void createResource(String id, String description) {
-
+		Resource resource = new Resource(id, description);
+		resourceMap.put(id, resource);
 	}
 
-	public void createResourceRole(String name, String roleId, String resourceId) {
+	public Entitlement getEntitlement(String id){
+		return entitlementMap.get(id);
+	}
 
+	public Resource getResource(String id){
+		return resourceMap.get(id);
+	}
+
+	public void createResourceRole(String id, String roleId, String resourceId) {
+		Resource resource = getResource(resourceId);
+		Role role = (Role) getEntitlement(roleId);
+		ResourceRole resourceRole = new ResourceRole(id, resource, role);
+		entitlementMap.put(id, resourceRole);
 	}
 
 	public void addPermissionToRole(String roleId, String permissionId) {
-
+		Role role = (Role) getEntitlement(roleId);
+		Permission permission = (Permission) getEntitlement(permissionId);
+		role.addPermission(permission);
 	}
 
 	public void addPermissionToUser(String userId, String permissionId) {
