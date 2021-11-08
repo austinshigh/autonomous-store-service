@@ -1,0 +1,181 @@
+java -cp . com.cscie97.store.test.TestDriver store_b.script
+
+
+# Define a store - this creates a ledger and transfers 20000 Units to the store
+>>> define-store STORE002 storeName "costco" storeAddress "77 Elma St, San Luis, CA"
+new store id: STORE002
+
+
+# Define an aisle within the store
+>>> define-aisle STORE002:1 aisleName AISLE_A aisleDescr "frozen food" location "floor"
+aisle id : 1
+>>> define-aisle STORE002:2 aisleName AISLE_B aisleDescr "chocolate" location "floor"
+aisle id : 2
+>>> define-aisle STORE002:3 aisleName AISLE_C aisleDescr "wine" location "floor"
+aisle id : 3
+
+
+
+
+# Define a new shelf within the store
+>>> define-shelf STORE002:1:SHELF001 shelfName FROZEN_SHELF shelfLevel medium sheldDescr "frozen food" shelfTempEnum refrigerated
+Shelf defined, new shelf id: SHELF001
+>>> define-shelf STORE002:1:SHELF002 shelfName SWEETS_SHELF shelfLevel medium sheldDescr "sweets" shelfTempEnum ambient
+Shelf defined, new shelf id: SHELF002
+>>> define-shelf STORE002:2:SHELF001 shelfName CONDIMENTS_SHELF shelfLevel high sheldDescr "condiment" shelfTempEnum ambient
+Shelf defined, new shelf id: SHELF001
+
+
+
+
+# Define a new products
+>>> define-product CHICKEN001 prodName chicken prodDescr "organic chicken" size 500g category "frozen food" unit_price 10 tempTempEnum refrigerated
+new product created, product id:CHICKEN001
+>>> define-product PIZZA001 prodName pizza prodDescr "pizza" size 600g category "condiments" unit_price 2 tempTempEnum ambient
+new product created, product id:PIZZA001
+
+
+
+
+# Define a new inventory item within the store
+>>> define-inventory INVENTORY001 location STORE002:1:SHELF001 capacity 20 count 19 product CHICKEN001
+Inventory Created, New Inventory Id:INVENTORY001
+>>> define-inventory INVENTORY002 location STORE002:1:SHELF002 capacity 30 count 23 product PIZZA001
+Inventory Created, New Inventory Id:INVENTORY002
+
+
+
+
+# Define 2 customers (2 registered who have 200 Units transferred from the master account)
+>>> define-customer CUSTOMER00001 first_name ann last_name fred type registered email_address "afred@gmail.com" account ann01
+customer id: CUSTOMER00001
+>>> define-customer CUSTOMER00002 first_name ted last_name hill type registered email_address "thill@yahoo.com" account ted01
+customer id: CUSTOMER00002
+
+
+
+
+# Define device of type camera, robot, speakers, microphones, and turnstile
+>>> define-device CAMERA001 name front_door_camera type camera location STORE002:1
+sensor id:CAMERA001
+>>> define-device CAMERA002 name right_end_camera type camera location STORE002:2
+sensor id:CAMERA002
+>>> define-device ROBOT001 name r2d2 type robot location STORE002:1
+appliance id:ROBOT001
+>>> define-device ROBOT002 name r2d3 type robot location STORE002:2
+appliance id:ROBOT002
+>>> define-device ROBOT003 name r2d4 type robot location STORE002:2
+appliance id:ROBOT003
+>>> define-device TURNSTILE001 name cashier1 type turnstile location STORE002:1
+appliance id:TURNSTILE001
+>>> define-device TURNSTILE002 name cashier2 type turnstile location STORE002:2
+appliance id:TURNSTILE002
+>>> define-device MICROPHONE001 name front-microphone type microphone location STORE002:1
+sensor id:MICROPHONE001
+>>> define-device SPEAKER001 name middle-aisle-speaker type speaker location STORE002:2
+appliance id:SPEAKER001
+>>> define-device SPEAKER002 name middle-aisle-speaker type speaker location STORE002:3
+appliance id:SPEAKER002
+
+
+
+
+# Create enter-store events for 2 customers
+>>> create-event TURNSTILE001 event "enter-store CUSTOMER00001 TURNSTILE001 STORE002:1"
+Turnstile: TURNSTILE001 Opened
+Command Received:  "Hello ann, welcome to costco!"
+
+>>> create-event TURNSTILE002 event "enter-store CUSTOMER00002 TURNSTILE002 STORE002:2"
+Turnstile: TURNSTILE002 Opened
+Command Received:  "Hello ted, welcome to costco!"
+
+
+
+# <<<<<<<<<<<<<<<<<<< NEW TESTS BEGIN >>>>>>>>>>>>>>>>>>>
+
+
+# Create a fetch-product event
+# should return response to customer, max quantity available is 19
+# robot should not be instructed to fetch product
+>>> create-event MICROPHONE001 event "fetch-product CUSTOMER00001 CHICKEN001 INVENTORY001 STORE002:1:SHELF001 20"
+ROBOT001: Announcement: 20 of chicken from aisle 1 and shelf SHELF001 not available, shelf contains 19
+
+
+
+# Create a fetch-product event - expect a command to 1 robot to restock because inventory count is 2 (less than 3)
+>>> create-event MICROPHONE001 event "fetch-product CUSTOMER00001 CHICKEN001 INVENTORY001 STORE002:1:SHELF001 17"
+ROBOT001: Command Received: fetch 17 of CHICKEN001 from aisle 1 and shelf SHELF001 and bring to customer CUSTOMER00001 in aisle null
+17 of : [CHICKEN001] added to [CUSTOMER00001b], New Item Quantity: [17]
+Inventory: [INVENTORY001] has changed, new Count:2 Capacity: 20
+
+ROBOT001: Command Received: perform task restock for 1:SHELF001 and CHICKEN001
+
+
+
+# Create a basket-event event (should show Alert message that sensor has malfunctioned because user cannot remove 21 products from shelf total quantity of 20)
+>>> create-event CAMERA001 event "basket-event CUSTOMER00001 CHICKEN001 INVENTORY001 STORE002:1:SHELF001 20"
+20 of : [CHICKEN001] added to [CUSTOMER00001b], New Item Quantity: [37]
+Inventory: [INVENTORY001] has changed, new Count:0 Capacity: 20
+ALERT: Inventory has been removed from shelf, inventory count for this item is now 0
+ROBOT001: Command Received: perform task restock for 1:SHELF001 and CHICKEN001
+
+
+
+# Create an emergency event - all turnstiles open, 1 attends to emergency and the rest help
+# customers, while speakers announce for customers to leave store
+>>> create-event CAMERA001 event "emergency FIRE STORE002:1"
+Turnstile: TURNSTILE002 Opened
+Turnstile: TURNSTILE001 Opened
+
+SPEAKER001: Announcement: There is a FIRE in 1, please leave STORE002 immediately
+SPEAKER002: Announcement: There is a FIRE in 1, please leave STORE002 immediately
+
+
+ROBOT001: Command Received: address FIRE in aisle 1
+
+
+ROBOT002: Command Received: assist customers leaving the store: STORE002
+ROBOT003: Command Received: assist customers leaving the store: STORE002
+
+
+
+# Should throw incorrect number of arguments error
+>>> create-event CAMERA002 "customer-seen CUSTOMER00003 STORE002:2"
+cscie97.store.model.CommandProcessorException:
+command = 'create-event CAMERA002 "customer-seen CUSTOMER00003 STORE002:2"'
+reason = 'command should follow form:
+create-event <device_id> event <event>'
+lineNumber = 67
+
+
+# Create a basket-event event for CUSTOMER00001
+>>> create-event CAMERA001 event "basket-event CUSTOMER00001 CHICKEN001 INVENTORY001 STORE002:1:SHELF001 2"
+2 of : [CHICKEN001] added to [CUSTOMER00001b], New Item Quantity: [39]
+Inventory: [INVENTORY001] has changed, new Count:18 Capacity: 20
+
+
+>>> create-event CAMERA002 event "basket-event CUSTOMER00001 PIZZA001 INVENTORY002 STORE002:1:SHELF002 5"
+5 of : [PIZZA001] added to [CUSTOMER00001b], New Item Quantity: [5]
+Inventory: [INVENTORY002] has changed, new Count:18 Capacity: 30
+
+
+>>> create-event CAMERA001 event "basket-event CUSTOMER00001 CHICKEN001 INVENTORY001 STORE002:1:SHELF001 2"
+2 of : [CHICKEN001] added to [CUSTOMER00001b], New Item Quantity: [41]
+Inventory: [INVENTORY001] has changed, new Count:16 Capacity: 20
+
+
+
+
+
+
+# Create a check-acc-bal event using a microphone - expect response, basket total is 350 which is more than user's account balance
+>>> create-event MICROPHONE001 event "check-acc-bal CUSTOMER00001 STORE002:2"
+SPEAKER001: Announcement: basket total is 420 which is more than your account balance
+
+
+
+# Create a checkout event
+# Customer should receive announcement, "sorry, you have insufficient funds, please return <amount> currency units worth of items in order to checkout."
+>>> create-event TURNSTILE001 event "checkout CUSTOMER00001 STORE002:1"
+TURNSTILE001: Announcement: Hello ann.
+TURNSTILE001: Announcement: sorry ann, you have insufficient funds, please return 220 currency units worth of items order to checkout.

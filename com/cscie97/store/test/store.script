@@ -140,7 +140,7 @@ create-event CAMERA002 event "basket-event CUSTOMER00001 HONEY001 INVENTORY002 S
 create-event CAMERA001 event "basket-event CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 2"
 
 
-# Create a check-acc-bal event using a microphone - expect only one speaker to give response - total cost = 53
+# Create a check-acc-bal event using a microphone - expect only one speaker to give response - total cost = 77
 create-event MICROPHONE001 event "check-acc-bal CUSTOMER00001 STORE001:2"
 
 

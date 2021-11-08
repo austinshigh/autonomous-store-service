@@ -65,7 +65,7 @@ public class Checkout implements Command {
 		String basketId = customer.getBasketId();
 
 		// identify customer
-		storeModelService.createAnnouncement(turnstileId, "Hello " + customerName + ".");
+		System.out.println(storeModelService.createAnnouncement(turnstileId, "Hello " + customerName + "."));
 
 		// compute total cost of items in the customer's basket
 		int basketTotal = storeModelService.getBasketTotal(basketId);
@@ -80,7 +80,8 @@ public class Checkout implements Command {
 			ledger.processTransaction(tx);
 
 			// get storeName from storemodelservice
-			String storeName = storeModelService.getStore(storeId).getName();
+			Store store = storeModelService.getStore(storeId);
+			String storeName = store.getName();
 
 			System.out.println(storeModelService.openTurnstile(turnstileId));
 
@@ -94,7 +95,7 @@ public class Checkout implements Command {
 				AssistCustomerToCar assistCustomerToCar = new AssistCustomerToCar(customerId, storeId, aisleId, storeModelService);
 				assistCustomerToCar.execute();
 			}
-			storeModelService.getStore(storeId).getCustomerMap().remove(customerId);
+			store.getCustomerMap().remove(customerId);
 
 			// clear customer's basket
 			storeModelService.getBasketMap().get(basketId).clearBasket();

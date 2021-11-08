@@ -49,17 +49,6 @@ public class CommandProcessor {
             }
             System.out.println(">>> " + command);
             switch (firstArg) {
-                // compare first word in line to determine method to call
-//                case "access-type":
-//                    String access = commands.get(1);
-//                    if (access.equals("admin") || (access.equals("user"))) {
-//                        // if valid input, set class variable to appropriate access type
-//                        accessType = access;
-//                    } else {
-//                        // throw exception displaying appropriate input form
-//                        throw new CommandProcessorException("command should follow form:" +
-//                                "\naccess-type <admin | user>");
-//                    }
                 case "create-ledger":
                     if (commands.size() != 6) {
                         // throw exception if incorrect number of command line arguments

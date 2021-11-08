@@ -1,0 +1,559 @@
+java -cp . com.cscie97.store.test.TestDriver store.script
+# Define a store - this creates a ledger and transfers 20000 Units to the store
+>>> define-store STORE001 storeName "costco" storeAddress "77 Elma St, San Luis, CA"
+new store id: STORE001
+
+
+# Define an aisle within the store
+>>> define-aisle STORE001:1 aisleName AISLE001 aisleDescr "dairy" location "floor"
+aisle id : 1
+>>> define-aisle STORE001:2 aisleName AISLE002 aisleDescr "chocolate" location "floor"
+aisle id : 2
+>>> define-aisle STORE001:3 aisleName AISLE003 aisleDescr "wine" location "floor"
+aisle id : 3
+
+
+
+
+# Define a new shelf within the store
+>>> define-shelf STORE001:1:SHELF001 shelfName DIARY_SHELF shelfLevel medium sheldDescr "dairy" shelfTempEnum refrigerated
+Shelf defined, new shelf id: SHELF001
+>>> define-shelf STORE001:1:SHELF002 shelfName SWEETS_SHELF shelfLevel medium sheldDescr "sweets" shelfTempEnum ambient
+Shelf defined, new shelf id: SHELF002
+>>> define-shelf STORE001:2:SHELF001 shelfName CONDIMENTS_SHELF shelfLevel high sheldDescr "condiment" shelfTempEnum ambient
+Shelf defined, new shelf id: SHELF001
+
+
+# Show the details of a store, aisles, and shelves
+>>> show-store STORE001
+Store : 
+id=STORE001
+name=costco
+
+STORE001's Address: 
+Address: 77 Elma St, San Luis, CA
+
+
+STORE001's Aisles: 
+{1=Aisle Details: 
+number='1'
+name='AISLE001'
+description='dairy'
+shelfMap={SHELF001=
+Shelf Details{
+id='SHELF001'
+name='DIARY_SHELF'
+description='medium'
+shelfLevel=dairy
+temperature=refrigerated
+}, SHELF002=
+Shelf Details{
+id='SHELF002'
+name='SWEETS_SHELF'
+description='medium'
+shelfLevel=sweets
+temperature=ambient
+}}
+aisleLocation=floor
+, 2=Aisle Details: 
+number='2'
+name='AISLE002'
+description='chocolate'
+shelfMap={SHELF001=
+Shelf Details{
+id='SHELF001'
+name='CONDIMENTS_SHELF'
+description='high'
+shelfLevel=condiment
+temperature=ambient
+}}
+aisleLocation=floor
+, 3=Aisle Details: 
+number='3'
+name='AISLE003'
+description='wine'
+shelfMap={}
+aisleLocation=floor
+}
+
+STORE001's Customers: 
+{}
+
+STORE001's Devices: 
+{}
+
+STORE001's Inventory: 
+{}
+
+>>> show-aisle STORE001:1
+Aisle Details: 
+number='1'
+name='AISLE001'
+description='dairy'
+shelfMap={SHELF001=
+Shelf Details{
+id='SHELF001'
+name='DIARY_SHELF'
+description='medium'
+shelfLevel=dairy
+temperature=refrigerated
+}, SHELF002=
+Shelf Details{
+id='SHELF002'
+name='SWEETS_SHELF'
+description='medium'
+shelfLevel=sweets
+temperature=ambient
+}}
+aisleLocation=floor
+
+>>> show-aisle STORE001:2
+Aisle Details: 
+number='2'
+name='AISLE002'
+description='chocolate'
+shelfMap={SHELF001=
+Shelf Details{
+id='SHELF001'
+name='CONDIMENTS_SHELF'
+description='high'
+shelfLevel=condiment
+temperature=ambient
+}}
+aisleLocation=floor
+
+>>> show-shelf STORE001:1:SHELF001
+
+Shelf Details{
+id='SHELF001'
+name='DIARY_SHELF'
+description='medium'
+shelfLevel=dairy
+temperature=refrigerated
+}
+>>> show-shelf STORE001:1:SHELF002
+
+Shelf Details{
+id='SHELF002'
+name='SWEETS_SHELF'
+description='medium'
+shelfLevel=sweets
+temperature=ambient
+}
+>>> show-shelf STORE001:2:SHELF001
+
+Shelf Details{
+id='SHELF001'
+name='CONDIMENTS_SHELF'
+description='high'
+shelfLevel=condiment
+temperature=ambient
+}
+
+
+
+
+# Define a new products
+>>> define-product MILK001 prodName milk prodDescr "organic milk" size 12 category "dairy" unit_price 3 tempTempEnum refrigerated
+new product created, product id:MILK001
+>>> define-product HONEY001 prodName honey prodDescr "organic assorted honey" size 6 category "condiments" unit_price 7 tempTempEnum ambient
+new product created, product id:HONEY001
+
+
+# Show the details of the product
+>>> show-product MILK001
+Product Details: 
+id='MILK001'
+name='milk'
+description='organic milk'
+category='dairy'
+price=3
+temperature=refrigerated
+Volume=12
+
+>>> show-product HONEY001
+Product Details: 
+id='HONEY001'
+name='honey'
+description='organic assorted honey'
+category='condiments'
+price=7
+temperature=ambient
+Volume=6
+
+
+
+# Define a new inventory item within the store
+>>> define-inventory INVENTORY001 location STORE001:1:SHELF001 capacity 20 count 11 product MILK001
+Inventory Created, New Inventory Id:INVENTORY001
+>>> define-inventory INVENTORY002 location STORE001:1:SHELF002 capacity 30 count 23 product HONEY001
+Inventory Created, New Inventory Id:INVENTORY002
+
+
+# Show the details of the inventory
+>>> show-inventory INVENTORY001
+
+Inventory Details: id='INVENTORY001'
+count=11
+capacity=20
+INVENTORY001's Product Information: 
+Product Details: 
+id='MILK001'
+name='milk'
+description='organic milk'
+category='dairy'
+price=3
+temperature=refrigerated
+Volume=12
+Inventory Location: 
+on shelf: SHELF001
+in aisle: 1
+in store: STORE001
+
+>>> show-inventory INVENTORY002
+
+Inventory Details: id='INVENTORY002'
+count=23
+capacity=30
+INVENTORY002's Product Information: 
+Product Details: 
+id='HONEY001'
+name='honey'
+description='organic assorted honey'
+category='condiments'
+price=7
+temperature=ambient
+Volume=6
+Inventory Location: 
+on shelf: SHELF002
+in aisle: 1
+in store: STORE001
+
+
+
+
+
+# Define 12 customers (9 registered who have 200 Units transferred from the master account = 10 transactions now)
+>>> define-customer CUSTOMER00001 first_name ann last_name fred type registered email_address "afred@gmail.com" account ann01
+customer id: CUSTOMER00001
+>>> define-customer CUSTOMER00002 first_name ted last_name hill type registered email_address "thill@yahoo.com" account ted01
+customer id: CUSTOMER00002
+>>> define-customer CUSTOMER00003 first_name jane last_name dan type guest email_address "jdan@gmail.com" account jane01
+customer id: CUSTOMER00003
+>>> define-customer CUSTOMER00004 first_name tami last_name donny type registered email_address "tdonny@gmail.com" account tami01
+customer id: CUSTOMER00004
+>>> define-customer CUSTOMER00005 first_name tayo last_name akin type registered email_address "takin@yahoo.com" account tayo01
+customer id: CUSTOMER00005
+>>> define-customer CUSTOMER00006 first_name dami last_name davis type guest email_address "ddavis@gmail.com" account dami01
+customer id: CUSTOMER00006
+>>> define-customer CUSTOMER00007 first_name ahmed last_name usman type registered email_address "ausman@gmail.com" account ahmed01
+customer id: CUSTOMER00007
+>>> define-customer CUSTOMER00008 first_name jake last_name farm type registered email_address "jfarm@yahoo.com" account jake01
+customer id: CUSTOMER00008
+>>> define-customer CUSTOMER00009 first_name hanna last_name alla type guest email_address "halla@gmail.com" account hanna01
+customer id: CUSTOMER00009
+>>> define-customer CUSTOMER00010 first_name ruth last_name bosch type registered email_address "rbosch@gmail.com" account ruth01
+customer id: CUSTOMER00010
+>>> define-customer CUSTOMER00011 first_name rose last_name lily type registered email_address "rlily@gmail.com" account rose01
+customer id: CUSTOMER00011
+>>> define-customer CUSTOMER00012 first_name abby last_name gotham type registered email_address "agotham@gmail.com" account abby01
+customer id: CUSTOMER00012
+
+
+
+
+# Define device of type camera, robot, speakers, microphones, and turnstile
+>>> define-device CAMERA001 name front_door_camera type camera location STORE001:1
+sensor id:CAMERA001
+>>> define-device CAMERA002 name right_end_camera type camera location STORE001:2
+sensor id:CAMERA002
+>>> define-device ROBOT001 name r2d2 type robot location STORE001:1
+appliance id:ROBOT001
+>>> define-device ROBOT002 name r2d3 type robot location STORE001:2
+appliance id:ROBOT002
+>>> define-device ROBOT003 name r2d4 type robot location STORE001:2
+appliance id:ROBOT003
+>>> define-device TURNSTILE001 name cashier1 type turnstile location STORE001:1
+appliance id:TURNSTILE001
+>>> define-device TURNSTILE002 name cashier2 type turnstile location STORE001:2
+appliance id:TURNSTILE002
+>>> define-device MICROPHONE001 name front-microphone type microphone location STORE001:1
+sensor id:MICROPHONE001
+>>> define-device SPEAKER001 name middle-aisle-speaker type speaker location STORE001:2
+appliance id:SPEAKER001
+>>> define-device SPEAKER002 name middle-aisle-speaker type speaker location STORE001:3
+appliance id:SPEAKER002
+
+
+# Show sensor details using its unique id
+>>> show-device CAMERA001
+Camera Details{
+id=CAMERA001
+name=front_door_camera
+deviceType=camera
+location=STORE001, 1
+}
+>>> show-device ROBOT001
+Robot Details{
+id='ROBOT001'
+name='r2d2'
+deviceType='robot'
+location=STORE001, 1
+}
+>>> show-device ROBOT002
+Robot Details{
+id='ROBOT002'
+name='r2d3'
+deviceType='robot'
+location=STORE001, 2
+}
+>>> show-device ROBOT003
+Robot Details{
+id='ROBOT003'
+name='r2d4'
+deviceType='robot'
+location=STORE001, 2
+}
+>>> show-device TURNSTILE001
+Turnstile Details{
+id='TURNSTILE001'
+name='cashier1'
+deviceType='turnstile'
+location=STORE001, 1
+}
+>>> show-device TURNSTILE002
+Turnstile Details{
+id='TURNSTILE002'
+name='cashier2'
+deviceType='turnstile'
+location=STORE001, 2
+}
+>>> show-device MICROPHONE001
+Microphone Details{
+id=MICROPHONE001
+name=front-microphone
+deviceType=microphone
+location=STORE001, 1
+}
+>>> show-device CAMERA002
+Camera Details{
+id=CAMERA002
+name=right_end_camera
+deviceType=camera
+location=STORE001, 2
+}
+>>> show-device SPEAKER001
+Speaker Details{
+id='SPEAKER001'name='middle-aisle-speaker'deviceType='speaker'location=STORE001, 2}
+>>> show-device SPEAKER002
+Speaker Details{
+id='SPEAKER002'name='middle-aisle-speaker'deviceType='speaker'location=STORE001, 3}
+
+
+
+
+# Create enter-store events for 3 customers
+>>> create-event TURNSTILE001 event "enter-store CUSTOMER00001 TURNSTILE001 STORE001:1"
+Turnstile: TURNSTILE001 Opened
+Command Received:  "Hello ann, welcome to costco!"
+
+>>> create-event TURNSTILE002 event "enter-store CUSTOMER00002 TURNSTILE002 STORE001:2"
+Turnstile: TURNSTILE002 Opened
+Command Received:  "Hello ted, welcome to costco!"
+
+>>> create-event TURNSTILE001 event "enter-store CUSTOMER00003 TURNSTILE001 STORE001:1"
+Command Received: "Hello jane, your blockchain balance is not sufficient to enter the store."
+
+
+
+# Create a customer-seen event for CUSTOMER00001 - location should change to {STORE001=3}
+>>> create-event CAMERA001 event "customer-seen CUSTOMER00001 STORE001:3"
+customer: [CUSTOMER00001] spotted in aisle: [3] of store: [STORE001] at [20:04:50.100219]
+
+
+
+# Create a basket-event event (leaving 9 out of the 11 milk products on the shelf)
+>>> create-event CAMERA001 event "basket-event CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 2"
+2 of : [MILK001] added to [CUSTOMER00001b], New Item Quantity: [2]
+Inventory: [INVENTORY001] has changed, new Count:9 Capacity: 20
+
+
+
+
+
+
+# Create a fetch-product event - expect a command to 1 robot to fetch the product
+>>> create-event MICROPHONE001 event "fetch-product CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 3"
+ROBOT001: Command Received: fetch 3 of MILK001 from aisle 1 and shelf SHELF001 and bring to customer CUSTOMER00001 in aisle 3
+3 of : [MILK001] added to [CUSTOMER00001b], New Item Quantity: [5]
+Inventory: [INVENTORY001] has changed, new Count:6 Capacity: 20
+
+
+
+
+
+
+# Create a fetch-product event - expect a command to 1 robot to restock because inventory count is 1 (less than 3)
+>>> create-event MICROPHONE001 event "fetch-product CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 5"
+ROBOT001: Command Received: fetch 5 of MILK001 from aisle 1 and shelf SHELF001 and bring to customer CUSTOMER00001 in aisle 3
+5 of : [MILK001] added to [CUSTOMER00001b], New Item Quantity: [10]
+Inventory: [INVENTORY001] has changed, new Count:1 Capacity: 20
+
+ROBOT001: Command Received: perform task restock for 1:SHELF001 and MILK001
+
+
+
+
+
+# Create an emergency event - all turnstiles open, 1 attends to emergency and the rest help
+# customers, while speakers announce for customers to leave store
+>>> create-event CAMERA001 event "emergency ARMED_INTRUDER STORE001:1"
+Turnstile: TURNSTILE002 Opened
+Turnstile: TURNSTILE001 Opened
+
+SPEAKER001: Announcement: There is a ARMED_INTRUDER in 1, please leave STORE001 immediately
+SPEAKER002: Announcement: There is a ARMED_INTRUDER in 1, please leave STORE001 immediately
+
+
+ROBOT001: Command Received: address ARMED_INTRUDER in aisle 1
+
+
+ROBOT002: Command Received: assist customers leaving the store: STORE001
+ROBOT003: Command Received: assist customers leaving the store: STORE001
+
+
+
+
+
+# 3 customers enter the STORE001 again
+>>> create-event TURNSTILE001 event "enter-store CUSTOMER00001 TURNSTILE001 STORE001:1"
+Turnstile: TURNSTILE001 Opened
+Command Received:  "Hello ann, welcome to costco!"
+
+>>> create-event TURNSTILE002 event "enter-store CUSTOMER00002 TURNSTILE002 STORE001:2"
+Turnstile: TURNSTILE002 Opened
+Command Received:  "Hello ted, welcome to costco!"
+
+>>> create-event TURNSTILE002 event "enter-store CUSTOMER00003 TURNSTILE002 STORE001:2"
+Command Received: "Hello jane, your blockchain balance is not sufficient to enter the store."
+
+
+
+
+
+# Show the details of the customers before updating location
+>>> show-customer CUSTOMER00001
+Customer Details :
+id='CUSTOMER00001'
+firstName='ann'
+lastName='fred'
+email='afred@gmail.com'
+blockchainAddress='ann01'
+registered=true
+timeLastSeen=2021-10-24T20:04:50.100219
+basket=CUSTOMER00001b
+location=Location{
+storeId='STORE001'
+aisleNumber='3
+}
+
+
+
+# Create a customer-seen event for CUSTOMER00001 - location should change to {STORE001=1}
+>>> create-event CAMERA001 event "customer-seen CUSTOMER00001 STORE001:1"
+customer: [CUSTOMER00001] spotted in aisle: [1] of store: [STORE001] at [20:04:50.129814]
+
+
+
+
+
+# Create a customer-seen event for CUSTOMER00003 - location should change to {STORE001=3}
+>>> create-event CAMERA001 event "customer-seen CUSTOMER00003 STORE001:3"
+customer: [CUSTOMER00003] spotted in aisle: [3] of store: [STORE001] at [20:04:50.130357]
+
+
+
+>>> show-customer CUSTOMER00003
+Customer Details :
+id='CUSTOMER00003'
+firstName='jane'
+lastName='dan'
+email='jdan@gmail.com'
+blockchainAddress='jane01'
+registered=false
+timeLastSeen=2021-10-24T20:04:50.130357
+basket=CUSTOMER00003b
+location=Location{
+storeId='STORE001'
+aisleNumber='3
+}
+
+
+
+
+
+# Create a broken-glass event - expect a robot to be assigned a new command to clean up glass
+>>> create-event CAMERA002 event "broken-glass STORE001:1"
+ROBOT001: Command Received: clean-up glass aisle 1
+
+
+
+
+
+# Create a product-spill event - expect a robot to be assigned a command to clean the milk
+>>> create-event CAMERA002 event "product-spill STORE001:2 MILK001"
+ROBOT002: Announcement: clean-up milk spill in aisle 2
+
+
+
+
+
+# Create a missing-person event using a microphone - expect that the missing customer is in aisle 1
+>>> create-event MICROPHONE001 event "missing-person STORE001 CUSTOMER00001"
+SPEAKER001: Announcement: customer-found in aisle: 1
+
+
+
+
+
+# Create a basket-event event for CUSTOMER00001
+>>> create-event CAMERA001 event "basket-event CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 2"
+2 of : [MILK001] added to [CUSTOMER00001b], New Item Quantity: [12]
+Inventory: [INVENTORY001] has changed, new Count:18 Capacity: 20
+
+
+>>> create-event CAMERA002 event "basket-event CUSTOMER00001 HONEY001 INVENTORY002 STORE001:1:SHELF002 5"
+5 of : [HONEY001] added to [CUSTOMER00001b], New Item Quantity: [5]
+Inventory: [INVENTORY002] has changed, new Count:18 Capacity: 30
+
+
+>>> create-event CAMERA001 event "basket-event CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 2"
+2 of : [MILK001] added to [CUSTOMER00001b], New Item Quantity: [14]
+Inventory: [INVENTORY001] has changed, new Count:16 Capacity: 20
+
+
+
+
+
+
+# Create a check-acc-bal event using a microphone - expect only one speaker to give response - total cost = 77
+>>> create-event MICROPHONE001 event "check-acc-bal CUSTOMER00001 STORE001:2"
+SPEAKER001: Announcement: basket total is 77 which is less than your account balance
+
+
+
+
+
+# Create an assist-customer event using a turnstile location
+>>> create-event TURNSTILE001 event "assist-customer CUSTOMER00001 STORE001:1"
+ROBOT001: Command Received: assist CUSTOMER00001 to their car
+
+
+
+
+
+# Create a checkout event
+>>> create-event TURNSTILE001 event "checkout CUSTOMER00001 STORE001:1"
+TURNSTILE001: Announcement: Hello ann.
+Turnstile: TURNSTILE001 Opened
+TURNSTILE001: Announcement: goodbye ann, thanks for shopping at costco!
