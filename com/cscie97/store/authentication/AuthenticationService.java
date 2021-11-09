@@ -1,8 +1,7 @@
+package com.cscie97.store.authentication;
+
 import javax.naming.AuthenticationException;
-import java.sql.Time;
-import java.time.LocalTime;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,17 +11,34 @@ public class AuthenticationService extends Visitable {
 
 	private int tokenTimeout;
 
-	private static AuthenticationService singleInstance;
+	private static AuthenticationService singleton;
 
 	private AuthenticationException authenticationException;
 
 	private Visitor visitor;
 
-	private Map<String,User> userMap;
+	private Map<String, User> userMap;
 
 	private Map<String, Entitlement> entitlementMap;
 
 	private Map<String, Resource> resourceMap;
+
+	/**
+	 * get field
+	 *
+	 * @return singleInstance
+	 */
+	public static AuthenticationService getSingleton() {
+		return singleton;
+	}
+
+	/**
+	 * set field
+	 *
+	 * @param singleInstance
+	 */
+	public static void setSingleInstance(AuthenticationService singleInstance) {singleton = singleInstance;
+	}
 
 	private void AuthenticationService() {
 		this.id = 1;
@@ -31,6 +47,11 @@ public class AuthenticationService extends Visitable {
 	}
 
 	public boolean checkAccess(String token, String permission) {
+		CheckAccessVisitor checkAccess = new CheckAccessVisitor(permission);
+		checkAccess.visit(getSingleton());
+		if (checkAccess.isPermissionFound()){
+			return true;
+		}
 		return false;
 	}
 
@@ -82,8 +103,31 @@ public class AuthenticationService extends Visitable {
 		resourceMap.put(id, resource);
 	}
 
-	public Entitlement getEntitlement(String id){
-		return entitlementMap.get(id);
+	public Role getRole(String id){
+		Entitlement entitlement = entitlementMap.get(id);
+		if (entitlement instanceof Role) {
+			Role role = (Role) entitlement;
+			return role;
+		}
+		return null;
+	}
+
+	public ResourceRole getResourceRole(String id){
+		Entitlement entitlement = entitlementMap.get(id);
+		if (entitlement instanceof ResourceRole) {
+			ResourceRole resourceRole = (ResourceRole) entitlement;
+			return resourceRole;
+		}
+		return null;
+	}
+
+	public Permission getPermission(String id){
+		Entitlement entitlement = entitlementMap.get(id);
+		if (entitlement instanceof Permission) {
+			Permission permission = (Permission) entitlement;
+			return permission;
+		}
+		return null;
 	}
 
 	public Resource getResource(String id){
@@ -92,43 +136,177 @@ public class AuthenticationService extends Visitable {
 
 	public void createResourceRole(String id, String roleId, String resourceId) {
 		Resource resource = getResource(resourceId);
-		Role role = (Role) getEntitlement(roleId);
+		Role role = getRole(roleId);
 		ResourceRole resourceRole = new ResourceRole(id, resource, role);
 		entitlementMap.put(id, resourceRole);
 	}
 
 	public void addPermissionToRole(String roleId, String permissionId) {
-		Role role = (Role) getEntitlement(roleId);
-		Permission permission = (Permission) getEntitlement(permissionId);
+		Role role = getRole(roleId);
+		Permission permission = getPermission(permissionId);
 		role.addPermission(permission);
 	}
 
 	public void addPermissionToUser(String userId, String permissionId) {
-
+		Permission permission = getPermission(permissionId);
+		User user = getUser(userId);
+		user.addPermission(permission);
 	}
 
 	public void addRoleToUser(String userId, String roleId) {
-
+		User user = getUser(userId);
+		Role role = getRole(roleId);
+		user.addRole(role);
 	}
 
 	public void addResourceRoleToUser(String userId, String resourceRoleId) {
-
+		User user = getUser(userId);
+		ResourceRole resourceRole = getResourceRole(resourceRoleId);
+		user.addResourceRole(resourceRole);
 	}
 
 	public void modifyTokenTimeout(int minutes) {
-
+		setTokenTimeout(minutes);
 	}
 
 	public AuthenticationService getInstance() {
-		return null;
+		return getSingleton();
 	}
 
-	public void generateInventory(Token authToken) {
-
+	public void generateInventory() {
+		InventoryVisitor inventoryVisitor = new InventoryVisitor();
+		inventoryVisitor.visit(getSingleton());
 	}
 
 	@Override
 	public void accept(Visitor visitor) {
+		System.out.println("accept");
+	}
 
+
+	/**
+	 * get field
+	 *
+	 * @return id
+	 */
+	public int getId() {
+		return this.id;
+	}
+
+	/**
+	 * set field
+	 *
+	 * @param id
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
+	 * get field
+	 *
+	 * @return tokenTimeout
+	 */
+	public int getTokenTimeout() {
+		return this.tokenTimeout;
+	}
+
+	/**
+	 * set field
+	 *
+	 * @param tokenTimeout
+	 */
+	public void setTokenTimeout(int tokenTimeout) {
+		this.tokenTimeout = tokenTimeout;
+	}
+
+	/**
+	 * get field
+	 *
+	 * @return authenticationException
+	 */
+	public AuthenticationException getAuthenticationException() {
+		return this.authenticationException;
+	}
+
+	/**
+	 * set field
+	 *
+	 * @param authenticationException
+	 */
+	public void setAuthenticationException(AuthenticationException authenticationException) {
+		this.authenticationException = authenticationException;
+	}
+
+	/**
+	 * get field
+	 *
+	 * @return visitor
+	 */
+	public Visitor getVisitor() {
+		return this.visitor;
+	}
+
+	/**
+	 * set field
+	 *
+	 * @param visitor
+	 */
+	public void setVisitor(Visitor visitor) {
+		this.visitor = visitor;
+	}
+
+	/**
+	 * get field
+	 *
+	 * @return userMap
+	 */
+	public Map<String, User> getUserMap() {
+		return this.userMap;
+	}
+
+	/**
+	 * set field
+	 *
+	 * @param userMap
+	 */
+	public void setUserMap(Map<String, User> userMap) {
+		this.userMap = userMap;
+	}
+
+	/**
+	 * get field
+	 *
+	 * @return entitlementMap
+	 */
+	public Map<String, Entitlement> getEntitlementMap() {
+		return this.entitlementMap;
+	}
+
+	/**
+	 * set field
+	 *
+	 * @param entitlementMap
+	 */
+	public void setEntitlementMap(Map<String, Entitlement> entitlementMap) {
+		this.entitlementMap = entitlementMap;
+	}
+
+	/**
+	 * get field
+	 *
+	 * @return resourceMap
+	 */
+	public Map<String, Resource> getResourceMap() {
+		return this.resourceMap;
+	}
+
+	/**
+	 * set field
+	 *
+	 * @param resourceMap
+	 */
+	public void setResourceMap(Map<String, Resource> resourceMap) {
+		this.resourceMap = resourceMap;
 	}
 }

@@ -1,3 +1,5 @@
+package com.cscie97.store.authentication;
+
 public abstract class Visitor {
 
 	public abstract void visit(User user);
@@ -9,6 +11,8 @@ public abstract class Visitor {
 	public abstract void visit(ResourceRole resourceRole);
 
 	public abstract void visit(Permission permission);
+
+	public abstract void visit(Entitlement entitlement);
 
 	public abstract void visit(AuthenticationService authService);
 

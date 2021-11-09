@@ -5,6 +5,7 @@ import com.cscie97.ledger.LedgerException;
 import com.cscie97.ledger.Transaction;
 import com.cscie97.store.controller.ControllerException;
 import com.cscie97.store.controller.StoreController;
+import com.cscie97.store.authentication.AuthenticationService;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,6 +19,7 @@ public class CommandProcessor {
 
 	private static StoreModelService storeModelService;
 	private static StoreController storeController;
+	private static AuthenticationService authenticationService;
 	private static String[] idArray;
 	private static Ledger ledgerService;
 

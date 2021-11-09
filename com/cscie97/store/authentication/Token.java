@@ -1,3 +1,5 @@
+package com.cscie97.store.authentication;
+
 import java.util.Calendar;
 
 public class Token {

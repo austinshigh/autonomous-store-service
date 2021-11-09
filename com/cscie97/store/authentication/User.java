@@ -1,3 +1,5 @@
+package com.cscie97.store.authentication;
+
 import java.util.ArrayList;
 
 public class User extends Visitable {
@@ -19,6 +21,18 @@ public class User extends Visitable {
 
     public void addCredential(Credential credential){
         credentialList.add(credential);
+    }
+
+    public void addPermission(Permission permission){
+        entitlementList.add(permission);
+    }
+
+    public void addRole(Role role){
+        entitlementList.add(role);
+    }
+
+    public void addResourceRole(ResourceRole resourceRole){
+        entitlementList.add(resourceRole);
     }
 
     public Boolean login(String password){
