@@ -1,5 +1,6 @@
 package com.cscie97.store.authentication;
 
+import javax.naming.AuthenticationNotSupportedException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,10 +28,10 @@ public class AuthenticationService extends Visitable {
 		this.tokenTimeout = 10;
 		this.userMap = new HashMap<String,User>();
 		//
-		User test = new User("root", "Gavin");
-		Credential testCred = new Credential("password", "default");
-		test.addCredential(testCred);
-		userMap.put(test.getId(), test);
+		User root = new User("root", "Gavin");
+		Password rootPassword = new Password("default");
+		root.addCredential(rootPassword);
+		userMap.put(root.getId(), root);
 		//
 		this.entitlementMap = new HashMap<String, Entitlement>();
 		//
@@ -51,19 +52,36 @@ public class AuthenticationService extends Visitable {
 		}
 	}
 
-	public void createUser(String id, String name) {
+	public String createUser(String id, String name) throws AuthenticationServiceException {
+		if (userMap.containsKey(id)){
+			throw new AuthenticationServiceException("user already exists: " + id);
+		}
 		User user = new User(id, name);
 		userMap.put(id, user);
+		return "user created: " + id;
 	}
 
 	public User getUser(String id){
 		return userMap.get(id);
 	}
 
-	public void addUserCredential(String userId, String type, String value) {
-		Credential credential = new Credential(type, value);
+	public String addUserCredential(String userId, String type, String value) throws AuthenticationServiceException {
 		User user = getUser(userId);
-		user.addCredential(credential);
+		if (type.equals("password")){
+			Password password = new Password(value);
+			user.setPassword(password);
+		}
+		else if (type.equals("voiceprint")){
+			VoicePrint voicePrint = new VoicePrint(value);
+			user.setVoicePrint(voicePrint);
+		}
+		else if (type.equals("faceprint")){
+			FacePrint facePrint = new FacePrint(value);
+			user.setFacePrint(facePrint);
+		}else{
+			throw new AuthenticationServiceException("credential type not supported");
+		}
+		return type + " added to user: " + userId;
 	}
 
 	public String login(String id, String password) throws AuthenticationServiceException {
@@ -89,7 +107,7 @@ public class AuthenticationService extends Visitable {
 
 	public String createPermission(String id, String name, String description) throws AuthenticationServiceException {
 		if (entitlementMap.containsKey(id)){
-			throw new AuthenticationServiceException("permission with id " + id + "already exists");
+			throw new AuthenticationServiceException("permission already exists: " + id);
 		}
 		Permission permission = new Permission(id, name, description);
 		entitlementMap.put(id, permission);
@@ -98,7 +116,7 @@ public class AuthenticationService extends Visitable {
 
 	public String createRole(String id, String name, String description) throws AuthenticationServiceException {
 		if (entitlementMap.containsKey(id)){
-			throw new AuthenticationServiceException("role with id " + id + "already exists");
+			throw new AuthenticationServiceException("role already exists: " + id);
 		}
 		Role role = new Role(id, name, description);
 		entitlementMap.put(id, role);
@@ -107,7 +125,7 @@ public class AuthenticationService extends Visitable {
 
 	public String createResource(String id, String description) throws AuthenticationServiceException {
 		if (resourceMap.containsKey(id)){
-			throw new AuthenticationServiceException("resource with id " + id + "already exists");
+			throw new AuthenticationServiceException("resource already exists: " + id);
 		}
 		Resource resource = new Resource(id, description);
 		resourceMap.put(id, resource);
@@ -116,7 +134,7 @@ public class AuthenticationService extends Visitable {
 
 	public String createResourceRole(String id, String roleId, String resourceId) throws AuthenticationServiceException {
 		if (entitlementMap.containsKey(id)){
-			throw new AuthenticationServiceException("resource role with id " + id + "already exists");
+			throw new AuthenticationServiceException("resource role already exists: " + id);
 		}
 		Resource resource = getResource(resourceId);
 		Role role = getRole(roleId);

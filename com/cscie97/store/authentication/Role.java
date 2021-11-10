@@ -16,6 +16,7 @@ public class Role extends Entitlement {
 		this.id = id;
 		this.name = name;
 		this.description = description;
+		this.entitlementList = new ArrayList<Entitlement>();
 	}
 
 	public void addPermission(Permission permission){

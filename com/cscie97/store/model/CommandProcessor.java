@@ -104,6 +104,28 @@ public class CommandProcessor {
 						}catch(AuthenticationServiceException e){
 							throw new CommandProcessorException(e);
 						}
+					case "create_user":
+						if (commands.size() != 4){
+							// throw exception if incorrect number of command line arguments
+							throw new CommandProcessorException("command should follow form:" +
+									"\ncreate_user <name> name \"<name>\"");
+						}
+						try {
+							return authenticationService.createUser(commands.get(1), commands.get(3));
+						}catch(AuthenticationServiceException e){
+							throw new CommandProcessorException(e);
+						}
+					case "add_user_credential":
+						if (commands.size() != 4){
+							// throw exception if incorrect number of command line arguments
+							throw new CommandProcessorException("command should follow form:" +
+									"\nadd_user_credential <id> <credentialType> <password>");
+						}
+						try {
+							return authenticationService.addUserCredential(commands.get(1), commands.get(2), commands.get(3));
+						}catch(AuthenticationServiceException e){
+							throw new CommandProcessorException(e);
+						}
 					case "define-store":
 						if (commands.size() != 6) {
 							// throw exception if incorrect number of command line arguments

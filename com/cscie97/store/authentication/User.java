@@ -10,19 +10,35 @@ public class User extends Visitable {
 
     private ArrayList<Entitlement> entitlementList;
 
-    private ArrayList<Credential> credentialList;
+    private Password password;
+
+    private FacePrint facePrint;
+
+    private VoicePrint voicePrint;
 
     private Token token;
 
     public User(String id, String name) {
         this.id = id;
         this.name = name;
-        this.entitlementList = new ArrayList<Entitlement>();
-        this.credentialList = new ArrayList<Credential>();
+        this.password = new Password();
+        this.facePrint = new FacePrint();
+        this.voicePrint = new VoicePrint();
     }
 
     public void addCredential(Credential credential){
-        credentialList.add(credential);
+        if (credential instanceof Password) {
+            Password password = (Password) credential;
+            this.password = password;
+        }
+        else if (credential instanceof VoicePrint) {
+            VoicePrint voicePrint = (VoicePrint) credential;
+            this.voicePrint = voicePrint;
+        }
+        else if (credential instanceof FacePrint) {
+            FacePrint facePrint = (FacePrint) credential;
+            this.facePrint = facePrint;
+        }
     }
 
     public void addPermission(Permission permission){
@@ -37,13 +53,9 @@ public class User extends Visitable {
         entitlementList.add(resourceRole);
     }
 
-    public Boolean login(String password) throws AuthenticationServiceException {
-        for (Credential cred : credentialList){
-            if (cred.getAuthType().equals("password")){
-                if (cred.getValue() == password.hashCode()){
-                    return true;
-                }
-            }
+    public Boolean login(String passwordAttempt) throws AuthenticationServiceException {
+        if (password.getValue() == passwordAttempt.hashCode()){
+            return true;
         }
         throw new AuthenticationServiceException("invalid user");
     }
@@ -113,24 +125,6 @@ public class User extends Visitable {
     /**
      * get field
      *
-     * @return credentialList
-     */
-    public ArrayList<Credential> getCredentialList() {
-        return this.credentialList;
-    }
-
-    /**
-     * set field
-     *
-     * @param credentialList
-     */
-    public void setCredentialList(ArrayList<Credential> credentialList) {
-        this.credentialList = credentialList;
-    }
-
-    /**
-     * get field
-     *
      * @return token
      */
     public Token getToken() {
@@ -144,5 +138,61 @@ public class User extends Visitable {
      */
     public void setToken(Token token) {
         this.token = token;
+    }
+
+
+    /**
+     * get field
+     *
+     * @return password
+     */
+    public Password getPassword() {
+        return this.password;
+    }
+
+    /**
+     * set field
+     *
+     * @param password
+     */
+    public void setPassword(Password password) {
+        this.password = password;
+    }
+
+
+    /**
+     * get field
+     *
+     * @return facePrint
+     */
+    public FacePrint getFacePrint() {
+        return this.facePrint;
+    }
+
+    /**
+     * set field
+     *
+     * @param facePrint
+     */
+    public void setFacePrint(FacePrint facePrint) {
+        this.facePrint = facePrint;
+    }
+
+    /**
+     * get field
+     *
+     * @return voicePrint
+     */
+    public VoicePrint getVoicePrint() {
+        return this.voicePrint;
+    }
+
+    /**
+     * set field
+     *
+     * @param voicePrint
+     */
+    public void setVoicePrint(VoicePrint voicePrint) {
+        this.voicePrint = voicePrint;
     }
 }

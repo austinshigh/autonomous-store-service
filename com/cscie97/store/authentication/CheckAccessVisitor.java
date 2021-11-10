@@ -29,7 +29,7 @@ public class CheckAccessVisitor extends Visitor {
 		if (!user.getToken().getExpirationTime().after(Calendar.getInstance())){
 			user.getToken().invalidateToken();
 		}
-		if (user.getToken().getId().equals(inputToken) && user.getToken().isValid()){
+		else if (user.getToken().getId().equals(inputToken) && user.getToken().isValid()){
 			for (Entitlement e : user.getEntitlementList()){
 				visit(e);
 			}
@@ -41,11 +41,11 @@ public class CheckAccessVisitor extends Visitor {
 			Role subRole = (Role) entitlement;
 			visit(subRole);
 		}
-		if (entitlement instanceof ResourceRole) {
+		else if (entitlement instanceof ResourceRole) {
 			ResourceRole resourceRole = (ResourceRole) entitlement;
 			visit(resourceRole);
 		}
-		if (entitlement instanceof Permission) {
+		else if (entitlement instanceof Permission) {
 			Permission permission = (Permission) entitlement;
 			visit(permission);
 		}
