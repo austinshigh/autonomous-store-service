@@ -82,6 +82,28 @@ public class CommandProcessor {
 						}catch(AuthenticationServiceException e){
 							throw new CommandProcessorException(e);
 						}
+					case "define_role":
+						if (commands.size() != 6){
+							// throw exception if incorrect number of command line arguments
+							throw new CommandProcessorException("command should follow form:" +
+									"\ndefine_role <role_id> role_name <role_name> role_description \"<role_description>\"");
+						}
+						try {
+							return authenticationService.createRole(commands.get(1), commands.get(3), commands.get(5));
+						}catch(AuthenticationServiceException e){
+							throw new CommandProcessorException(e);
+						}
+					case "add_permission_to_role":
+						if (commands.size() != 3){
+							// throw exception if incorrect number of command line arguments
+							throw new CommandProcessorException("command should follow form:" +
+									"\nadd_permission_to_role <role_id> <permission_id>");
+						}
+						try {
+							return authenticationService.addPermissionToRole(commands.get(1), commands.get(2));
+						}catch(AuthenticationServiceException e){
+							throw new CommandProcessorException(e);
+						}
 					case "define-store":
 						if (commands.size() != 6) {
 							// throw exception if incorrect number of command line arguments

@@ -96,14 +96,33 @@ public class AuthenticationService extends Visitable {
 		return "permission created: " + id;
 	}
 
-	public void createRole(String id, String name, String description) {
+	public String createRole(String id, String name, String description) throws AuthenticationServiceException {
+		if (entitlementMap.containsKey(id)){
+			throw new AuthenticationServiceException("role with id " + id + "already exists");
+		}
 		Role role = new Role(id, name, description);
 		entitlementMap.put(id, role);
+		return "role created: " + id;
 	}
 
-	public void createResource(String id, String description) {
+	public String createResource(String id, String description) throws AuthenticationServiceException {
+		if (resourceMap.containsKey(id)){
+			throw new AuthenticationServiceException("resource with id " + id + "already exists");
+		}
 		Resource resource = new Resource(id, description);
 		resourceMap.put(id, resource);
+		return "resource created: " + id;
+	}
+
+	public String createResourceRole(String id, String roleId, String resourceId) throws AuthenticationServiceException {
+		if (entitlementMap.containsKey(id)){
+			throw new AuthenticationServiceException("resource role with id " + id + "already exists");
+		}
+		Resource resource = getResource(resourceId);
+		Role role = getRole(roleId);
+		ResourceRole resourceRole = new ResourceRole(id, resource, role);
+		entitlementMap.put(id, resourceRole);
+		return "resource role created: " + id;
 	}
 
 	public Role getRole(String id){
@@ -137,17 +156,14 @@ public class AuthenticationService extends Visitable {
 		return resourceMap.get(id);
 	}
 
-	public void createResourceRole(String id, String roleId, String resourceId) {
-		Resource resource = getResource(resourceId);
-		Role role = getRole(roleId);
-		ResourceRole resourceRole = new ResourceRole(id, resource, role);
-		entitlementMap.put(id, resourceRole);
-	}
-
-	public void addPermissionToRole(String roleId, String permissionId) {
+	public String addPermissionToRole(String roleId, String permissionId) throws AuthenticationServiceException {
 		Role role = getRole(roleId);
 		Permission permission = getPermission(permissionId);
+		if (role.getEntitlementList().contains(permissionId)){
+			throw new AuthenticationServiceException("role already contains permission: " + permissionId);
+		}
 		role.addPermission(permission);
+		return "permission: " + permissionId + "added to role: " + roleId;
 	}
 
 	public void addPermissionToUser(String userId, String permissionId) {
