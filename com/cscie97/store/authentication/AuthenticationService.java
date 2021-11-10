@@ -11,9 +11,9 @@ public class AuthenticationService extends Visitable {
 
 	private int tokenTimeout;
 
-	private static AuthenticationService singleton;
+	private static AuthenticationService singleton = new AuthenticationService();
 
-	private AuthenticationException authenticationException;
+	private AuthenticationServiceException AuthenticationServiceException;
 
 	private Visitor visitor;
 
@@ -23,32 +23,21 @@ public class AuthenticationService extends Visitable {
 
 	private Map<String, Resource> resourceMap;
 
-	/**
-	 * get field
-	 *
-	 * @return singleInstance
-	 */
-	public static AuthenticationService getSingleton() {
-		return singleton;
-	}
-
-	/**
-	 * set field
-	 *
-	 * @param singleInstance
-	 */
-	public static void setSingleInstance(AuthenticationService singleInstance) {singleton = singleInstance;
-	}
-
 	private void AuthenticationService() {
 		this.id = 1;
 		this.tokenTimeout = 10;
 		this.userMap = new HashMap<String,User>();
+		User test = new User("CUSTOMER00001", "Austin");
+		Credential testCred = new Credential("password", "secure");
+		test.addCredential(testCred);
+		userMap.put(test.getId(), test);
+		this.entitlementMap = new HashMap<String, Entitlement>();
+		this.resourceMap = new HashMap<String, Resource>();
 	}
 
 	public boolean checkAccess(String token, String permission) throws AuthenticationServiceException {
 		CheckAccessVisitor checkAccess = new CheckAccessVisitor(permission);
-		checkAccess.visit(getSingleton());
+		checkAccess.visit(getInstance());
 		if (checkAccess.isPermissionFound()){
 			return true;
 		}else{
@@ -71,16 +60,20 @@ public class AuthenticationService extends Visitable {
 		user.addCredential(credential);
 	}
 
-	public String login(String id, String password) throws AuthenticationException {
+	public String login(String id, String password) throws AuthenticationServiceException {
+		System.out.println("XXXX");
 		User user = getUser(id);
-		if (user.login(password)){
+		try{
+			user.login(password);
 			Calendar now = Calendar.getInstance();
 			now.add(Calendar.MINUTE, tokenTimeout);
 			Token token = new Token("RANDOM", now, true);
 			user.setToken(token);
 			return token.getId();
 		}
-		throw new AuthenticationException("invalid user");
+		catch(AuthenticationServiceException e){
+			throw new AuthenticationServiceException(e);
+		}
 	}
 
 	public void logout(String id) {
@@ -171,12 +164,12 @@ public class AuthenticationService extends Visitable {
 	}
 
 	public AuthenticationService getInstance() {
-		return getSingleton();
+		return singleton;
 	}
 
 	public void generateInventory() {
 		InventoryVisitor inventoryVisitor = new InventoryVisitor();
-		inventoryVisitor.visit(getSingleton());
+		inventoryVisitor.visit(getInstance());
 	}
 
 	@Override
@@ -224,19 +217,19 @@ public class AuthenticationService extends Visitable {
 	/**
 	 * get field
 	 *
-	 * @return authenticationException
+	 * @return AuthenticationServiceException
 	 */
-	public AuthenticationException getAuthenticationException() {
-		return this.authenticationException;
+	public AuthenticationServiceException getAuthenticationException() {
+		return this.AuthenticationServiceException;
 	}
 
 	/**
 	 * set field
 	 *
-	 * @param authenticationException
+	 * @param AuthenticationServiceException
 	 */
-	public void setAuthenticationException(AuthenticationException authenticationException) {
-		this.authenticationException = authenticationException;
+	public void setAuthenticationException(AuthenticationServiceException AuthenticationServiceException) {
+		this.AuthenticationServiceException = AuthenticationServiceException;
 	}
 
 	/**

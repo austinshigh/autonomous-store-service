@@ -35,15 +35,17 @@ public class User extends Visitable {
         entitlementList.add(resourceRole);
     }
 
-    public Boolean login(String password){
+    public Boolean login(String password) throws AuthenticationServiceException {
         for (Credential cred : credentialList){
+            System.out.println(cred.getValue());
+            System.out.println("XXXXX");
             if (cred.getAuthType().equals("password")){
                 if (cred.getValue().equals(password.hashCode())){
                     return true;
                 }
             }
         }
-        return false;
+        throw new AuthenticationServiceException("invalid user");
     }
 
     /**

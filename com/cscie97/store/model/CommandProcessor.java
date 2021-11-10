@@ -423,13 +423,13 @@ public class CommandProcessor {
 							throw new CommandProcessorException(e);
 						}
 					case "create-event":
-						if (commands.size() != 5) {
+						if (commands.size() != 6) {
 							// throw exception if incorrect number of command line arguments
 							throw new CommandProcessorException("command should follow form:" +
 									"\ncreate-event <device_id> event <event> credential <credential>");
 						}
 						try {
-							return(storeModelService.createEvent(commands.get(1), commands.get(3), commands.get(4)));
+							return(storeModelService.createEvent(commands.get(1), commands.get(3), commands.get(5)));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						} catch (ControllerException e) {

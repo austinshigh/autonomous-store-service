@@ -17,6 +17,10 @@ public class AuthenticationServiceException extends Throwable {
 		this.reason = e.getReason();
 	}
 
+	public AuthenticationServiceException(String reason) {
+		this.reason = reason;
+	}
+
 	/**
 	 * get field
 	 *
