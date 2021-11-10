@@ -1,7 +1,10 @@
 package com.cscie97.store.controller;
 
 
+import com.cscie97.store.authentication.AuthenticationService;
 import com.cscie97.store.model.*;
+
+import javax.naming.AuthenticationException;
 
 /**
  *  Commmands robot to fetch product for customer,
@@ -9,6 +12,8 @@ import com.cscie97.store.model.*;
  *
  */
 public class FetchProduct implements Command {
+
+	private String credential;
 
 	private String customerId;
 
@@ -26,7 +31,19 @@ public class FetchProduct implements Command {
 
 	private StoreModelService storeModelService;
 
-	public FetchProduct(String customerId, String productId, String inventoryId, String storeId, String aisleId, String shelfId, String quantity, StoreModelService storeModelService) {
+	private AuthenticationService authenticationService;
+
+	public FetchProduct(String credential,
+						String customerId,
+						String productId,
+						String inventoryId,
+						String storeId,
+						String aisleId,
+						String shelfId,
+						String quantity,
+						StoreModelService storeModelService,
+						AuthenticationService authenticationService) {
+		this.credential = credential;
 		this.customerId = customerId;
 		this.productId = productId;
 		this.inventoryId = inventoryId;
@@ -35,6 +52,7 @@ public class FetchProduct implements Command {
 		this.shelfId = shelfId;
 		this.quantity = quantity;
 		this.storeModelService = storeModelService;
+		this.authenticationService = authenticationService.getInstance();
 	}
 
 	/**
@@ -47,7 +65,9 @@ public class FetchProduct implements Command {
 	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws StoreModelServiceException {
+	public void execute() throws StoreModelServiceException, AuthenticationException {
+
+		this.authenticationService.getInstance().checkAccess(credential, "fetch_product");
 
 		String customerAisle = storeModelService.getCustomer(customerId).getLocation().getAisleNumber();
 

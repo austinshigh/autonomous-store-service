@@ -2,6 +2,7 @@ package com.cscie97.store.controller;
 
 import com.cscie97.ledger.Ledger;
 import com.cscie97.ledger.LedgerException;
+import com.cscie97.store.authentication.AuthenticationService;
 import com.cscie97.store.model.*;
 
 /**
@@ -13,10 +14,12 @@ public class StoreController implements Observer {
 
 	private StoreModelService storeModelService;
 	private Ledger ledger;
+	private AuthenticationService authenticationService;
 
-	public StoreController(StoreModelService storeModelService, Ledger ledger) {
+	public StoreController(StoreModelService storeModelService, Ledger ledger, AuthenticationService authenticationService) {
 		this.storeModelService = storeModelService;
 		this.ledger = ledger;
+		this.authenticationService = authenticationService.getInstance();
 	}
 
 
@@ -41,7 +44,7 @@ public class StoreController implements Observer {
 				missingPerson.execute();
 				break;
 			case "fetch-product":
-				FetchProduct fetchProduct = new FetchProduct(event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3(), event.getArg4(), event.getArg5(), event.getArg6(), storeModelService);
+				FetchProduct fetchProduct = new FetchProduct(event.getCredential(), event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3(), event.getArg4(), event.getArg5(), event.getArg6(), storeModelService, authenticationService);
 				fetchProduct.execute();
 				break;
 			case "basket-event":

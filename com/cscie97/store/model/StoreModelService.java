@@ -2,6 +2,7 @@ package com.cscie97.store.model;
 
 import com.cscie97.ledger.CommandProcessorException;
 import com.cscie97.ledger.LedgerException;
+import com.cscie97.store.authentication.AuthenticationService;
 import com.cscie97.store.controller.ControllerException;
 
 import java.time.LocalDateTime;
@@ -30,6 +31,8 @@ public class StoreModelService implements Subject {
 
 	private String authToken;
 
+	private AuthenticationService authenticationService;
+
 	private Map<String, Store> storeMap;
 
 	private Map<String, Product> productMap;
@@ -44,7 +47,7 @@ public class StoreModelService implements Subject {
 
 	private ArrayList<Observer> observerArrayList;
 
-	public StoreModelService(String authToken) {
+	public StoreModelService(String authToken, AuthenticationService authenticationService) {
 		this.authToken = authToken;
 		this.storeMap = new HashMap<String, Store>();
 		this.productMap = new HashMap<String, Product>();
@@ -53,6 +56,7 @@ public class StoreModelService implements Subject {
 		this.deviceIdMap = new HashMap<String, String>();
 		this.inventoryIdMap = new HashMap<String, String>();
 		this.observerArrayList = new ArrayList<Observer>();
+		this.authenticationService = authenticationService.getInstance();
 	}
 
 	/**
@@ -764,7 +768,7 @@ public class StoreModelService implements Subject {
 	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
 	 * @throws LedgerException com.cscie97.ledger. ledger exception
 	 */
-	public String createEvent(String deviceId, String event) throws StoreModelServiceException, LedgerException, ControllerException {
+	public String createEvent(String deviceId, String event, String credential) throws StoreModelServiceException, LedgerException, ControllerException {
 		String[] eventArgs = event.split(" ");
 		Device selectedDevice = getDevice(deviceId);
 		Event createdEvent;
@@ -775,7 +779,7 @@ public class StoreModelService implements Subject {
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 				}else{
 					String[] storeAisleShelf = eventArgs[4].split(":");
-					createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2], eventArgs[3], storeAisleShelf[0], storeAisleShelf[1], storeAisleShelf[2], eventArgs[5]);
+					createdEvent = new Event(credential, eventArgs[0], eventArgs[1], eventArgs[2], eventArgs[3], storeAisleShelf[0], storeAisleShelf[1], storeAisleShelf[2], eventArgs[5]);
 				}
 				break;
 			case "enter-store":

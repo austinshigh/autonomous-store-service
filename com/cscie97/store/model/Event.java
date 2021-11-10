@@ -6,6 +6,7 @@ package com.cscie97.store.model;
  */
 public class Event {
 
+    private String credential;
     private String eventType;
     private String arg0;
     private String arg1;
@@ -72,7 +73,8 @@ public class Event {
         this.arg5 = arg5;
     }
 
-    public Event(String eventType, String arg0, String arg1, String arg2, String arg3, String arg4, String arg5, String arg6) {
+    public Event(String credential, String eventType, String arg0, String arg1, String arg2, String arg3, String arg4, String arg5, String arg6) {
+        this.credential = credential;
         this.eventType = eventType;
         this.arg0 = arg0;
         this.arg1 = arg1;
@@ -228,6 +230,27 @@ public class Event {
     public void setArg6(String arg6) {
         this.arg6 = arg6;
     }
+
+
+    /**
+     * get field
+     *
+     * @return credential
+     */
+    public String getCredential() {
+        return this.credential;
+    }
+
+    /**
+     * set field
+     *
+     * @param credential
+     */
+    public void setCredential(String credential) {
+        this.credential = credential;
+    }
 }
+
+
 
 

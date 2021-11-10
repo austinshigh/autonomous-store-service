@@ -421,13 +421,13 @@ public class CommandProcessor {
 							throw new CommandProcessorException(e);
 						}
 					case "create-event":
-						if (commands.size() != 4) {
+						if (commands.size() != 5) {
 							// throw exception if incorrect number of command line arguments
 							throw new CommandProcessorException("command should follow form:" +
-									"\ncreate-event <device_id> event <event>");
+									"\ncreate-event <device_id> event <event> credential <credential>");
 						}
 						try {
-							return(storeModelService.createEvent(commands.get(1), commands.get(3)));
+							return(storeModelService.createEvent(commands.get(1), commands.get(3), commands.get(4)));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						} catch (ControllerException e) {
@@ -502,8 +502,9 @@ public class CommandProcessor {
 		try {
 			ledgerService = new Ledger("test", "testService", "controller");
 			ledgerService.fundLedger();
-			storeModelService = new StoreModelService("authToken");
-			storeController = new StoreController(storeModelService,ledgerService);
+			authenticationService = new AuthenticationService();
+			storeModelService = new StoreModelService("authToken", authenticationService.getInstance());
+			storeController = new StoreController(storeModelService,ledgerService, authenticationService.getInstance());
 			storeModelService.attach(storeController);
 			// get script file in test folder specified as parameter
 			File myObj = new File("com/cscie97/store/test/" + file);

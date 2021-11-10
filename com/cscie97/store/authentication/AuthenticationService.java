@@ -46,11 +46,13 @@ public class AuthenticationService extends Visitable {
 		this.userMap = new HashMap<String,User>();
 	}
 
-	public boolean checkAccess(String token, String permission) {
+	public boolean checkAccess(String token, String permission) throws AuthenticationException {
 		CheckAccessVisitor checkAccess = new CheckAccessVisitor(permission);
 		checkAccess.visit(getSingleton());
 		if (checkAccess.isPermissionFound()){
 			return true;
+		}else{
+			throw new AuthenticationException("dont work!");
 		}
 		return false;
 	}

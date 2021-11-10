@@ -3,6 +3,8 @@ package com.cscie97.store.controller;
 import com.cscie97.ledger.LedgerException;
 import com.cscie97.store.model.StoreModelServiceException;
 
+import javax.naming.AuthenticationException;
+
 /**
  *  Enforces execute method
  *	All Commands must have same execute method
@@ -17,6 +19,6 @@ public interface Command {
 	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
 	 * @throws LedgerException com.cscie97.ledger. ledger exception
 	 */
-	public abstract void execute() throws StoreModelServiceException, LedgerException, ControllerException;
+	public abstract void execute() throws StoreModelServiceException, LedgerException, ControllerException, AuthenticationException;
 
 }
