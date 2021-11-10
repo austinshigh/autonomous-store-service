@@ -1,6 +1,7 @@
 package com.cscie97.store.model;
 
 import com.cscie97.ledger.LedgerException;
+import com.cscie97.store.authentication.AuthenticationServiceException;
 import com.cscie97.store.controller.ControllerException;
 
 public class CommandProcessorException extends Exception {
@@ -26,7 +27,11 @@ public class CommandProcessorException extends Exception {
 
 	public CommandProcessorException(LedgerException var1) { this.reason = var1.getReason();}
 
-	public String toString() {
+	public CommandProcessorException(AuthenticationServiceException e) {
+		this.reason = e.getReason();
+	}
+
+    public String toString() {
 		return "cscie97.store.model.CommandProcessorException:\ncommand = '" + this.command + "'\nreason = '" + this.reason + "'\nlineNumber = " + this.lineNumber;
 	}
 

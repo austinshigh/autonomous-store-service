@@ -3,7 +3,10 @@ package com.cscie97.store.controller;
 import com.cscie97.ledger.Ledger;
 import com.cscie97.ledger.LedgerException;
 import com.cscie97.store.authentication.AuthenticationService;
+import com.cscie97.store.authentication.AuthenticationServiceException;
 import com.cscie97.store.model.*;
+
+import javax.naming.AuthenticationException;
 
 /**
  *  Observes the StoreModelService. When StoreModelService notify's StoreController of new event,
@@ -33,7 +36,7 @@ public class StoreController implements Observer {
 	 * @throws LedgerException com.cscie97.ledger. ledger exception
 	 */
 	@Override
-	public void update(Event event) throws StoreModelServiceException, LedgerException, ControllerException {
+	public void update(Event event) throws StoreModelServiceException, LedgerException, ControllerException, AuthenticationServiceException {
 		switch(event.getEventType()){
 			case "emergency":
 				Emergency emergency = new Emergency(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService);

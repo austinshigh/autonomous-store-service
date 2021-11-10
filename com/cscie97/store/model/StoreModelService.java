@@ -3,8 +3,10 @@ package com.cscie97.store.model;
 import com.cscie97.ledger.CommandProcessorException;
 import com.cscie97.ledger.LedgerException;
 import com.cscie97.store.authentication.AuthenticationService;
+import com.cscie97.store.authentication.AuthenticationServiceException;
 import com.cscie97.store.controller.ControllerException;
 
+import javax.naming.AuthenticationException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -768,7 +770,7 @@ public class StoreModelService implements Subject {
 	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
 	 * @throws LedgerException com.cscie97.ledger. ledger exception
 	 */
-	public String createEvent(String deviceId, String event, String credential) throws StoreModelServiceException, LedgerException, ControllerException {
+	public String createEvent(String deviceId, String event, String credential) throws StoreModelServiceException, LedgerException, ControllerException, AuthenticationServiceException {
 		String[] eventArgs = event.split(" ");
 		Device selectedDevice = getDevice(deviceId);
 		Event createdEvent;
@@ -867,7 +869,7 @@ public class StoreModelService implements Subject {
 	 * @throws com.cscie97.store.model.CommandProcessorException com.cscie97.store.model. command processor exception
 	 * @throws CommandProcessorException com.cscie97.ledger. command processor exception
 	 */
-	public void notify(Event event) throws StoreModelServiceException, LedgerException, ControllerException {
+	public void notify(Event event) throws StoreModelServiceException, LedgerException, ControllerException, AuthenticationServiceException {
 		for (Observer curr : observerArrayList){
 			curr.update(event);
 		}

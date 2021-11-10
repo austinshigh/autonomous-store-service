@@ -2,6 +2,7 @@ package com.cscie97.store.controller;
 
 
 import com.cscie97.store.authentication.AuthenticationService;
+import com.cscie97.store.authentication.AuthenticationServiceException;
 import com.cscie97.store.model.*;
 
 import javax.naming.AuthenticationException;
@@ -65,7 +66,7 @@ public class FetchProduct implements Command {
 	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws StoreModelServiceException, AuthenticationException {
+	public void execute() throws StoreModelServiceException, AuthenticationServiceException {
 
 		this.authenticationService.getInstance().checkAccess(credential, "fetch_product");
 

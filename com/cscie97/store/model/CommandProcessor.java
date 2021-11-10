@@ -3,10 +3,12 @@ package com.cscie97.store.model;
 import com.cscie97.ledger.Ledger;
 import com.cscie97.ledger.LedgerException;
 import com.cscie97.ledger.Transaction;
+import com.cscie97.store.authentication.AuthenticationServiceException;
 import com.cscie97.store.controller.ControllerException;
 import com.cscie97.store.controller.StoreController;
 import com.cscie97.store.authentication.AuthenticationService;
 
+import javax.naming.AuthenticationException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -433,6 +435,8 @@ public class CommandProcessor {
 						} catch (ControllerException e) {
 							throw new CommandProcessorException(e);
 						} catch (LedgerException e) {
+							throw new CommandProcessorException(e);
+						} catch (AuthenticationServiceException e){
 							throw new CommandProcessorException(e);
 						}
 					case "create-command":
