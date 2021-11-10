@@ -24,6 +24,15 @@ public class User extends Visitable {
         this.password = new Password();
         this.facePrint = new FacePrint();
         this.voicePrint = new VoicePrint();
+        this.entitlementList = new ArrayList<Entitlement>();
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 
     public void addCredential(Credential credential){

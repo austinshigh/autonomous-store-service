@@ -104,6 +104,12 @@ public class CommandProcessor {
 						}catch(AuthenticationServiceException e){
 							throw new CommandProcessorException(e);
 						}
+					case "get_inventory":
+						try {
+							return authenticationService.getInventory();
+						}catch(AuthenticationServiceException e){
+							throw new CommandProcessorException(e);
+						}
 					case "create_user":
 						if (commands.size() != 4){
 							// throw exception if incorrect number of command line arguments
@@ -123,6 +129,17 @@ public class CommandProcessor {
 						}
 						try {
 							return authenticationService.addUserCredential(commands.get(1), commands.get(2), commands.get(3));
+						}catch(AuthenticationServiceException e){
+							throw new CommandProcessorException(e);
+						}
+					case "add_role_to_user":
+						if (commands.size() != 3){
+							// throw exception if incorrect number of command line arguments
+							throw new CommandProcessorException("command should follow form:" +
+									"\nadd_role_to_user <userId> <roleId>");
+						}
+						try {
+							return authenticationService.addRoleToUser(commands.get(1), commands.get(2));
 						}catch(AuthenticationServiceException e){
 							throw new CommandProcessorException(e);
 						}

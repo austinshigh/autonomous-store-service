@@ -14,6 +14,14 @@ public class Permission extends Entitlement {
         this.description = description;
     }
 
+    @Override
+    public String toString() {
+        return "Permission{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 
     /**
      * get field

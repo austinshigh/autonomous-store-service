@@ -42,6 +42,13 @@ public class AuthenticationService extends Visitable {
 		this.resourceMap = new HashMap<String, Resource>();
 	}
 
+	@Override
+	public String toString() {
+		return "AuthenticationService{" +
+				"id=" + id +
+				'}';
+	}
+
 	public boolean checkAccess(String token, String permission) throws AuthenticationServiceException {
 		CheckAccessVisitor checkAccess = new CheckAccessVisitor(token, permission);
 		checkAccess.visit(getInstance());
@@ -50,6 +57,12 @@ public class AuthenticationService extends Visitable {
 		}else{
 			throw new AuthenticationServiceException("Permission Not Found");
 		}
+	}
+
+	public String getInventory() throws AuthenticationServiceException{
+		InventoryVisitor inventoryVisitor = new InventoryVisitor();
+		inventoryVisitor.visit(getInstance());
+		return inventoryVisitor.getReport();
 	}
 
 	public String createUser(String id, String name) throws AuthenticationServiceException {
@@ -181,7 +194,7 @@ public class AuthenticationService extends Visitable {
 			throw new AuthenticationServiceException("role already contains permission: " + permissionId);
 		}
 		role.addPermission(permission);
-		return "permission: " + permissionId + "added to role: " + roleId;
+		return "permission: " + permissionId + " added to role: " + roleId;
 	}
 
 	public void addPermissionToUser(String userId, String permissionId) {
@@ -190,10 +203,14 @@ public class AuthenticationService extends Visitable {
 		user.addPermission(permission);
 	}
 
-	public void addRoleToUser(String userId, String roleId) {
+	public String addRoleToUser(String userId, String roleId) throws AuthenticationServiceException {
 		User user = getUser(userId);
 		Role role = getRole(roleId);
+		if (user.getEntitlementList().contains(roleId)){
+			throw new AuthenticationServiceException("user already had role: " + roleId);
+		}
 		user.addRole(role);
+		return "role: " + roleId + " added to user: " + userId;
 	}
 
 	public void addResourceRoleToUser(String userId, String resourceRoleId) {

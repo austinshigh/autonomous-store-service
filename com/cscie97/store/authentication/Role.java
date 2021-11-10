@@ -19,6 +19,16 @@ public class Role extends Entitlement {
 		this.entitlementList = new ArrayList<Entitlement>();
 	}
 
+	@Override
+	public String toString() {
+		return "Role{" +
+				"id='" + id + '\'' +
+				", name='" + name + '\'' +
+				", description='" + description + '\'' +
+				", entitlementList=" + entitlementList +
+				'}';
+	}
+
 	public void addPermission(Permission permission){
 		entitlementList.add(permission);
 	}

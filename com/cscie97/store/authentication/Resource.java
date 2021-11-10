@@ -13,6 +13,15 @@ public class Resource extends Visitable {
 		this.description = description;
 	}
 
+	@Override
+	public String toString() {
+		return "Resource{" +
+				"id='" + id + '\'' +
+				", description='" + description + '\'' +
+				", resourceRoleList=" + resourceRoleList +
+				'}';
+	}
+
 	/**
 	 * @see Visitable#accept(Visitor)
 	 */

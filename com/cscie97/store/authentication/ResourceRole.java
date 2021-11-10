@@ -14,6 +14,14 @@ public class ResourceRole extends Entitlement {
 		this.role = role;
 	}
 
+	@Override
+	public String toString() {
+		return "ResourceRole{" +
+				"id='" + id + '\'' +
+				", resource=" + resource +
+				", role=" + role +
+				'}';
+	}
 
 	/**
 	 * get field

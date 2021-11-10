@@ -4,16 +4,29 @@ import java.util.Map;
 
 public class InventoryVisitor extends Visitor {
 
-	public void generateInventory() {
-	}
-
+	private String report;
 
 	/**
 	 * @see Visitor#visit(User)
 	 */
 	public void visit(User user) {
-		String userInfo = user.toString();
-		System.out.println(userInfo);
+		report += "User: " + user.getName() + "\n";
+		for (Entitlement e : user.getEntitlementList()){
+			if (e instanceof Role) {
+				Role subRole = (Role) e;
+				report += "Role: " + subRole.getId() + "\n";
+			}
+			else if (e instanceof ResourceRole) {
+				ResourceRole resourceRole = (ResourceRole) e;
+				report += "ResourceRole: " + resourceRole.getId() + "\n";
+			}
+			else if (e instanceof Permission) {
+				Permission permission = (Permission) e;
+				report += "Permission: " + permission.getId() + "\n";
+			}
+		}
+		//String userInfo = user.toString();
+		//System.out.println(userInfo);
 	}
 
 	/**
@@ -22,14 +35,17 @@ public class InventoryVisitor extends Visitor {
 	public void visit(Entitlement entitlement){
 		if (entitlement instanceof Role) {
 			Role subRole = (Role) entitlement;
+			report += "Role: " + subRole.getId() + "\n";
 			visit(subRole);
 		}
-		if (entitlement instanceof ResourceRole) {
+		else if (entitlement instanceof ResourceRole) {
 			ResourceRole resourceRole = (ResourceRole) entitlement;
+			report += "ResourceRole: " + resourceRole.getId() + "\n";
 			visit(resourceRole);
 		}
-		if (entitlement instanceof Permission) {
+		else if (entitlement instanceof Permission) {
 			Permission permission = (Permission) entitlement;
+			report += "Permission: " + permission.getId() + "\n";
 			visit(permission);
 		}
 	}
@@ -39,8 +55,16 @@ public class InventoryVisitor extends Visitor {
 	 * @see Visitor#visit(Role)
 	 */
 	public void visit(Role role) {
-		String roleInfo = role.toString();
-		System.out.println(roleInfo);
+		report += role.getId() + " " + role.getName() + " " + role.getDescription() + "\n";
+
+		for (Entitlement e : role.getEntitlementList()){
+			if (e instanceof Role) {
+				Role subRole = (Role) e;
+				report += "SubRole: " + subRole.getId() + "\n";
+			}
+		}
+		//String roleInfo = role.toString();
+		//System.out.println(roleInfo);
 	}
 
 
@@ -48,8 +72,9 @@ public class InventoryVisitor extends Visitor {
 	 * @see Visitor#visit(Resource)
 	 */
 	public void visit(Resource resource) {
-		String resourceInfo = resource.toString();
-		System.out.println(resourceInfo);
+		//report += resource.getId() + "/n"
+		//String resourceInfo = resource.toString();
+		//System.out.println(resourceInfo);
 	}
 
 
@@ -57,8 +82,9 @@ public class InventoryVisitor extends Visitor {
 	 * @see Visitor#visit(ResourceRole)
 	 */
 	public void visit(ResourceRole resourceRole) {
-		String resourceRoleInfo = resourceRole.toString();
-		System.out.println(resourceRoleInfo);
+		report += resourceRole.getId() + " " + resourceRole.getRole() + " " + resourceRole.getResource() + "\n";
+		//String resourceRoleInfo = resourceRole.toString();
+		//System.out.println(resourceRoleInfo);
 	}
 
 
@@ -66,8 +92,9 @@ public class InventoryVisitor extends Visitor {
 	 * @see Visitor#visit(Permission)
 	 */
 	public void visit(Permission permission) {
-		String permissionInfo = permission.toString();
-		System.out.println(permissionInfo);
+		report += permission.getId() + " " + permission.getName() + " " + permission.getDescription() + "\n";
+		//String permissionInfo = permission.toString();
+		//System.out.println(permissionInfo);
 	}
 
 
@@ -75,17 +102,36 @@ public class InventoryVisitor extends Visitor {
 	 * @see Visitor#visit(AuthenticationService)
 	 */
 	public void visit(AuthenticationService authService) {
+		report += "AuthenticationService ID: " + authService.getId() + "\n";
 		String authServiceInfo = authService.toString();
-		System.out.println(authServiceInfo);
-		for (Map.Entry<String, User> user : authService.getUserMap().entrySet()){
-			visit(user.getValue());
-		}
+		//System.out.println(authServiceInfo);
 		for (Map.Entry<String, Entitlement> entitlement : authService.getEntitlementMap().entrySet()){
 			visit(entitlement.getValue());
 		}
-		for (Map.Entry<String, Resource> resource : authService.getResourceMap().entrySet()){
-			visit(resource.getValue());
+		for (Map.Entry<String, User> user : authService.getUserMap().entrySet()){
+			visit(user.getValue());
 		}
+//		for (Map.Entry<String, Resource> resource : authService.getResourceMap().entrySet()){
+//			visit(resource.getValue());
+//		}
 	}
 
+
+	/**
+	 * get field
+	 *
+	 * @return report
+	 */
+	public String getReport() {
+		return this.report;
+	}
+
+	/**
+	 * set field
+	 *
+	 * @param report
+	 */
+	public void setReport(String report) {
+		this.report = report;
+	}
 }
