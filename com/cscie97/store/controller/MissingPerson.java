@@ -1,5 +1,6 @@
 package com.cscie97.store.controller;
 
+import com.cscie97.store.authentication.AuthenticationService;
 import com.cscie97.store.model.StoreModelService;
 import com.cscie97.store.model.StoreModelServiceException;
 
@@ -18,7 +19,7 @@ public class MissingPerson implements Command {
 
 	private StoreModelService storeModelService;
 
-	public MissingPerson(String storeId, String customerId, String deviceId, StoreModelService storeModelService) {
+	public MissingPerson(String storeId, String customerId, String deviceId, StoreModelService storeModelService, AuthenticationService authenticationService) {
 		this.storeId = storeId;
 		this.customerId = customerId;
 		this.deviceId = deviceId;

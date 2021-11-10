@@ -26,7 +26,10 @@ public class CheckAccessVisitor extends Visitor {
 	 * @see Visitor#visit(User)
 	 */
 	public void visit(User user) {
-		if (user.getToken().getId().equals(inputToken) && user.getToken().getExpirationTime().after(Calendar.getInstance())){
+		if (!user.getToken().getExpirationTime().after(Calendar.getInstance())){
+			user.getToken().invalidateToken();
+		}
+		if (user.getToken().getId().equals(inputToken) && user.getToken().isValid()){
 			for (Entitlement e : user.getEntitlementList()){
 				visit(e);
 			}

@@ -1,5 +1,6 @@
 package com.cscie97.store.controller;
 
+import com.cscie97.store.authentication.AuthenticationService;
 import com.cscie97.store.model.StoreModelService;
 import com.cscie97.store.model.StoreModelServiceException;
 
@@ -17,7 +18,7 @@ public class BrokenGlass implements Command {
 
 	private StoreModelService storeModelService;
 
-	public BrokenGlass(String storeId, String aisleId, String deviceId, StoreModelService storeModelService) {
+	public BrokenGlass(String storeId, String aisleId, String deviceId, StoreModelService storeModelService, AuthenticationService authenticationService) {
 		this.storeId = storeId;
 		this.aisleId = aisleId;
 		this.deviceId = deviceId;

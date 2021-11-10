@@ -27,17 +27,17 @@ public class AuthenticationService extends Visitable {
 		this.tokenTimeout = 10;
 		this.userMap = new HashMap<String,User>();
 		//
-		User test = new User("CUSTOMER00001", "Gavin");
-		Credential testCred = new Credential("password", "secure");
+		User test = new User("root", "Gavin");
+		Credential testCred = new Credential("password", "default");
 		test.addCredential(testCred);
 		userMap.put(test.getId(), test);
 		//
 		this.entitlementMap = new HashMap<String, Entitlement>();
 		//
-		Permission permission = new Permission("1", "fetch_product", "test");
-		entitlementMap.put(permission.getId(), permission);
+		//Permission permission = new Permission("1", "fetch_product", "test");
+		//entitlementMap.put(permission.getId(), permission);
 		//
-		addPermissionToUser("CUSTOMER00001", permission.getId());
+		//addPermissionToUser("root", permission.getId());
 		this.resourceMap = new HashMap<String, Resource>();
 	}
 
@@ -47,7 +47,7 @@ public class AuthenticationService extends Visitable {
 		if (checkAccess.isPermissionFound()){
 			return true;
 		}else{
-			throw new AuthenticationServiceException("dont work!", "nope!");
+			throw new AuthenticationServiceException("Permission Not Found");
 		}
 	}
 
@@ -87,9 +87,13 @@ public class AuthenticationService extends Visitable {
 				.invalidateToken();
 	}
 
-	public void createPermission(String id, String name, String description) {
+	public String createPermission(String id, String name, String description) throws AuthenticationServiceException {
+		if (entitlementMap.containsKey(id)){
+			throw new AuthenticationServiceException("permission with id " + id + "already exists");
+		}
 		Permission permission = new Permission(id, name, description);
 		entitlementMap.put(id, permission);
+		return "permission created: " + id;
 	}
 
 	public void createRole(String id, String name, String description) {

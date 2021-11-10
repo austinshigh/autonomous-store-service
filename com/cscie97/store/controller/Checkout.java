@@ -3,6 +3,8 @@ package com.cscie97.store.controller;
 import com.cscie97.ledger.Ledger;
 import com.cscie97.ledger.LedgerException;
 import com.cscie97.ledger.Transaction;
+import com.cscie97.store.authentication.AuthenticationService;
+import com.cscie97.store.authentication.AuthenticationServiceException;
 import com.cscie97.store.model.*;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -26,13 +28,16 @@ public class Checkout implements Command {
 
 	private Ledger ledger;
 
-	public Checkout(String customerId, String storeId, String aisleId, String turnstileId, StoreModelService storeModelService, Ledger ledger) {
+	private AuthenticationService authenticationService;
+
+	public Checkout(String customerId, String storeId, String aisleId, String turnstileId, StoreModelService storeModelService, Ledger ledger, AuthenticationService authenticationService) {
 		this.storeId = storeId;
 		this.customerId = customerId;
 		this.aisleId = aisleId;
 		this.turnstileId = turnstileId;
 		this.storeModelService = storeModelService;
 		this.ledger = ledger;
+		this.authenticationService = authenticationService;
 	}
 
 	/**
@@ -51,7 +56,7 @@ public class Checkout implements Command {
 	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws StoreModelServiceException, LedgerException {
+	public void execute() throws StoreModelServiceException, LedgerException, AuthenticationServiceException {
 		// get customer from storemodelservice
 		Customer customer = storeModelService.getCustomer(customerId);
 
@@ -92,7 +97,7 @@ public class Checkout implements Command {
 			int basketWeight = Integer.parseInt(storeModelService.computeBasketWeight(basketId));
 			// if product weight is more than 10lbs (in grams), assist customer to car
 			if (basketWeight > 4535) {
-				AssistCustomerToCar assistCustomerToCar = new AssistCustomerToCar(customerId, storeId, aisleId, storeModelService);
+				AssistCustomerToCar assistCustomerToCar = new AssistCustomerToCar(customerId, storeId, aisleId, storeModelService, authenticationService);
 				assistCustomerToCar.execute();
 			}
 			store.getCustomerMap().remove(customerId);

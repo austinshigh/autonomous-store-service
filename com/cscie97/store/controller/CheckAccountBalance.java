@@ -2,6 +2,7 @@ package com.cscie97.store.controller;
 
 import com.cscie97.ledger.Ledger;
 import com.cscie97.ledger.LedgerException;
+import com.cscie97.store.authentication.AuthenticationService;
 import com.cscie97.store.model.*;
 
 /**
@@ -21,7 +22,7 @@ public class CheckAccountBalance implements Command {
 
 	private Ledger ledger;
 
-	public CheckAccountBalance(String customerId, String storeId, String aisleId, StoreModelService storeModelService, Ledger ledger) {
+	public CheckAccountBalance(String customerId, String storeId, String aisleId, StoreModelService storeModelService, Ledger ledger, AuthenticationService authenticationService) {
 		this.customerId = customerId;
 		this.storeId = storeId;
 		this.aisleId = aisleId;

@@ -5,8 +5,6 @@ import com.cscie97.store.authentication.AuthenticationService;
 import com.cscie97.store.authentication.AuthenticationServiceException;
 import com.cscie97.store.model.*;
 
-import javax.naming.AuthenticationException;
-
 /**
  *  Commmands robot to fetch product for customer,
  *  triggered when customer speaks into microphone and asks for product
@@ -94,7 +92,7 @@ public class FetchProduct implements Command {
 
 			String basketId = storeModelService.getCustomerBasketId(customerId);
 			// make changes to inventory and customer's basket
-			BasketEvent basketEvent = new BasketEvent(customerId, productId, inventoryId, storeId, aisleId, shelfId, String.valueOf(quantity), storeModelService);
+			BasketEvent basketEvent = new BasketEvent(customerId, productId, inventoryId, storeId, aisleId, shelfId, String.valueOf(quantity), storeModelService, authenticationService);
 			basketEvent.execute();
 		}
 	}

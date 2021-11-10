@@ -3,6 +3,7 @@ package com.cscie97.store.controller;
 
 import com.cscie97.ledger.Ledger;
 import com.cscie97.ledger.LedgerException;
+import com.cscie97.store.authentication.AuthenticationService;
 import com.cscie97.store.model.*;
 
 import java.util.Map;
@@ -24,7 +25,7 @@ public class EnterStore implements Command {
 
 	private Ledger ledger;
 
-	public EnterStore(String customerId, String turnstileId, String storeId, String aisleId, StoreModelService storeModelService, Ledger ledger) {
+	public EnterStore(String customerId, String turnstileId, String storeId, String aisleId, StoreModelService storeModelService, Ledger ledger, AuthenticationService authenticationService) {
 		this.customerId = customerId;
 		this.turnstileId = turnstileId;
 		this.storeId = storeId;

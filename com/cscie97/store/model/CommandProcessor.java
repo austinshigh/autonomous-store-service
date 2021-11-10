@@ -60,6 +60,28 @@ public class CommandProcessor {
 				System.out.println(">>> " + command);
 				switch (firstArg) {
 					// compare first word in line to determine method to call
+					case "login":
+						if (commands.size() != 4){
+							// throw exception if incorrect number of command line arguments
+							throw new CommandProcessorException("command should follow form:" +
+									"\nlogin <username> password <password>");
+						}
+						try {
+							return authenticationService.login(commands.get(1), commands.get(3));
+						}catch(AuthenticationServiceException e){
+							throw new CommandProcessorException(e);
+						}
+					case "define_permission":
+						if (commands.size() != 6){
+							// throw exception if incorrect number of command line arguments
+							throw new CommandProcessorException("command should follow form:" +
+									"\ndefine_permission <permission_id> permission_name <permission_name> permission_description \"<permission_description>\"");
+						}
+						try {
+							return authenticationService.createPermission(commands.get(1), commands.get(3), commands.get(5));
+						}catch(AuthenticationServiceException e){
+							throw new CommandProcessorException(e);
+						}
 					case "define-store":
 						if (commands.size() != 6) {
 							// throw exception if incorrect number of command line arguments
@@ -507,7 +529,6 @@ public class CommandProcessor {
 			ledgerService = new Ledger("test", "testService", "controller");
 			ledgerService.fundLedger();
 			authenticationService = AuthenticationService.getInstance();
-			System.out.println(authenticationService.getUser("CUSTOMER00001").getName());
 			storeModelService = new StoreModelService("authToken", authenticationService.getInstance());
 			storeController = new StoreController(storeModelService,ledgerService, authenticationService.getInstance());
 			storeModelService.attach(storeController);

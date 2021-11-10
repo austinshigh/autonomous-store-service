@@ -94,16 +94,6 @@ create-event CAMERA001 event "basket-event CUSTOMER00001 MILK001 INVENTORY001 ST
 create-event MICROPHONE001 event "fetch-product CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 3" credential secure
 
 
-
-
-
-
-
-
-
-
-
-
 # Create a fetch-product event - expect a command to 1 robot to restock because inventory count is 1 (less than 3)
 create-event MICROPHONE001 event "fetch-product CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 5"
 

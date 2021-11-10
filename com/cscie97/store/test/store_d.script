@@ -1,0 +1,338 @@
+
+# Sample Authentication Script
+# This script only provisions the Authentication service
+# You should use the script from the Controller Service assignment to test interaction between the Authentication Service, Store Model Service, and Controller Service.
+
+# Login to the default bootstrap root account which has full access. Use it to setup basic authentication entitlements and users.
+login root password default
+
+
+# Define Authentication Service Permissions
+define_permission create_entitlement permission_name "Create Entitlement" permission_description "Create Entitlements in Authentication Service"
+define_permission create_user permission_name "Create User" permission_description "Create Users in Authentication Service"
+define_permission create_resource permission_name "Create Resource" permission_description "Create Resource in Authentication Service"
+define_permission read_entitlement permission_name "Read Entitlement" permission_description "Read Entitlements in Authentication Service"
+define_permission read_user permission_name "Read User" permission_description "Read Users in Authentication Service"
+define_permission read_resource permission_name "Read Resource" permission_description "Read Resource in Authentication Service"
+define_permission update_entitlement permission_name "Update Entitlement" permission_description "Update Entitlements in Authentication Service"
+define_permission update_user permission_name "Update User" permission_description "Update Users in Authentication Service"
+define_permission update_resource permission_name "Update Resource" permission_description "Update Resource in Authentication Service"
+
+define_role auth_admin_role role_name "Authorization Admin Role" role_description "Has all Authorization permissions"
+define_role auth_readonly_role role_name "Authorization Read Only Role" role_description "Has Authorization read only permissions"
+
+add_permission_to_role auth_admin_role create_entitlement
+add_permission_to_role auth_admin_role create_user
+add_permission_to_role auth_admin_role create_resource
+add_permission_to_role auth_admin_role read_entitlement
+add_permission_to_role auth_admin_role read_user
+add_permission_to_role auth_admin_role read_resource
+add_permission_to_role auth_admin_role update_entitlement
+add_permission_to_role auth_admin_role update_user
+add_permission_to_role auth_admin_role update_resource
+
+add_permission_to_role auth_readonly_role read_entitlement
+add_permission_to_role auth_readonly_role read_user
+add_permission_to_role auth_readonly_role read_resource
+
+create_user debra name "Debra Smart"
+add_user_credential debra password debra123
+add_user_credential debra faceprint faceprint-debra123
+add_user_credential debra voiceprint voiceprint-debra123
+add_role_to_user debra auth_admin_role
+
+# Create an inventory for all of the objects in the Authentication service
+get_inventory
+
+# logout from root user
+logout
+
+# login as auth_admin_role to provision store users and entitlements.
+login faceprint faceprint-debra123
+
+
+#Define Store Permissions
+#Define Permission control_robot
+define_permission control_robot permission_name "Control Robot" permission_description "Full Control of Robots"
+#Define Permission control_speaker
+define_permission control_speaker permission_name "Control Speaker" permission_description "Full Control of Speakers"
+#Define Permission control_turnstile
+define_permission control_turnstile permission_name "Control Turnstile" permission_description "Full Control of Turnstiles"
+#Define Permission enter_store
+define_permission enter_store permission_name "Enter Store" permission_description "Permission to Enter Store"
+#Define Permission checkout
+define_permission checkout permission_name "Checkout" permission_description "Permission to Checkout"
+#Define Permission get_user_authtoken
+define_permission get_user_authtoken permission_name "Get User's AuthToken" permission_description "Permission to get AuthToken"
+#Define Permission provision_store
+define_permission provision_store permission_name "Provision Store" permission_description "Permission to provision stores, ailes, shelves, products, devices, customers"
+
+#Define Store Roles
+#Define role adult_consumer_role
+define_role adult_consumer_role role_name "Adult Consumer Role" role_description "Has all permissions of an adult consumer"
+#Define role child_consumer_role
+define_role child_consumer_role role_name "Child Consumer Role" role_description "Has all permissions of an child consumer"
+#Define role guest_consumer_role
+define_role guest_consumer_role role_name "Guest Consumer Role" role_description "Has all permissions of an guest"
+#Define role controller_service_role
+define_role controller_service_role role_name "Store Controller Role" role_description "Has all permissions of controller service"
+#Define role admin_role
+define_role admin_role role_name "Admin Role" role_description "Has all permissions"
+
+# add permission to role
+# for admin user
+# add permission user_admin to admin_role
+add_permission_to_role admin_role user_admin
+# add permission control_robot to admin_role
+add_permission_to_role admin_role control_robot
+# add permission control_speaker to admin_role
+add_permission_to_role admin_role control_speaker
+# add permission control_turnstile to admin_role
+add_permission_to_role admin_role control_turnstile
+# add permission control_microphone to admin_role
+add_permission_to_role admin_role control_microphone
+# add permission control_camera to admin_role
+add_permission_to_role admin_role control_camera
+# add permission provision_store to admin_role
+add_permission_to_role admin_role provision_store
+# for adult user
+# add permission control_robot to adult_consumer_role
+add_permission_to_role adult_consumer_role control_robot
+# add permission enter_store to adult_consumer_role
+add_permission_to_role adult_consumer_role enter_store
+# add permission checkout to adult_consumer_role
+add_permission_to_role adult_consumer_role checkout
+# for child consumer
+# add permission enter_store to child_consumer_role
+add_permission_to_role child_consumer_role enter_store
+
+
+# add permission checkout to child_consumer_role
+add_permission_to_role child_consumer_role checkout
+# for guest
+# add permission enter_store to guest
+add_permission_to_role guest_consumer_role enter_store
+# for Store Controller role
+# add permission control_robot to controller_service_role
+add_permission_to_role controller_service_role control_robot
+# add permission control_speaker to controller_service_role
+add_permission_to_role controller_service_role control_speaker
+# add permission control_turnstile to controller_service_role
+add_permission_to_role controller_service_role control_turnstile
+# add permission get_user_authtoken to controller_service_role
+add_permission_to_role controller_service_role get_user_authtoken
+# add permission control_microphone to controller_service_role
+add_permission_to_role controller_service_role control_microphone
+# add permission control_camera to admin_role
+add_permission_to_role controller_service_role control_camera
+
+# Create Store Users
+# create_user <user_id> name <user_name>
+# Creates new user Sam Davis
+create_user sam name "Sam Davis"
+# add_user_credential
+add_user_credential sam password sam123
+add_user_credential sam faceprint faceprint-sam123
+add_user_credential sam voiceprint voiceprint-sam123
+# create new user Jimmy Jones
+create_user jimmy name "Jimmy Jones"
+# add_user_credential
+add_user_credential jimmy password jimmy123
+add_user_credential jimmy faceprint faceprint-jimmy123
+add_user_credential jimmy voiceprint voiceprint-jimmy123
+# create new user Store Controller Service
+create_user scs name "Store Controller Service"
+# add_user_credential
+add_user_credential scs password scs123
+
+# create resource role
+# create_resource_role <resource_role_name> <role> <resource>
+# create resourceRole store1_child_consumer
+create_resource_role store1_child_consumer child_consumer_role store123
+# create resourceRole store1_adult_consumer
+create_resource_role store1_adult_consumer adult_consumer_role store123
+# add resource role to user
+# add_resource_role_to_user <user_id>, <resource_role>
+# add resourceRole store1_adult_consumer to user sam
+add_resource_role_to_user sam store1_adult_consumer
+# add resourceRole store1_child_consumer to user jimmy
+add_resource_role_to_user jimmy store1_child_consumer
+# add role to user
+# add_role_to_user <user_id> <role>
+# add role adult_consumer_role to user sam
+add_role_to_user sam adult_consumer_role
+# add role child_consumer_role to user jimmy
+add_role_to_user jimmy child_consumer_role
+# add role controller_service_role to user scs (Store Controller Service)
+add_role_to_user scs controller_service_role
+
+# check access, retrieves auth token for credential and calls check access method
+#should succeed for sam
+check_access user sam password sam123 resource store1 permission control_robot
+check_access voiceprint voiceprint-sam123 resource store1 permission control_robot
+#should fail for jimmy
+check_access user jimmy password jimmy123 resource store1 permission control_robot
+check_access faceprint faceprint-jimmy123 resource store1 permission control_robot
+
+
+# Create an inventory for all of the objects in the Authentication service
+get_inventory
+
+# Logout
+logout
+
+
+
+
+# Define a store - this creates a ledger and transfers 20000 Units to the store
+define-store STORE001 storeName "costco" storeAddress "77 Elma St, San Luis, CA"
+
+# Define an aisle within the store
+define-aisle STORE001:1 aisleName AISLE001 aisleDescr "dairy" location "floor"
+define-aisle STORE001:2 aisleName AISLE002 aisleDescr "chocolate" location "floor"
+define-aisle STORE001:3 aisleName AISLE003 aisleDescr "wine" location "floor"
+
+
+# Define a new shelf within the store
+define-shelf STORE001:1:SHELF001 shelfName DIARY_SHELF shelfLevel medium sheldDescr "dairy" shelfTempEnum refrigerated
+define-shelf STORE001:1:SHELF002 shelfName SWEETS_SHELF shelfLevel medium sheldDescr "sweets" shelfTempEnum ambient
+define-shelf STORE001:2:SHELF001 shelfName CONDIMENTS_SHELF shelfLevel high sheldDescr "condiment" shelfTempEnum ambient
+
+# Show the details of a store, aisles, and shelves
+show-store STORE001
+show-aisle STORE001:1
+show-aisle STORE001:2
+show-shelf STORE001:1:SHELF001
+show-shelf STORE001:1:SHELF002
+show-shelf STORE001:2:SHELF001
+
+
+# Define a new products
+define-product MILK001 prodName milk prodDescr "organic milk" size 12 category "dairy" unit_price 3 tempTempEnum refrigerated
+define-product HONEY001 prodName honey prodDescr "organic assorted honey" size 6 category "condiments" unit_price 7 tempTempEnum ambient
+
+# Show the details of the product
+show-product MILK001
+show-product HONEY001
+
+# Define a new inventory item within the store
+define-inventory INVENTORY001 location STORE001:1:SHELF001 capacity 20 count 11 product MILK001
+define-inventory INVENTORY002 location STORE001:1:SHELF002 capacity 30 count 23 product HONEY001
+
+# Show the details of the inventory
+show-inventory INVENTORY001
+show-inventory INVENTORY002
+
+
+# Define 12 customers (9 registered who have 200 Units transferred from the master account = 10 transactions now)
+define-customer CUSTOMER00001 first_name ann last_name fred type registered email_address "afred@gmail.com" account ann01
+define-customer CUSTOMER00002 first_name ted last_name hill type registered email_address "thill@yahoo.com" account ted01
+define-customer CUSTOMER00003 first_name jane last_name dan type guest email_address "jdan@gmail.com" account jane01
+define-customer CUSTOMER00004 first_name tami last_name donny type registered email_address "tdonny@gmail.com" account tami01
+define-customer CUSTOMER00005 first_name tayo last_name akin type registered email_address "takin@yahoo.com" account tayo01
+define-customer CUSTOMER00006 first_name dami last_name davis type guest email_address "ddavis@gmail.com" account dami01
+define-customer CUSTOMER00007 first_name ahmed last_name usman type registered email_address "ausman@gmail.com" account ahmed01
+define-customer CUSTOMER00008 first_name jake last_name farm type registered email_address "jfarm@yahoo.com" account jake01
+define-customer CUSTOMER00009 first_name hanna last_name alla type guest email_address "halla@gmail.com" account hanna01
+define-customer CUSTOMER00010 first_name ruth last_name bosch type registered email_address "rbosch@gmail.com" account ruth01
+define-customer CUSTOMER00011 first_name rose last_name lily type registered email_address "rlily@gmail.com" account rose01
+define-customer CUSTOMER00012 first_name abby last_name gotham type registered email_address "agotham@gmail.com" account abby01
+
+
+# Define device of type camera, robot, speakers, microphones, and turnstile
+define-device CAMERA001 name front_door_camera type camera location STORE001:1
+define-device CAMERA002 name right_end_camera type camera location STORE001:2
+define-device ROBOT001 name r2d2 type robot location STORE001:1
+define-device ROBOT002 name r2d3 type robot location STORE001:2
+define-device ROBOT003 name r2d4 type robot location STORE001:2
+define-device TURNSTILE001 name cashier1 type turnstile location STORE001:1
+define-device TURNSTILE002 name cashier2 type turnstile location STORE001:2
+define-device MICROPHONE001 name front-microphone type microphone location STORE001:1
+define-device SPEAKER001 name middle-aisle-speaker type speaker location STORE001:2
+define-device SPEAKER002 name middle-aisle-speaker type speaker location STORE001:3
+
+# Show sensor details using its unique id
+show-device CAMERA001
+show-device ROBOT001
+show-device ROBOT002
+show-device ROBOT003
+show-device TURNSTILE001
+show-device TURNSTILE002
+show-device MICROPHONE001
+show-device CAMERA002
+show-device SPEAKER001
+show-device SPEAKER002
+
+
+# Create enter-store events for 3 customers
+create-event TURNSTILE001 event "enter-store CUSTOMER00001 TURNSTILE001 STORE001:1"
+create-event TURNSTILE002 event "enter-store CUSTOMER00002 TURNSTILE002 STORE001:2"
+create-event TURNSTILE001 event "enter-store CUSTOMER00003 TURNSTILE001 STORE001:1"
+
+# Create a customer-seen event for CUSTOMER00001 - location should change to {STORE001=3}
+create-event CAMERA001 event "customer-seen CUSTOMER00001 STORE001:3"
+
+# Create a basket-event event (leaving 9 out of the 11 milk products on the shelf)
+create-event CAMERA001 event "basket-event CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 2"
+
+
+# Create a fetch-product event - expect a command to 1 robot to fetch the product
+create-event MICROPHONE001 event "fetch-product CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 3" credential secure
+
+
+# Create a fetch-product event - expect a command to 1 robot to restock because inventory count is 1 (less than 3)
+create-event MICROPHONE001 event "fetch-product CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 5"
+
+
+# Create an emergency event - all turnstiles open, 1 attends to emergency and the rest help
+# customers, while speakers announce for customers to leave store
+create-event CAMERA001 event "emergency ARMED_INTRUDER STORE001:1"
+
+
+# 3 customers enter the STORE001 again
+create-event TURNSTILE001 event "enter-store CUSTOMER00001 TURNSTILE001 STORE001:1"
+create-event TURNSTILE002 event "enter-store CUSTOMER00002 TURNSTILE002 STORE001:2"
+create-event TURNSTILE002 event "enter-store CUSTOMER00003 TURNSTILE002 STORE001:2"
+
+
+# Show the details of the customers before updating location
+show-customer CUSTOMER00001
+
+# Create a customer-seen event for CUSTOMER00001 - location should change to {STORE001=1}
+create-event CAMERA001 event "customer-seen CUSTOMER00001 STORE001:1"
+
+
+# Create a customer-seen event for CUSTOMER00003 - location should change to {STORE001=3}
+create-event CAMERA001 event "customer-seen CUSTOMER00003 STORE001:3"
+
+show-customer CUSTOMER00003
+
+
+# Create a broken-glass event - expect a robot to be assigned a new command to clean up glass
+create-event CAMERA002 event "broken-glass STORE001:1"
+
+
+# Create a product-spill event - expect a robot to be assigned a command to clean the milk
+create-event CAMERA002 event "product-spill STORE001:2 MILK001"
+
+
+# Create a missing-person event using a microphone - expect that the missing customer is in aisle 1
+create-event MICROPHONE001 event "missing-person STORE001 CUSTOMER00001"
+
+
+# Create a basket-event event for CUSTOMER00001
+create-event CAMERA001 event "basket-event CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 2"
+create-event CAMERA002 event "basket-event CUSTOMER00001 HONEY001 INVENTORY002 STORE001:1:SHELF002 5"
+create-event CAMERA001 event "basket-event CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 2"
+
+
+# Create a check-acc-bal event using a microphone - expect only one speaker to give response - total cost = 77
+create-event MICROPHONE001 event "check-acc-bal CUSTOMER00001 STORE001:2"
+
+
+# Create an assist-customer event using a turnstile location
+create-event TURNSTILE001 event "assist-customer CUSTOMER00001 STORE001:1"
+
+
+# Create a checkout event
+create-event TURNSTILE001 event "checkout CUSTOMER00001 STORE001:1"

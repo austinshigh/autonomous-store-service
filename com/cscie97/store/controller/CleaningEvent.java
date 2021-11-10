@@ -1,5 +1,6 @@
 package com.cscie97.store.controller;
 
+import com.cscie97.store.authentication.AuthenticationService;
 import com.cscie97.store.model.StoreModelService;
 import com.cscie97.store.model.StoreModelServiceException;
 
@@ -17,7 +18,7 @@ public class CleaningEvent implements Command {
 
 	private StoreModelService storeModelService;
 
-	public CleaningEvent(String storeId, String aisleId, String productId, StoreModelService storeModelService) {
+	public CleaningEvent(String storeId, String aisleId, String productId, StoreModelService storeModelService, AuthenticationService authenticationService) {
 		this.storeId = storeId;
 		this.aisleId = aisleId;
 		this.productId = productId;

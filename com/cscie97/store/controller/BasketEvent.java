@@ -1,6 +1,6 @@
 package com.cscie97.store.controller;
 
-import com.cscie97.ledger.Ledger;
+import com.cscie97.store.authentication.AuthenticationService;
 import com.cscie97.store.model.*;
 
 /**
@@ -26,7 +26,7 @@ public class BasketEvent implements Command {
 
 	private StoreModelService storeModelService;
 
-	public BasketEvent(String customerId, String productId, String inventoryId, String storeId, String aisleId, String shelfId, String quantity, StoreModelService storeModelService) {
+	public BasketEvent(String customerId, String productId, String inventoryId, String storeId, String aisleId, String shelfId, String quantity, StoreModelService storeModelService, AuthenticationService authenticationService) {
 		this.customerId = customerId;
 		this.productId = productId;
 		this.inventoryId = inventoryId;

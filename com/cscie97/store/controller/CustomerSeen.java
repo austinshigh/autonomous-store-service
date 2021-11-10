@@ -1,5 +1,6 @@
 package com.cscie97.store.controller;
 
+import com.cscie97.store.authentication.AuthenticationService;
 import com.cscie97.store.model.StoreModelService;
 import com.cscie97.store.model.StoreModelServiceException;
 
@@ -17,7 +18,7 @@ public class CustomerSeen implements Command {
 
 	private StoreModelService storeModelService;
 
-	public CustomerSeen(String customerId, String storeId, String aisleId, StoreModelService storeModelService) {
+	public CustomerSeen(String customerId, String storeId, String aisleId, StoreModelService storeModelService, AuthenticationService authenticationService) {
 		this.customerId = customerId;
 		this.storeId = storeId;
 		this.aisleId = aisleId;

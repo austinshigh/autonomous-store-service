@@ -39,8 +39,6 @@ public class User extends Visitable {
 
     public Boolean login(String password) throws AuthenticationServiceException {
         for (Credential cred : credentialList){
-            System.out.println(cred.getValue());
-            System.out.println("secure".hashCode());
             if (cred.getAuthType().equals("password")){
                 if (cred.getValue() == password.hashCode()){
                     return true;

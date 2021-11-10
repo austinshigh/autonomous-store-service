@@ -8,16 +8,16 @@ public class Token {
 
 	private Calendar expirationTime;
 
-	private boolean active;
+	private boolean valid;
 
-	public Token(String id, Calendar expirationTime, boolean active) {
+	public Token(String id, Calendar expirationTime, boolean valid) {
 		this.id = id;
 		this.expirationTime = expirationTime;
-		this.active = active;
+		this.valid = valid;
 	}
 
 	public void invalidateToken() {
-		active = false;
+		valid = false;
 	}
 
 
@@ -60,18 +60,18 @@ public class Token {
 	/**
 	 * get field
 	 *
-	 * @return active
+	 * @return valid
 	 */
-	public boolean isActive() {
-		return this.active;
+	public boolean isValid() {
+		return this.valid;
 	}
 
 	/**
 	 * set field
 	 *
-	 * @param active
+	 * @param valid
 	 */
-	public void setActive(boolean active) {
-		this.active = active;
+	public void setValid(boolean valid) {
+		this.valid = valid;
 	}
 }

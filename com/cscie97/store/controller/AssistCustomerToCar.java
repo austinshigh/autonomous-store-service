@@ -1,5 +1,7 @@
 package com.cscie97.store.controller;
 
+import com.cscie97.store.authentication.AuthenticationService;
+import com.cscie97.store.authentication.AuthenticationServiceException;
 import com.cscie97.store.model.StoreModelService;
 import com.cscie97.store.model.StoreModelServiceException;
 
@@ -18,11 +20,14 @@ public class AssistCustomerToCar implements Command {
 
 	private StoreModelService storeModelService;
 
-	public AssistCustomerToCar(String customerId, String storeId, String aisleId, StoreModelService storeModelService) {
+	private AuthenticationService authenticationService;
+
+	public AssistCustomerToCar(String customerId, String storeId, String aisleId, StoreModelService storeModelService, AuthenticationService authenticationService) {
 		this.customerId = customerId;
 		this.storeId = storeId;
 		this.aisleId = aisleId;
 		this.storeModelService = storeModelService;
+		this.authenticationService = authenticationService;
 	}
 
 	/**
@@ -33,7 +38,10 @@ public class AssistCustomerToCar implements Command {
 	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws StoreModelServiceException {
+	public void execute() throws StoreModelServiceException, AuthenticationServiceException {
+
+//		String authToken = this.authenticationService.login(customerId, credential);
+//		this.authenticationService.getInstance().checkAccess(authToken, "fetch_product");
 
 		// find robot closest to turnstile where checkout is occurring
 		String[] robotLocation = storeModelService.findNearestRobot(storeId, aisleId).split(":");

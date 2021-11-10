@@ -1,5 +1,6 @@
 package com.cscie97.store.controller;
 
+import com.cscie97.store.authentication.AuthenticationService;
 import com.cscie97.store.model.*;
 
 import java.util.HashMap;
@@ -25,11 +26,14 @@ public class Emergency implements Command {
 
 	private StoreModelService storeModelService;
 
-	public Emergency(String emergencyType, String storeId, String aisleId, StoreModelService storeModelService) {
+	private AuthenticationService authenticationService;
+
+	public Emergency(String emergencyType, String storeId, String aisleId, StoreModelService storeModelService, AuthenticationService authenticationService) {
 		this.emergencyType = emergencyType;
 		this.storeId = storeId;
 		this.aisleId = aisleId;
 		this.storeModelService = storeModelService;
+		this.authenticationService = authenticationService;
 	}
 
 	/**
