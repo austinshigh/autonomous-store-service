@@ -1,12 +1,13 @@
 package com.cscie97.store.authentication;
 
+import java.util.Calendar;
 import java.util.Map;
 
 public class CheckAccessVisitor extends Visitor {
 
 	private boolean permissionFound;
 
-	private boolean inputToken;
+	private String inputToken;
 
 	private String requestedPermission;
 
@@ -16,7 +17,8 @@ public class CheckAccessVisitor extends Visitor {
 		}
 	}
 
-	public CheckAccessVisitor(String requestedPermission) {
+	public CheckAccessVisitor(String token, String requestedPermission) {
+		this.inputToken = token;
 		this.requestedPermission = requestedPermission;
 	}
 
@@ -24,7 +26,7 @@ public class CheckAccessVisitor extends Visitor {
 	 * @see Visitor#visit(User)
 	 */
 	public void visit(User user) {
-		if (user.getToken().equals(inputToken)){
+		if (user.getToken().getId().equals(inputToken) && user.getToken().getExpirationTime().after(Calendar.getInstance())){
 			for (Entitlement e : user.getEntitlementList()){
 				visit(e);
 			}
@@ -112,7 +114,7 @@ public class CheckAccessVisitor extends Visitor {
 	 *
 	 * @return inputToken
 	 */
-	public boolean isInputToken() {
+	public String getInputToken() {
 		return this.inputToken;
 	}
 
@@ -121,7 +123,7 @@ public class CheckAccessVisitor extends Visitor {
 	 *
 	 * @param inputToken
 	 */
-	public void setInputToken(boolean inputToken) {
+	public void setInputToken(String inputToken) {
 		this.inputToken = inputToken;
 	}
 

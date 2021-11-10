@@ -506,7 +506,8 @@ public class CommandProcessor {
 		try {
 			ledgerService = new Ledger("test", "testService", "controller");
 			ledgerService.fundLedger();
-			authenticationService = new AuthenticationService();
+			authenticationService = AuthenticationService.getInstance();
+			System.out.println(authenticationService.getUser("CUSTOMER00001").getName());
 			storeModelService = new StoreModelService("authToken", authenticationService.getInstance());
 			storeController = new StoreController(storeModelService,ledgerService, authenticationService.getInstance());
 			storeModelService.attach(storeController);

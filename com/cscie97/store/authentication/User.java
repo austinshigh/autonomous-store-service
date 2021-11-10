@@ -17,6 +17,8 @@ public class User extends Visitable {
     public User(String id, String name) {
         this.id = id;
         this.name = name;
+        this.entitlementList = new ArrayList<Entitlement>();
+        this.credentialList = new ArrayList<Credential>();
     }
 
     public void addCredential(Credential credential){
@@ -38,9 +40,9 @@ public class User extends Visitable {
     public Boolean login(String password) throws AuthenticationServiceException {
         for (Credential cred : credentialList){
             System.out.println(cred.getValue());
-            System.out.println("XXXXX");
+            System.out.println("secure".hashCode());
             if (cred.getAuthType().equals("password")){
-                if (cred.getValue().equals(password.hashCode())){
+                if (cred.getValue() == password.hashCode()){
                     return true;
                 }
             }

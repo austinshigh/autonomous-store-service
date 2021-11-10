@@ -4,11 +4,11 @@ public class Credential {
 
 	private String authType;
 
-	private String value;
+	private int value;
 
 	public Credential(String authType, String value) {
 		this.authType = authType;
-		this.value = value;
+		this.value = value.hashCode();
 	}
 
 
@@ -35,7 +35,7 @@ public class Credential {
 	 *
 	 * @return value
 	 */
-	public String getValue() {
+	public int getValue() {
 		return this.value;
 	}
 
@@ -44,7 +44,7 @@ public class Credential {
 	 *
 	 * @param value
 	 */
-	public void setValue(String value) {
+	public void setValue(int value) {
 		this.value = value;
 	}
 }

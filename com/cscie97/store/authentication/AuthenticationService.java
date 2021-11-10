@@ -1,6 +1,5 @@
 package com.cscie97.store.authentication;
 
-import javax.naming.AuthenticationException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +10,7 @@ public class AuthenticationService extends Visitable {
 
 	private int tokenTimeout;
 
-	private static AuthenticationService singleton = new AuthenticationService();
+	private static AuthenticationService singleton = null;
 
 	private AuthenticationServiceException AuthenticationServiceException;
 
@@ -23,20 +22,27 @@ public class AuthenticationService extends Visitable {
 
 	private Map<String, Resource> resourceMap;
 
-	private void AuthenticationService() {
+	private AuthenticationService() {
 		this.id = 1;
 		this.tokenTimeout = 10;
 		this.userMap = new HashMap<String,User>();
-		User test = new User("CUSTOMER00001", "Austin");
+		//
+		User test = new User("CUSTOMER00001", "Gavin");
 		Credential testCred = new Credential("password", "secure");
 		test.addCredential(testCred);
 		userMap.put(test.getId(), test);
+		//
 		this.entitlementMap = new HashMap<String, Entitlement>();
+		//
+		Permission permission = new Permission("1", "fetch_product", "test");
+		entitlementMap.put(permission.getId(), permission);
+		//
+		addPermissionToUser("CUSTOMER00001", permission.getId());
 		this.resourceMap = new HashMap<String, Resource>();
 	}
 
 	public boolean checkAccess(String token, String permission) throws AuthenticationServiceException {
-		CheckAccessVisitor checkAccess = new CheckAccessVisitor(permission);
+		CheckAccessVisitor checkAccess = new CheckAccessVisitor(token, permission);
 		checkAccess.visit(getInstance());
 		if (checkAccess.isPermissionFound()){
 			return true;
@@ -61,7 +67,6 @@ public class AuthenticationService extends Visitable {
 	}
 
 	public String login(String id, String password) throws AuthenticationServiceException {
-		System.out.println("XXXX");
 		User user = getUser(id);
 		try{
 			user.login(password);
@@ -163,7 +168,11 @@ public class AuthenticationService extends Visitable {
 		setTokenTimeout(minutes);
 	}
 
-	public AuthenticationService getInstance() {
+	public static AuthenticationService getInstance() {
+		if (singleton == null) {
+			singleton = new AuthenticationService();
+		}
+
 		return singleton;
 	}
 
