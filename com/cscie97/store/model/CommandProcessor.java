@@ -178,6 +178,16 @@ public class CommandProcessor {
 						}catch(AuthenticationServiceException e){
 							throw new CommandProcessorException(e);
 						}
+					case "check_access":
+						if (commands.size() != 9){
+							throw new CommandProcessorException("command should follow form:" +
+									"\ncheck_access user <username> password <password> resource <resource_id> permission <permission_id>");
+						}
+						try{
+							return authenticationService.checkAccess(commands.get(2), commands.get(4), commands.get(6), commands.get(8));
+						}catch(AuthenticationServiceException e){
+							throw new CommandProcessorException(e);
+						}
 					case "define-store":
 						if (commands.size() != 6) {
 							// throw exception if incorrect number of command line arguments

@@ -57,6 +57,17 @@ public class AuthenticationService extends Visitable {
 		}
 	}
 
+	public String checkAccess(String userId, String password, String resourceId, String permissionId) throws AuthenticationServiceException {
+		String tokenId = login(userId, "password", password);
+		CheckAccessVisitor checkAccess = new CheckAccessVisitor(tokenId, resourceId, permissionId);
+		checkAccess.visit(getInstance());
+		if (checkAccess.isPermissionFound()){
+			return "success, token valid";
+		}else{
+			throw new AuthenticationServiceException("Permission Not Found");
+		}
+	}
+
 	public String getInventory() throws AuthenticationServiceException{
 		InventoryVisitor inventoryVisitor = new InventoryVisitor();
 		inventoryVisitor.visit(getInstance());
@@ -97,14 +108,18 @@ public class AuthenticationService extends Visitable {
 
 	public String login(String id, String type, String credential) throws AuthenticationServiceException {
 		User user = getUser(id);
+		String tokenId = null;
 		try{
 			user.login(type, credential);
-			Calendar now = Calendar.getInstance();
-			now.add(Calendar.MINUTE, tokenTimeout);
-			Token token = new Token("RANDOM", now, true);
-			user.setToken(token);
+			if (!user.getToken().isValid()) {
+				Calendar now = Calendar.getInstance();
+				now.add(Calendar.MINUTE, tokenTimeout);
+				Token token = new Token("RANDOM", now, true);
+				user.setToken(token);
+				tokenId = token.getId();
+			}
 			setCurrentUser(user);
-			return token.getId();
+			return tokenId;
 		}
 		catch(AuthenticationServiceException e){
 			throw new AuthenticationServiceException(e);

@@ -11,7 +11,7 @@ public class CheckAccessVisitor extends Visitor {
 
 	private String requestedPermission;
 
-	private String resourceId;
+	private String resource;
 
 	public void check(String permission) {
 		if (permission.equals(requestedPermission)){
@@ -20,22 +20,23 @@ public class CheckAccessVisitor extends Visitor {
 	}
 	
 
-	public CheckAccessVisitor(String inputToken, String requestedPermission, String resource) {
+	public CheckAccessVisitor(String inputToken, String resource, String requestedPermission) {
 		this.inputToken = inputToken;
+		this.resource = resource;
 		this.requestedPermission = requestedPermission;
-		this.resourceId = resource;
 	}
 
 	/**
 	 * @see Visitor#visit(User)
 	 */
 	public void visit(User user) {
-		if (!user.getToken().getExpirationTime().after(Calendar.getInstance())){
-			user.getToken().invalidateToken();
-		}
-		else if (user.getToken().getId().equals(inputToken) && user.getToken().isValid()){
-			for (Entitlement e : user.getEntitlementList()){
-				visit(e);
+		if (user.getToken().getId() != null) {
+			if (!user.getToken().getExpirationTime().after(Calendar.getInstance())) {
+				user.getToken().invalidateToken();
+			} else if (user.getToken().getId().equals(inputToken) && user.getToken().isValid()) {
+				for (Entitlement e : user.getEntitlementList()) {
+					visit(e);
+				}
 			}
 		}
 	}
@@ -69,7 +70,7 @@ public class CheckAccessVisitor extends Visitor {
 	 * @see Visitor#visit(ResourceRole)
 	 */
 	public void visit(ResourceRole resourceRole) {
-		if (resourceRole.getResourceId().equals(resourceId)) {
+		if (resourceRole.getResourceId().equals(resource)) {
 			visit(resourceRole.getRole());
 		}
 	}
@@ -79,7 +80,7 @@ public class CheckAccessVisitor extends Visitor {
 	 * @see Visitor#visit(Permission)
 	 */
 	public void visit(Permission permission) {
-		check(permission.getName());
+		check(permission.getId());
 	}
 
 
@@ -154,7 +155,7 @@ public class CheckAccessVisitor extends Visitor {
 	 * @return resource
 	 */
 	public String getResource() {
-		return this.resourceId;
+		return this.resource;
 	}
 
 	/**
@@ -163,6 +164,6 @@ public class CheckAccessVisitor extends Visitor {
 	 * @param resource
 	 */
 	public void setResource(String resource) {
-		this.resourceId = resource;
+		this.resource = resource;
 	}
 }

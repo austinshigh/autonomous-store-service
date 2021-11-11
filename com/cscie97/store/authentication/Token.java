@@ -16,6 +16,12 @@ public class Token {
 		this.valid = valid;
 	}
 
+	public Token() {
+		this.id = null;
+		this.valid = false;
+		this.expirationTime = null;
+	}
+
 	public void invalidateToken() {
 		valid = false;
 	}

@@ -25,6 +25,7 @@ public class User extends Visitable {
         this.facePrint = new FacePrint();
         this.voicePrint = new VoicePrint();
         this.entitlementList = new ArrayList<Entitlement>();
+        this.token = new Token();
     }
 
 
