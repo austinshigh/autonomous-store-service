@@ -30,7 +30,7 @@ public class AuthenticationService extends Visitable {
 		this.tokenTimeout = 10;
 		this.userMap = new HashMap<String,User>();
 		//
-		User root = new User("root", "Gavin");
+		User root = new User("root", "superuser");
 		Password rootPassword = new Password("default");
 		root.addCredential(rootPassword);
 		userMap.put(root.getId(), root);
@@ -107,7 +107,7 @@ public class AuthenticationService extends Visitable {
 			now.add(Calendar.MINUTE, tokenTimeout);
 			Token token = new Token("RANDOM", now, true);
 			user.setToken(token);
-			currentUser = user;
+			setCurrentUser(user);
 			return token.getId();
 		}
 		catch(AuthenticationServiceException e){
@@ -118,13 +118,13 @@ public class AuthenticationService extends Visitable {
 	public String login(String type, String credential) throws AuthenticationServiceException {
 		if (type.equals("faceprint")) {
 			for (Map.Entry<String, User> entry : userMap.entrySet()) {
-				if (entry.getValue().getFacePrint().equals(credential)){
+				if (entry.getValue().getFacePrint().getValue().equals(credential)){
 					return login(entry.getValue().getId(), type, credential);
 				}
 			}
 		}else if (type.equals("voiceprint")){
 			for (Map.Entry<String, User> entry : userMap.entrySet()) {
-				if (entry.getValue().getVoicePrint().equals(credential)){
+				if (entry.getValue().getVoicePrint().getValue().equals(credential)){
 					return login(entry.getValue().getId(), type, credential);
 				}
 			}
@@ -133,11 +133,10 @@ public class AuthenticationService extends Visitable {
 	}
 
 	public String logout() {
-		currentUser
-				.getToken()
-				.invalidateToken();
+		currentUser.getToken().invalidateToken();
+		String message = currentUser.getId() + " logged out.";
 		currentUser = null;
-		return currentUser.getId() + " logged out.";
+		return message;
 	}
 
 	public String createPermission(String id, String name, String description) throws AuthenticationServiceException {
@@ -388,5 +387,24 @@ public class AuthenticationService extends Visitable {
 	 */
 	public void setResourceMap(Map<String, Resource> resourceMap) {
 		this.resourceMap = resourceMap;
+	}
+
+
+	/**
+	 * get field
+	 *
+	 * @return currentUser
+	 */
+	public User getCurrentUser() {
+		return this.currentUser;
+	}
+
+	/**
+	 * set field
+	 *
+	 * @param currentUser
+	 */
+	public void setCurrentUser(User currentUser) {
+		this.currentUser = currentUser;
 	}
 }

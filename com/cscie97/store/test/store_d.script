@@ -51,32 +51,32 @@ logout
 login faceprint faceprint-debra123
 
 
-#Define Store Permissions
-#Define Permission control_robot
+# Define Store Permissions
+# Define Permission control_robot
 define_permission control_robot permission_name "Control Robot" permission_description "Full Control of Robots"
-#Define Permission control_speaker
+# Define Permission control_speaker
 define_permission control_speaker permission_name "Control Speaker" permission_description "Full Control of Speakers"
-#Define Permission control_turnstile
+# Define Permission control_turnstile
 define_permission control_turnstile permission_name "Control Turnstile" permission_description "Full Control of Turnstiles"
-#Define Permission enter_store
+# Define Permission enter_store
 define_permission enter_store permission_name "Enter Store" permission_description "Permission to Enter Store"
-#Define Permission checkout
+# Define Permission checkout
 define_permission checkout permission_name "Checkout" permission_description "Permission to Checkout"
-#Define Permission get_user_authtoken
+# Define Permission get_user_authtoken
 define_permission get_user_authtoken permission_name "Get User's AuthToken" permission_description "Permission to get AuthToken"
-#Define Permission provision_store
+# Define Permission provision_store
 define_permission provision_store permission_name "Provision Store" permission_description "Permission to provision stores, ailes, shelves, products, devices, customers"
 
-#Define Store Roles
-#Define role adult_consumer_role
+# Define Store Roles
+# Define role adult_consumer_role
 define_role adult_consumer_role role_name "Adult Consumer Role" role_description "Has all permissions of an adult consumer"
-#Define role child_consumer_role
+# Define role child_consumer_role
 define_role child_consumer_role role_name "Child Consumer Role" role_description "Has all permissions of an child consumer"
-#Define role guest_consumer_role
+# Define role guest_consumer_role
 define_role guest_consumer_role role_name "Guest Consumer Role" role_description "Has all permissions of an guest"
-#Define role controller_service_role
+# Define role controller_service_role
 define_role controller_service_role role_name "Store Controller Role" role_description "Has all permissions of controller service"
-#Define role admin_role
+# Define role admin_role
 define_role admin_role role_name "Admin Role" role_description "Has all permissions"
 
 # add permission to role
@@ -167,10 +167,10 @@ add_role_to_user jimmy child_consumer_role
 add_role_to_user scs controller_service_role
 
 # check access, retrieves auth token for credential and calls check access method
-#should succeed for sam
+# should succeed for sam
 check_access user sam password sam123 resource store1 permission control_robot
 check_access voiceprint voiceprint-sam123 resource store1 permission control_robot
-#should fail for jimmy
+# should fail for jimmy
 check_access user jimmy password jimmy123 resource store1 permission control_robot
 check_access faceprint faceprint-jimmy123 resource store1 permission control_robot
 

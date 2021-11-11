@@ -27,6 +27,7 @@ public class User extends Visitable {
         this.entitlementList = new ArrayList<Entitlement>();
     }
 
+
     @Override
     public String toString() {
         return "User{" +
