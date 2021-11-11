@@ -4,7 +4,7 @@ import java.util.Map;
 
 public class InventoryVisitor extends Visitor {
 
-	private String report;
+	private String report = "";
 
 	/**
 	 * @see Visitor#visit(User)
@@ -14,15 +14,15 @@ public class InventoryVisitor extends Visitor {
 		for (Entitlement e : user.getEntitlementList()){
 			if (e instanceof Role) {
 				Role subRole = (Role) e;
-				report += "Role: " + subRole.getId() + "\n";
+				report += "\tRole: " + subRole.getId() + "\n";
 			}
 			else if (e instanceof ResourceRole) {
 				ResourceRole resourceRole = (ResourceRole) e;
-				report += "ResourceRole: " + resourceRole.getId() + "\n";
+				report += "\tResourceRole: " + resourceRole.getId() + "\n";
 			}
 			else if (e instanceof Permission) {
 				Permission permission = (Permission) e;
-				report += "Permission: " + permission.getId() + "\n";
+				report += "\tPermission: " + permission.getId() + "\n";
 			}
 		}
 		//String userInfo = user.toString();
@@ -35,17 +35,17 @@ public class InventoryVisitor extends Visitor {
 	public void visit(Entitlement entitlement){
 		if (entitlement instanceof Role) {
 			Role subRole = (Role) entitlement;
-			report += "Role: " + subRole.getId() + "\n";
+			report += "\tRole: " + subRole.getId() + "\n\t";
 			visit(subRole);
 		}
 		else if (entitlement instanceof ResourceRole) {
 			ResourceRole resourceRole = (ResourceRole) entitlement;
-			report += "ResourceRole: " + resourceRole.getId() + "\n";
+			report += "\tResourceRole: " + resourceRole.getId() + "\n\t";
 			visit(resourceRole);
 		}
 		else if (entitlement instanceof Permission) {
 			Permission permission = (Permission) entitlement;
-			report += "Permission: " + permission.getId() + "\n";
+			report += "\tPermission: " + permission.getId() + "\n\t";
 			visit(permission);
 		}
 	}
@@ -55,12 +55,15 @@ public class InventoryVisitor extends Visitor {
 	 * @see Visitor#visit(Role)
 	 */
 	public void visit(Role role) {
-		report += role.getId() + " " + role.getName() + " " + role.getDescription() + "\n";
+		report += "Name: " + role.getName() + "\n\tDescription: " + role.getDescription() + "\n\t";
 
 		for (Entitlement e : role.getEntitlementList()){
 			if (e instanceof Role) {
 				Role subRole = (Role) e;
-				report += "SubRole: " + subRole.getId() + "\n";
+				report += "\tSubRole: " + subRole.getId() + "\n";
+			}else if (e instanceof Permission) {
+				Permission permission = (Permission) e;
+				report += "\tPermission: " + permission.getId() + "\n\t";
 			}
 		}
 		//String roleInfo = role.toString();
@@ -72,7 +75,7 @@ public class InventoryVisitor extends Visitor {
 	 * @see Visitor#visit(ResourceRole)
 	 */
 	public void visit(ResourceRole resourceRole) {
-		report += resourceRole.getId() + " " + resourceRole.getRole() + " " + resourceRole.getResourceId() + "\n";
+		report += resourceRole.getId() + " " + resourceRole.getRole().getId() + " " + resourceRole.getResourceId() + "\n";
 		//String resourceRoleInfo = resourceRole.toString();
 		//System.out.println(resourceRoleInfo);
 	}
@@ -82,7 +85,7 @@ public class InventoryVisitor extends Visitor {
 	 * @see Visitor#visit(Permission)
 	 */
 	public void visit(Permission permission) {
-		report += permission.getId() + " " + permission.getName() + " " + permission.getDescription() + "\n";
+		report += "Name: " + permission.getName() + "\n\tDescription: " + permission.getDescription() + "\n\t";
 		//String permissionInfo = permission.toString();
 		//System.out.println(permissionInfo);
 	}
@@ -93,8 +96,6 @@ public class InventoryVisitor extends Visitor {
 	 */
 	public void visit(AuthenticationService authService) {
 		report += "AuthenticationService ID: " + authService.getId() + "\n";
-		String authServiceInfo = authService.toString();
-		//System.out.println(authServiceInfo);
 		for (Map.Entry<String, Entitlement> entitlement : authService.getEntitlementMap().entrySet()){
 			visit(entitlement.getValue());
 		}
