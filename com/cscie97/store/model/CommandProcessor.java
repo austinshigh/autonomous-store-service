@@ -157,6 +157,27 @@ public class CommandProcessor {
 						}
 					case "logout":
 							return authenticationService.logout();
+					case "create_resource_role":
+						if (commands.size() != 4){
+							// throw exception if incorrect number of command line arguments
+							throw new CommandProcessorException("command should follow form:" +
+									"\ncreate_resource_role <resource_role_name> <role> <resource>");
+						}
+						try {
+							return authenticationService.createResourceRole(commands.get(1), commands.get(2), commands.get(3));
+						}catch(AuthenticationServiceException e){
+							throw new CommandProcessorException(e);
+						}
+					case "add_resource_role_to_user":
+						if (commands.size() != 3){
+							throw new CommandProcessorException("command should follow form:" +
+									"\nadd_resource_role_to_user <user_id>, <resource_role>");
+						}
+						try{
+							return authenticationService.addResourceRoleToUser(commands.get(1), commands.get(2));
+						}catch(AuthenticationServiceException e){
+							throw new CommandProcessorException(e);
+						}
 					case "define-store":
 						if (commands.size() != 6) {
 							// throw exception if incorrect number of command line arguments

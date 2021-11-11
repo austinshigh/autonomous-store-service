@@ -1,6 +1,5 @@
 package com.cscie97.store.authentication;
 
-import javax.naming.AuthenticationNotSupportedException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,8 +22,6 @@ public class AuthenticationService extends Visitable {
 
 	private Map<String, Entitlement> entitlementMap;
 
-	private Map<String, Resource> resourceMap;
-
 	private AuthenticationService() {
 		this.id = 1;
 		this.tokenTimeout = 10;
@@ -41,7 +38,6 @@ public class AuthenticationService extends Visitable {
 		//entitlementMap.put(permission.getId(), permission);
 		//
 		//addPermissionToUser("root", permission.getId());
-		this.resourceMap = new HashMap<String, Resource>();
 	}
 
 	@Override
@@ -51,8 +47,8 @@ public class AuthenticationService extends Visitable {
 				'}';
 	}
 
-	public boolean checkAccess(String token, String permission) throws AuthenticationServiceException {
-		CheckAccessVisitor checkAccess = new CheckAccessVisitor(token, permission);
+	public boolean checkAccess(String token, String resource, String permission) throws AuthenticationServiceException {
+		CheckAccessVisitor checkAccess = new CheckAccessVisitor(token, resource, permission);
 		checkAccess.visit(getInstance());
 		if (checkAccess.isPermissionFound()){
 			return true;
@@ -157,22 +153,22 @@ public class AuthenticationService extends Visitable {
 		return "role created: " + id;
 	}
 
-	public String createResource(String id, String description) throws AuthenticationServiceException {
-		if (resourceMap.containsKey(id)){
-			throw new AuthenticationServiceException("resource already exists: " + id);
-		}
-		Resource resource = new Resource(id, description);
-		resourceMap.put(id, resource);
-		return "resource created: " + id;
-	}
+//	public String createResource(String id, String description) throws AuthenticationServiceException {
+//		if (resourceMap.containsKey(id)){
+//			throw new AuthenticationServiceException("resource already exists: " + id);
+//		}
+//		Resource resource = new Resource(id, description);
+//		resourceMap.put(id, resource);
+//		return "resource created: " + id;
+//	}
 
 	public String createResourceRole(String id, String roleId, String resourceId) throws AuthenticationServiceException {
 		if (entitlementMap.containsKey(id)){
 			throw new AuthenticationServiceException("resource role already exists: " + id);
 		}
-		Resource resource = getResource(resourceId);
+		//Resource resource = getResource(resourceId);
 		Role role = getRole(roleId);
-		ResourceRole resourceRole = new ResourceRole(id, resource, role);
+		ResourceRole resourceRole = new ResourceRole(id, role, resourceId);
 		entitlementMap.put(id, resourceRole);
 		return "resource role created: " + id;
 	}
@@ -204,9 +200,6 @@ public class AuthenticationService extends Visitable {
 		return null;
 	}
 
-	public Resource getResource(String id){
-		return resourceMap.get(id);
-	}
 
 	public String addPermissionToRole(String roleId, String permissionId) throws AuthenticationServiceException {
 		Role role = getRole(roleId);
@@ -234,10 +227,14 @@ public class AuthenticationService extends Visitable {
 		return "role: " + roleId + " added to user: " + userId;
 	}
 
-	public void addResourceRoleToUser(String userId, String resourceRoleId) {
+	public String addResourceRoleToUser(String userId, String resourceRoleId) throws AuthenticationServiceException {
 		User user = getUser(userId);
 		ResourceRole resourceRole = getResourceRole(resourceRoleId);
+		if (user.getEntitlementList().contains(resourceRoleId)){
+			throw new AuthenticationServiceException("User already contains resource role: " + resourceRoleId);
+		}
 		user.addResourceRole(resourceRole);
+		return resourceRoleId + " added to user: " + userId;
 	}
 
 	public void modifyTokenTimeout(int minutes) {
@@ -369,24 +366,6 @@ public class AuthenticationService extends Visitable {
 	 */
 	public void setEntitlementMap(Map<String, Entitlement> entitlementMap) {
 		this.entitlementMap = entitlementMap;
-	}
-
-	/**
-	 * get field
-	 *
-	 * @return resourceMap
-	 */
-	public Map<String, Resource> getResourceMap() {
-		return this.resourceMap;
-	}
-
-	/**
-	 * set field
-	 *
-	 * @param resourceMap
-	 */
-	public void setResourceMap(Map<String, Resource> resourceMap) {
-		this.resourceMap = resourceMap;
 	}
 
 

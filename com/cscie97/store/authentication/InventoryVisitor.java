@@ -69,20 +69,10 @@ public class InventoryVisitor extends Visitor {
 
 
 	/**
-	 * @see Visitor#visit(Resource)
-	 */
-	public void visit(Resource resource) {
-		//report += resource.getId() + "/n"
-		//String resourceInfo = resource.toString();
-		//System.out.println(resourceInfo);
-	}
-
-
-	/**
 	 * @see Visitor#visit(ResourceRole)
 	 */
 	public void visit(ResourceRole resourceRole) {
-		report += resourceRole.getId() + " " + resourceRole.getRole() + " " + resourceRole.getResource() + "\n";
+		report += resourceRole.getId() + " " + resourceRole.getRole() + " " + resourceRole.getResourceId() + "\n";
 		//String resourceRoleInfo = resourceRole.toString();
 		//System.out.println(resourceRoleInfo);
 	}

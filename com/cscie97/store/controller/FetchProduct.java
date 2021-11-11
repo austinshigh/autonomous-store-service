@@ -67,7 +67,7 @@ public class FetchProduct implements Command {
 	public void execute() throws StoreModelServiceException, AuthenticationServiceException {
 
 		String authToken = this.authenticationService.login(customerId, credential);
-		this.authenticationService.getInstance().checkAccess(authToken, "fetch_product");
+		this.authenticationService.getInstance().checkAccess(authToken, "fetch_product", storeId);
 
 		String customerAisle = storeModelService.getCustomer(customerId).getLocation().getAisleNumber();
 

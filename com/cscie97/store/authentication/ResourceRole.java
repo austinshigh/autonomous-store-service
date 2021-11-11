@@ -4,24 +4,16 @@ public class ResourceRole extends Entitlement {
 
 	private String id;
 
-	private Resource resource;
+	private String resourceId;
 
 	private Role role;
 
-	public ResourceRole(String id, Resource resource, Role role) {
+	public ResourceRole(String id, Role role, String resourceId) {
 		this.id = id;
-		this.resource = resource;
+		this.resourceId = resourceId;
 		this.role = role;
 	}
 
-	@Override
-	public String toString() {
-		return "ResourceRole{" +
-				"id='" + id + '\'' +
-				", resource=" + resource +
-				", role=" + role +
-				'}';
-	}
 
 	/**
 	 * get field
@@ -44,19 +36,19 @@ public class ResourceRole extends Entitlement {
 	/**
 	 * get field
 	 *
-	 * @return resource
+	 * @return resourceId
 	 */
-	public Resource getResource() {
-		return this.resource;
+	public String getResourceId() {
+		return this.resourceId;
 	}
 
 	/**
 	 * set field
 	 *
-	 * @param resource
+	 * @param resourceId
 	 */
-	public void setResource(Resource resource) {
-		this.resource = resource;
+	public void setResourceId(String resourceId) {
+		this.resourceId = resourceId;
 	}
 
 	/**

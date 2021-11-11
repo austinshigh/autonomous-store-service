@@ -11,15 +11,19 @@ public class CheckAccessVisitor extends Visitor {
 
 	private String requestedPermission;
 
+	private String resourceId;
+
 	public void check(String permission) {
 		if (permission.equals(requestedPermission)){
 			permissionFound = true;
 		}
 	}
+	
 
-	public CheckAccessVisitor(String token, String requestedPermission) {
-		this.inputToken = token;
+	public CheckAccessVisitor(String inputToken, String requestedPermission, String resource) {
+		this.inputToken = inputToken;
 		this.requestedPermission = requestedPermission;
+		this.resourceId = resource;
 	}
 
 	/**
@@ -60,19 +64,14 @@ public class CheckAccessVisitor extends Visitor {
 		}
 	}
 
-	/**
-	 * @see Visitor#visit(Resource)
-	 */
-	public void visit(Resource resource) {
-
-	}
-
 
 	/**
 	 * @see Visitor#visit(ResourceRole)
 	 */
 	public void visit(ResourceRole resourceRole) {
-		visit(resourceRole.getRole());
+		if (resourceRole.getResourceId().equals(resourceId)) {
+			visit(resourceRole.getRole());
+		}
 	}
 
 
@@ -146,5 +145,24 @@ public class CheckAccessVisitor extends Visitor {
 	 */
 	public void setRequestedPermission(String requestedPermission) {
 		this.requestedPermission = requestedPermission;
+	}
+
+
+	/**
+	 * get field
+	 *
+	 * @return resource
+	 */
+	public String getResource() {
+		return this.resourceId;
+	}
+
+	/**
+	 * set field
+	 *
+	 * @param resource
+	 */
+	public void setResource(String resource) {
+		this.resourceId = resource;
 	}
 }
