@@ -61,13 +61,25 @@ public class CommandProcessor {
 				switch (firstArg) {
 					// compare first word in line to determine method to call
 					case "login":
+						if (commands.get(1).equals("faceprint") || commands.get(1).equals("voiceprint")){
+							if (commands.size() != 3){
+								// throw exception if incorrect number of command line arguments
+								throw new CommandProcessorException("command should follow form:" +
+										"\nlogin faceprint|voiceprint <faceprint|voiceprint>");
+							}
+							try{
+								return authenticationService.login(commands.get(1), commands.get(2));
+							}catch(AuthenticationServiceException e){
+								throw new CommandProcessorException(e);
+							}
+						}
 						if (commands.size() != 4){
 							// throw exception if incorrect number of command line arguments
 							throw new CommandProcessorException("command should follow form:" +
 									"\nlogin <username> password <password>");
 						}
 						try {
-							return authenticationService.login(commands.get(1), commands.get(3));
+							return authenticationService.login(commands.get(1), commands.get(2), commands.get(3));
 						}catch(AuthenticationServiceException e){
 							throw new CommandProcessorException(e);
 						}
@@ -143,6 +155,8 @@ public class CommandProcessor {
 						}catch(AuthenticationServiceException e){
 							throw new CommandProcessorException(e);
 						}
+					case "logout":
+							return authenticationService.logout();
 					case "define-store":
 						if (commands.size() != 6) {
 							// throw exception if incorrect number of command line arguments

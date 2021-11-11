@@ -15,6 +15,8 @@ public class AuthenticationService extends Visitable {
 
 	private AuthenticationServiceException AuthenticationServiceException;
 
+	private User currentUser;
+
 	private Visitor visitor;
 
 	private Map<String, User> userMap;
@@ -97,14 +99,15 @@ public class AuthenticationService extends Visitable {
 		return type + " added to user: " + userId;
 	}
 
-	public String login(String id, String password) throws AuthenticationServiceException {
+	public String login(String id, String type, String credential) throws AuthenticationServiceException {
 		User user = getUser(id);
 		try{
-			user.login(password);
+			user.login(type, credential);
 			Calendar now = Calendar.getInstance();
 			now.add(Calendar.MINUTE, tokenTimeout);
 			Token token = new Token("RANDOM", now, true);
 			user.setToken(token);
+			currentUser = user;
 			return token.getId();
 		}
 		catch(AuthenticationServiceException e){
@@ -112,10 +115,29 @@ public class AuthenticationService extends Visitable {
 		}
 	}
 
-	public void logout(String id) {
-		getUser(id)
+	public String login(String type, String credential) throws AuthenticationServiceException {
+		if (type.equals("faceprint")) {
+			for (Map.Entry<String, User> entry : userMap.entrySet()) {
+				if (entry.getValue().getFacePrint().equals(credential)){
+					return login(entry.getValue().getId(), type, credential);
+				}
+			}
+		}else if (type.equals("voiceprint")){
+			for (Map.Entry<String, User> entry : userMap.entrySet()) {
+				if (entry.getValue().getVoicePrint().equals(credential)){
+					return login(entry.getValue().getId(), type, credential);
+				}
+			}
+		}
+		throw new AuthenticationServiceException("credential not found");
+	}
+
+	public String logout() {
+		currentUser
 				.getToken()
 				.invalidateToken();
+		currentUser = null;
+		return currentUser.getId() + " logged out.";
 	}
 
 	public String createPermission(String id, String name, String description) throws AuthenticationServiceException {

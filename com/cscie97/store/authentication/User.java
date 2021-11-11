@@ -62,9 +62,19 @@ public class User extends Visitable {
         entitlementList.add(resourceRole);
     }
 
-    public Boolean login(String passwordAttempt) throws AuthenticationServiceException {
-        if (password.getValue() == passwordAttempt.hashCode()){
-            return true;
+    public void login(String type, String credentialAttempt) throws AuthenticationServiceException {
+        if (type.equals("password")) {
+            if (password.getValue() == credentialAttempt.hashCode()){
+                return;
+            }
+        }else if (type.equals("faceprint")) {
+            if (facePrint.getValue().equals(credentialAttempt)){
+                return;
+            }
+        }else if (type.equals("voiceprint")){
+            if (voicePrint.getValue().equals(credentialAttempt)){
+                return;
+            }
         }
         throw new AuthenticationServiceException("invalid user");
     }
