@@ -57,15 +57,65 @@ public class AuthenticationService extends Visitable {
 		}
 	}
 
-	public String checkAccess(String userId, String password, String resourceId, String permissionId) throws AuthenticationServiceException {
-		String tokenId = login(userId, "password", password);
-		CheckAccessVisitor checkAccess = new CheckAccessVisitor(tokenId, resourceId, permissionId);
-		checkAccess.visit(getInstance());
-		if (checkAccess.isPermissionFound()){
-			return "success, token valid";
-		}else{
-			throw new AuthenticationServiceException("Permission Not Found");
+	public String checkAccess(String type, String publicKey, String privateKey, String resourceId, String permissionId) throws AuthenticationServiceException {
+		String tokenId = null;
+		if (type.equals("login")){
+			tokenId = login(publicKey, "password", privateKey);
+		}else if (type.equals("print")){
+			tokenId = login(publicKey, privateKey);
 		}
+		CheckAccessVisitor checkAccess = new CheckAccessVisitor(tokenId, resourceId, permissionId);
+		checkAccess.visit(currentUser);
+		if (checkAccess.isPermissionFound()){
+			return "Success: Permission Authorized.";
+		}else{
+			throw new AuthenticationServiceException("Failure: Permission Not Found");
+		}
+	}
+
+	public String login(String id, String type, String credential) throws AuthenticationServiceException {
+		User user = getUser(id);
+		String tokenId = null;
+		try{
+			user.login(type, credential);
+			if (!user.getToken().isValid()) {
+				Calendar now = Calendar.getInstance();
+				now.add(Calendar.MINUTE, tokenTimeout);
+				Token token = new Token("RANDOM", now, true);
+				user.setToken(token);
+				tokenId = token.getId();
+			}else{
+				tokenId = user.getToken().getId();
+			}
+			setCurrentUser(user);
+			return tokenId;
+		}
+		catch(AuthenticationServiceException e){
+			throw new AuthenticationServiceException(e);
+		}
+	}
+
+	public String login(String type, String credential) throws AuthenticationServiceException {
+		if (type.equals("faceprint")) {
+			for (Map.Entry<String, User> entry : userMap.entrySet()) {
+				String facePrint = entry.getValue().getFacePrint().getValue();
+				if (facePrint != null) {
+					if (facePrint.equals(credential)) {
+						return login(entry.getValue().getId(), type, credential);
+					}
+				}
+			}
+		}else if (type.equals("voiceprint")){
+			for (Map.Entry<String, User> entry : userMap.entrySet()) {
+				String voicePrint = entry.getValue().getVoicePrint().getValue();
+				if (voicePrint != null) {
+					if (voicePrint.equals(credential)) {
+						return login(entry.getValue().getId(), type, credential);
+					}
+				}
+			}
+		}
+		throw new AuthenticationServiceException("credential not found");
 	}
 
 	public String getInventory() throws AuthenticationServiceException{
@@ -104,43 +154,6 @@ public class AuthenticationService extends Visitable {
 			throw new AuthenticationServiceException("credential type not supported");
 		}
 		return type + " added to user: " + userId;
-	}
-
-	public String login(String id, String type, String credential) throws AuthenticationServiceException {
-		User user = getUser(id);
-		String tokenId = null;
-		try{
-			user.login(type, credential);
-			if (!user.getToken().isValid()) {
-				Calendar now = Calendar.getInstance();
-				now.add(Calendar.MINUTE, tokenTimeout);
-				Token token = new Token("RANDOM", now, true);
-				user.setToken(token);
-				tokenId = token.getId();
-			}
-			setCurrentUser(user);
-			return tokenId;
-		}
-		catch(AuthenticationServiceException e){
-			throw new AuthenticationServiceException(e);
-		}
-	}
-
-	public String login(String type, String credential) throws AuthenticationServiceException {
-		if (type.equals("faceprint")) {
-			for (Map.Entry<String, User> entry : userMap.entrySet()) {
-				if (entry.getValue().getFacePrint().getValue().equals(credential)){
-					return login(entry.getValue().getId(), type, credential);
-				}
-			}
-		}else if (type.equals("voiceprint")){
-			for (Map.Entry<String, User> entry : userMap.entrySet()) {
-				if (entry.getValue().getVoicePrint().getValue().equals(credential)){
-					return login(entry.getValue().getId(), type, credential);
-				}
-			}
-		}
-		throw new AuthenticationServiceException("credential not found");
 	}
 
 	public String logout() {

@@ -18,7 +18,6 @@ public class CheckAccessVisitor extends Visitor {
 			permissionFound = true;
 		}
 	}
-	
 
 	public CheckAccessVisitor(String inputToken, String resource, String requestedPermission) {
 		this.inputToken = inputToken;

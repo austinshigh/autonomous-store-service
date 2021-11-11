@@ -179,14 +179,26 @@ public class CommandProcessor {
 							throw new CommandProcessorException(e);
 						}
 					case "check_access":
-						if (commands.size() != 9){
-							throw new CommandProcessorException("command should follow form:" +
-									"\ncheck_access user <username> password <password> resource <resource_id> permission <permission_id>");
-						}
-						try{
-							return authenticationService.checkAccess(commands.get(2), commands.get(4), commands.get(6), commands.get(8));
-						}catch(AuthenticationServiceException e){
-							throw new CommandProcessorException(e);
+						if (commands.get(1).equals("user")) {
+							if (commands.size() != 9) {
+								throw new CommandProcessorException("command should follow form:" +
+										"\ncheck_access user <username> password <password> resource <resource_id> permission <permission_id>");
+							}
+							try {
+								return authenticationService.checkAccess("login", commands.get(2), commands.get(4), commands.get(6), commands.get(8));
+							} catch (AuthenticationServiceException e) {
+								throw new CommandProcessorException(e);
+							}
+						}else if (commands.get(1).equals("faceprint") || commands.get(1).equals("voiceprint")){
+							if (commands.size() != 7) {
+								throw new CommandProcessorException("command should follow form:" +
+										"\ncheck_access voiceprint|faceprint <voiceprint|faceprint> resource <resource_id> permission <permission_id>");
+							}
+							try {
+								return authenticationService.checkAccess("print", commands.get(1), commands.get(2), commands.get(4), commands.get(6));
+							} catch (AuthenticationServiceException e) {
+								throw new CommandProcessorException(e);
+							}
 						}
 					case "define-store":
 						if (commands.size() != 6) {
