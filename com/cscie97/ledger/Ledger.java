@@ -74,7 +74,6 @@ public class Ledger {
         }else {
             String authToken = authenticationService.getCurrentUser().getToken().getId();
             authenticationService.checkAccess(authToken, permission);
-            System.out.println("User Permission Verified\n");
         }
     }
 

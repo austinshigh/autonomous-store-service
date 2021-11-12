@@ -88,7 +88,6 @@ public class StoreModelService implements Subject {
 		}else {
 			String authToken = authenticationService.getCurrentUser().getToken().getId();
 			authenticationService.checkAccess(authToken, "provision_store");
-			System.out.println("User Permission Verified\n");
 		}
 	}
 
@@ -105,7 +104,6 @@ public class StoreModelService implements Subject {
 		}else {
 			String authToken = authenticationService.getCurrentUser().getToken().getId();
 			authenticationService.checkAccess(authToken, "provision_store");
-			System.out.println("User Permission Verified\n");
 		}
 	}
 

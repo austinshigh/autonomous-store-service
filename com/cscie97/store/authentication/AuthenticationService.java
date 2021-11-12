@@ -1,9 +1,6 @@
 package com.cscie97.store.authentication;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class AuthenticationService extends Visitable {
 
@@ -92,8 +89,8 @@ public class AuthenticationService extends Visitable {
 			if (!user.getToken().isValid()) {
 				Calendar now = Calendar.getInstance();
 				now.add(Calendar.MINUTE, tokenTimeout);
-				Random rand = new Random();
-				Token token = new Token(rand.toString(), now, true);
+				String rand = UUID.randomUUID().toString();
+				Token token = new Token(rand, now, true);
 				user.setToken(token);
 				tokenId = token.getId();
 			}else{
