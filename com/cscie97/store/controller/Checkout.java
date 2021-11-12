@@ -57,6 +57,12 @@ public class Checkout implements Command {
 	 * @see Command#execute()
 	 */
 	public void execute() throws StoreModelServiceException, LedgerException, AuthenticationServiceException {
+
+		String voicePrint = "faceprint-" + customerId;
+		String authToken = this.authenticationService.login("faceprint", voicePrint);
+		System.out.println("User Permission Verified\n");
+		this.authenticationService.getInstance().checkAccess(authToken, storeId, "control_turnstile");
+
 		// get customer from storemodelservice
 		Customer customer = storeModelService.getCustomer(customerId);
 

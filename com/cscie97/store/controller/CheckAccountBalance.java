@@ -3,6 +3,7 @@ package com.cscie97.store.controller;
 import com.cscie97.ledger.Ledger;
 import com.cscie97.ledger.LedgerException;
 import com.cscie97.store.authentication.AuthenticationService;
+import com.cscie97.store.authentication.AuthenticationServiceException;
 import com.cscie97.store.model.*;
 
 /**
@@ -22,12 +23,20 @@ public class CheckAccountBalance implements Command {
 
 	private Ledger ledger;
 
-	public CheckAccountBalance(String customerId, String storeId, String aisleId, StoreModelService storeModelService, Ledger ledger, AuthenticationService authenticationService) {
+	private AuthenticationService authenticationService;
+
+	public CheckAccountBalance(String customerId,
+							   String storeId,
+							   String aisleId,
+							   StoreModelService storeModelService,
+							   Ledger ledger,
+							   AuthenticationService authenticationService) {
 		this.customerId = customerId;
 		this.storeId = storeId;
 		this.aisleId = aisleId;
 		this.storeModelService = storeModelService;
 		this.ledger = ledger;
+		this.authenticationService = authenticationService;
 	}
 
 	/**
@@ -44,7 +53,13 @@ public class CheckAccountBalance implements Command {
 	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws StoreModelServiceException, LedgerException {
+	public void execute() throws StoreModelServiceException, LedgerException, AuthenticationServiceException {
+
+		String voicePrint = "voiceprint-" + customerId;
+		String authToken = this.authenticationService.login("voiceprint", voicePrint);
+		System.out.println("User Permission Verified\n");
+		this.authenticationService.getInstance().checkAccess(authToken, storeId, "control_speaker");
+
 		// get customer from store model service
 		Customer customer = storeModelService.getCustomer(customerId);
 

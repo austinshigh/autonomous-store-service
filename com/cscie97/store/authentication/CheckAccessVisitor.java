@@ -25,6 +25,11 @@ public class CheckAccessVisitor extends Visitor {
 		this.requestedPermission = requestedPermission;
 	}
 
+	public CheckAccessVisitor(String inputToken, String requestedPermission) {
+		this.inputToken = inputToken;
+		this.requestedPermission = requestedPermission;
+	}
+
 	/**
 	 * @see Visitor#visit(User)
 	 */
@@ -69,8 +74,10 @@ public class CheckAccessVisitor extends Visitor {
 	 * @see Visitor#visit(ResourceRole)
 	 */
 	public void visit(ResourceRole resourceRole) {
-		if (resourceRole.getResourceId().equals(resource)) {
-			visit(resourceRole.getRole());
+		if (resource != null){
+			if (resourceRole.getResourceId().equals(resource)) {
+				visit(resourceRole.getRole());
+			}
 		}
 	}
 

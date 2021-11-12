@@ -77,6 +77,39 @@ public class StoreModelService implements Subject {
 	}
 
 	/**
+	 * check access
+	 *
+	 * @param permission permission
+	 * @throws AuthenticationServiceException com.cscie97.store.authentication. authentication service exception
+	 */
+	public void checkAccess(String permission) throws AuthenticationServiceException {
+		if (authenticationService.getCurrentUser() == null){
+			throw new AuthenticationServiceException("no user logged in");
+		}else {
+			String authToken = authenticationService.getCurrentUser().getToken().getId();
+			authenticationService.checkAccess(authToken, "provision_store");
+			System.out.println("User Permission Verified\n");
+		}
+	}
+
+	/**
+	 * check access
+	 *
+	 * @param resourceId resourceId
+	 * @param permission permission
+	 * @throws AuthenticationServiceException com.cscie97.store.authentication. authentication service exception
+	 */
+	public void checkAccess(String resourceId, String permission) throws AuthenticationServiceException {
+		if (authenticationService.getCurrentUser() == null){
+			throw new AuthenticationServiceException("no user logged in");
+		}else {
+			String authToken = authenticationService.getCurrentUser().getToken().getId();
+			authenticationService.checkAccess(authToken, "provision_store");
+			System.out.println("User Permission Verified\n");
+		}
+	}
+
+	/**
 	 * Creates a new store and adds to the store map
 	 *
 	 * @param id id
@@ -87,7 +120,8 @@ public class StoreModelService implements Subject {
 	 * @return {@link String}
 	 * @see String
 	 */
-	public String createStore(String id, String name, String street, String city, String state) throws StoreModelServiceException {
+	public String createStore(String id, String name, String street, String city, String state) throws StoreModelServiceException, AuthenticationServiceException {
+		checkAccess(id, "provision_store");
 		if (storeMap.containsKey(id)){
 			throw new StoreModelServiceException("create store", "store with store id: [" + id + "] already exists");
 		}
@@ -111,7 +145,8 @@ public class StoreModelService implements Subject {
 	 * @see String
 	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
 	 */
-	public String createAisle(String storeId, String aisleNumber, String name, String description, String location) throws StoreModelServiceException {
+	public String createAisle(String storeId, String aisleNumber, String name, String description, String location) throws StoreModelServiceException, AuthenticationServiceException {
+		checkAccess("provision_store");
 		Aisle nextAisle = new Aisle(aisleNumber, name, description, location);
 		if (!(location.equals("store_room") || location.equals("floor"))){
 			throw new StoreModelServiceException("create aisle", "aisle must be located in 'store_room' or 'floor'," +
@@ -150,7 +185,8 @@ public class StoreModelService implements Subject {
 	 * @see String
 	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
 	 */
-	public String createShelf(String storeId, String aisleNumber, String shelfId, String name, String description, String height) throws StoreModelServiceException {
+	public String createShelf(String storeId, String aisleNumber, String shelfId, String name, String description, String height) throws StoreModelServiceException, AuthenticationServiceException {
+		checkAccess("provision_store");
 		Shelf nextShelf = new Shelf(shelfId, name, description, height);
 		getAisle(storeId, aisleNumber).createShelf(nextShelf);
 		return shelfId;
@@ -171,7 +207,8 @@ public class StoreModelService implements Subject {
 	 * @see String
 	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
 	 */
-	public String createShelf(String storeId, String aisleNumber, String shelfId, String name, String description, String height, String temperature) throws StoreModelServiceException {
+	public String createShelf(String storeId, String aisleNumber, String shelfId, String name, String description, String height, String temperature) throws StoreModelServiceException, AuthenticationServiceException {
+		checkAccess("provision_store");
 		Shelf nextShelf = new Shelf(shelfId, name, description, height, temperature);
 		getAisle(storeId, aisleNumber).createShelf(nextShelf);
 		return shelfId;
@@ -226,7 +263,8 @@ public class StoreModelService implements Subject {
 	 */
 	public String createProduct(String productId, String name, String description,
 								String size, String category,
-								int unitPrice, String temperature) throws StoreModelServiceException {
+								int unitPrice, String temperature) throws StoreModelServiceException, AuthenticationServiceException {
+		checkAccess("provision_store");
 		if (!productMap.isEmpty() && productMap.containsKey(productId)){
 			throw new StoreModelServiceException("create product", "product must have unique id, [" + productId +
 					"] is not unique");
@@ -260,7 +298,8 @@ public class StoreModelService implements Subject {
 								String description,
 								String size,
 								String category,
-								int unitPrice) throws StoreModelServiceException {
+								int unitPrice) throws StoreModelServiceException, AuthenticationServiceException {
+		checkAccess("provision_store");
 		if (!productMap.isEmpty() && productMap.containsKey(productId)){
 			throw new StoreModelServiceException("create product", "product must have unique id, [" + productId +
 					"] is not unique");
@@ -333,7 +372,8 @@ public class StoreModelService implements Subject {
 	 */
 	public String createCustomer(String customerId, String firstName,
 								 String lastName, boolean registered,
-								 String email, String accountAddress) throws StoreModelServiceException {
+								 String email, String accountAddress) throws StoreModelServiceException, AuthenticationServiceException {
+		checkAccess("provision_store");
 		if (!customerMap.isEmpty() && customerMap.containsKey(customerId)){
 			throw new StoreModelServiceException("create customer", "customer must have unique id, [" + customerId
 			+ "] is not a unique id");
@@ -420,7 +460,8 @@ public class StoreModelService implements Subject {
 								  int capacity,
 								  int count,
 								  String productId
-								  ) throws StoreModelServiceException {
+								  ) throws StoreModelServiceException, AuthenticationServiceException {
+		checkAccess("provision_store");
 		if (count > capacity){
 			// if inventory count is greater than capacity, throw error
 			throw new StoreModelServiceException("create inventory", "inventory count [" +
@@ -525,7 +566,8 @@ public class StoreModelService implements Subject {
 							   String name,
 							   String type,
 							   String storeId,
-							   String aisleId) throws StoreModelServiceException {
+							   String aisleId) throws StoreModelServiceException, AuthenticationServiceException {
+		checkAccess("provision_store");
 		if (!deviceIdMap.isEmpty() && deviceIdMap.containsKey(sensorId)){
 			throw new StoreModelServiceException("create sensor", "new sensor requires unique device id [" +
 					sensorId + "] is not unique");
@@ -562,7 +604,8 @@ public class StoreModelService implements Subject {
 	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
 	 */
 	public String createAppliance(String applianceId, String name,
-								  String type, String storeId, String aisleId) throws StoreModelServiceException {
+								  String type, String storeId, String aisleId) throws StoreModelServiceException, AuthenticationServiceException {
+		checkAccess("provision_store");
 		if (!deviceIdMap.isEmpty() && deviceIdMap.containsKey(applianceId)){
 			throw new StoreModelServiceException("createAppliance", "new appliance requires unique device id, [" +
 					applianceId + "] is not unique");
@@ -627,7 +670,8 @@ public class StoreModelService implements Subject {
 	 * @see String
 	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
 	 */
-	public String defineBasket(String basketId) throws StoreModelServiceException {
+	public String defineBasket(String basketId) throws StoreModelServiceException, AuthenticationServiceException {
+		checkAccess("provision_store");
 		if (basketMap.containsKey(basketId)){
 			throw new StoreModelServiceException("define basket", "basket id: [" + basketId + "] already exists");
 		}
@@ -770,7 +814,7 @@ public class StoreModelService implements Subject {
 	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
 	 * @throws LedgerException com.cscie97.ledger. ledger exception
 	 */
-	public String createEvent(String deviceId, String event, String credential) throws StoreModelServiceException, LedgerException, ControllerException, AuthenticationServiceException {
+	public String createEvent(String deviceId, String event) throws StoreModelServiceException, LedgerException, ControllerException, AuthenticationServiceException {
 		String[] eventArgs = event.split(" ");
 		Device selectedDevice = getDevice(deviceId);
 		Event createdEvent;
@@ -781,7 +825,7 @@ public class StoreModelService implements Subject {
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 				}else{
 					String[] storeAisleShelf = eventArgs[4].split(":");
-					createdEvent = new Event(credential, eventArgs[0], eventArgs[1], eventArgs[2], eventArgs[3], storeAisleShelf[0], storeAisleShelf[1], storeAisleShelf[2], eventArgs[5]);
+					createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2], eventArgs[3], storeAisleShelf[0], storeAisleShelf[1], storeAisleShelf[2], eventArgs[5]);
 				}
 				break;
 			case "enter-store":

@@ -12,8 +12,6 @@ import com.cscie97.store.model.*;
  */
 public class FetchProduct implements Command {
 
-	private String credential;
-
 	private String customerId;
 
 	private String productId;
@@ -32,8 +30,7 @@ public class FetchProduct implements Command {
 
 	private AuthenticationService authenticationService;
 
-	public FetchProduct(String credential,
-						String customerId,
+	public FetchProduct(String customerId,
 						String productId,
 						String inventoryId,
 						String storeId,
@@ -42,7 +39,6 @@ public class FetchProduct implements Command {
 						String quantity,
 						StoreModelService storeModelService,
 						AuthenticationService authenticationService) {
-		this.credential = credential;
 		this.customerId = customerId;
 		this.productId = productId;
 		this.inventoryId = inventoryId;
@@ -66,8 +62,10 @@ public class FetchProduct implements Command {
 	 */
 	public void execute() throws StoreModelServiceException, AuthenticationServiceException {
 
-		String authToken = this.authenticationService.login(customerId, credential);
-		this.authenticationService.getInstance().checkAccess(authToken, "fetch_product", storeId);
+		String voicePrint = "voiceprint-" + customerId;
+		String authToken = this.authenticationService.login("voiceprint", voicePrint);
+		System.out.println("User Permission Verified\n");
+		this.authenticationService.getInstance().checkAccess(authToken, storeId, "control_robot");
 
 		String customerAisle = storeModelService.getCustomer(customerId).getLocation().getAisleNumber();
 

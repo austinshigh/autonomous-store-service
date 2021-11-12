@@ -22,7 +22,12 @@ public class AssistCustomerToCar implements Command {
 
 	private AuthenticationService authenticationService;
 
-	public AssistCustomerToCar(String customerId, String storeId, String aisleId, StoreModelService storeModelService, AuthenticationService authenticationService) {
+	public AssistCustomerToCar(String customerId,
+							   String storeId,
+							   String aisleId,
+							   StoreModelService storeModelService,
+							   AuthenticationService authenticationService
+							   ) {
 		this.customerId = customerId;
 		this.storeId = storeId;
 		this.aisleId = aisleId;
@@ -39,6 +44,11 @@ public class AssistCustomerToCar implements Command {
 	 * @see Command#execute()
 	 */
 	public void execute() throws StoreModelServiceException, AuthenticationServiceException {
+
+//		String voicePrint = "voiceprint-" + customerId;
+//		String authToken = this.authenticationService.login(controllerId, "password", controllerPassword);
+//		System.out.println("User Permission Verified\n");
+//		this.authenticationService.getInstance().checkAccess(authToken, storeId, "control_robot");
 
 //		String authToken = this.authenticationService.login(customerId, credential);
 //		this.authenticationService.getInstance().checkAccess(authToken, "fetch_product");

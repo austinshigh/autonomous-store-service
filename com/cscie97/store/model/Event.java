@@ -73,8 +73,7 @@ public class Event {
         this.arg5 = arg5;
     }
 
-    public Event(String credential, String eventType, String arg0, String arg1, String arg2, String arg3, String arg4, String arg5, String arg6) {
-        this.credential = credential;
+    public Event(String eventType, String arg0, String arg1, String arg2, String arg3, String arg4, String arg5, String arg6) {
         this.eventType = eventType;
         this.arg0 = arg0;
         this.arg1 = arg1;

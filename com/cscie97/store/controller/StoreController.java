@@ -47,7 +47,7 @@ public class StoreController implements Observer {
 				missingPerson.execute();
 				break;
 			case "fetch-product":
-				FetchProduct fetchProduct = new FetchProduct(event.getCredential(), event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3(), event.getArg4(), event.getArg5(), event.getArg6(), storeModelService, authenticationService);
+				FetchProduct fetchProduct = new FetchProduct(event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3(), event.getArg4(), event.getArg5(), event.getArg6(), storeModelService, authenticationService);
 				fetchProduct.execute();
 				break;
 			case "basket-event":

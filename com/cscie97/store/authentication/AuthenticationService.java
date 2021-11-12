@@ -3,6 +3,7 @@ package com.cscie97.store.authentication;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class AuthenticationService extends Visitable {
 
@@ -47,6 +48,16 @@ public class AuthenticationService extends Visitable {
 				'}';
 	}
 
+	public boolean checkAccess(String token, String permission) throws AuthenticationServiceException {
+		CheckAccessVisitor checkAccess = new CheckAccessVisitor(token, permission);
+		checkAccess.visit(getInstance());
+		if (checkAccess.isPermissionFound()){
+			return true;
+		}else{
+			throw new AuthenticationServiceException("Permission Not Found");
+		}
+	}
+
 	public boolean checkAccess(String token, String resource, String permission) throws AuthenticationServiceException {
 		CheckAccessVisitor checkAccess = new CheckAccessVisitor(token, resource, permission);
 		checkAccess.visit(getInstance());
@@ -81,7 +92,8 @@ public class AuthenticationService extends Visitable {
 			if (!user.getToken().isValid()) {
 				Calendar now = Calendar.getInstance();
 				now.add(Calendar.MINUTE, tokenTimeout);
-				Token token = new Token("RANDOM", now, true);
+				Random rand = new Random();
+				Token token = new Token(rand.toString(), now, true);
 				user.setToken(token);
 				tokenId = token.getId();
 			}else{

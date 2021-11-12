@@ -1,6 +1,7 @@
 package com.cscie97.store.controller;
 
 import com.cscie97.store.authentication.AuthenticationService;
+import com.cscie97.store.authentication.AuthenticationServiceException;
 import com.cscie97.store.model.*;
 
 /**
@@ -50,7 +51,7 @@ public class BasketEvent implements Command {
 	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws StoreModelServiceException {
+	public void execute() throws StoreModelServiceException, AuthenticationServiceException {
 		// get customer from storemodelservice
 		Customer customer = storeModelService.getCustomer(customerId);
 

@@ -37,8 +37,8 @@ add_permission_to_role auth_readonly_role read_resource
 
 create_user debra name "Debra Smart"
 add_user_credential debra password debra123
-add_user_credential debra faceprint faceprint-debra123
-add_user_credential debra voiceprint voiceprint-debra123
+add_user_credential debra faceprint faceprint-debra
+add_user_credential debra voiceprint voiceprint-debra
 add_role_to_user debra auth_admin_role
 
 # Create an inventory for all of the objects in the Authentication service
@@ -48,7 +48,7 @@ get_inventory
 logout
 
 # login as auth_admin_role to provision store users and entitlements.
-login faceprint faceprint-debra123
+login faceprint faceprint-debra
 
 
 # Define Store Permissions
@@ -132,14 +132,14 @@ add_permission_to_role controller_service_role control_camera
 create_user sam name "Sam Davis"
 # add_user_credential
 add_user_credential sam password sam123
-add_user_credential sam faceprint faceprint-sam123
-add_user_credential sam voiceprint voiceprint-sam123
+add_user_credential sam faceprint faceprint-sam
+add_user_credential sam voiceprint voiceprint-sam
 # create new user Jimmy Jones
 create_user jimmy name "Jimmy Jones"
 # add_user_credential
 add_user_credential jimmy password jimmy123
-add_user_credential jimmy faceprint faceprint-jimmy123
-add_user_credential jimmy voiceprint voiceprint-jimmy123
+add_user_credential jimmy faceprint faceprint-jimmy
+add_user_credential jimmy voiceprint voiceprint-jimmy
 # create new user Store Controller Service
 create_user scs name "Store Controller Service"
 # add_user_credential
@@ -166,13 +166,16 @@ add_role_to_user jimmy child_consumer_role
 # add role controller_service_role to user scs (Store Controller Service)
 add_role_to_user scs controller_service_role
 
+# Added For Testing Below
+add_role_to_user debra admin_role
+
 # check access, retrieves auth token for credential and calls check access method
 # should succeed for sam
 check_access user sam password sam123 resource store1 permission control_robot
-check_access voiceprint voiceprint-sam123 resource store1 permission control_robot
+check_access voiceprint voiceprint-sam resource store1 permission control_robot
 # should fail for jimmy
 check_access user jimmy password jimmy123 resource store1 permission control_robot
-check_access faceprint faceprint-jimmy123 resource store1 permission control_robot
+check_access faceprint faceprint-jimmy resource store1 permission control_robot
 
 
 # Create an inventory for all of the objects in the Authentication service
@@ -184,27 +187,35 @@ logout
 
 
 
+
+
+# should fail, no user is logged in
+define-store store123 storeName "costco" storeAddress "77 Elma St, San Luis, CA"
+
+# login to Debra Smart (admin_role) to provision stores
+login debra password debra123
+
 # Define a store - this creates a ledger and transfers 20000 Units to the store
-define-store STORE001 storeName "costco" storeAddress "77 Elma St, San Luis, CA"
+define-store store123 storeName "costco" storeAddress "77 Elma St, San Luis, CA"
 
 # Define an aisle within the store
-define-aisle STORE001:1 aisleName AISLE001 aisleDescr "dairy" location "floor"
-define-aisle STORE001:2 aisleName AISLE002 aisleDescr "chocolate" location "floor"
-define-aisle STORE001:3 aisleName AISLE003 aisleDescr "wine" location "floor"
+define-aisle store123:1 aisleName AISLE001 aisleDescr "dairy" location "floor"
+define-aisle store123:2 aisleName AISLE002 aisleDescr "chocolate" location "floor"
+define-aisle store123:3 aisleName AISLE003 aisleDescr "wine" location "floor"
 
 
 # Define a new shelf within the store
-define-shelf STORE001:1:SHELF001 shelfName DIARY_SHELF shelfLevel medium sheldDescr "dairy" shelfTempEnum refrigerated
-define-shelf STORE001:1:SHELF002 shelfName SWEETS_SHELF shelfLevel medium sheldDescr "sweets" shelfTempEnum ambient
-define-shelf STORE001:2:SHELF001 shelfName CONDIMENTS_SHELF shelfLevel high sheldDescr "condiment" shelfTempEnum ambient
+define-shelf store123:1:SHELF001 shelfName DIARY_SHELF shelfLevel medium sheldDescr "dairy" shelfTempEnum refrigerated
+define-shelf store123:1:SHELF002 shelfName SWEETS_SHELF shelfLevel medium sheldDescr "sweets" shelfTempEnum ambient
+define-shelf store123:2:SHELF001 shelfName CONDIMENTS_SHELF shelfLevel high sheldDescr "condiment" shelfTempEnum ambient
 
 # Show the details of a store, aisles, and shelves
-show-store STORE001
-show-aisle STORE001:1
-show-aisle STORE001:2
-show-shelf STORE001:1:SHELF001
-show-shelf STORE001:1:SHELF002
-show-shelf STORE001:2:SHELF001
+show-store store123
+show-aisle store123:1
+show-aisle store123:2
+show-shelf store123:1:SHELF001
+show-shelf store123:1:SHELF002
+show-shelf store123:2:SHELF001
 
 
 # Define a new products
@@ -216,8 +227,8 @@ show-product MILK001
 show-product HONEY001
 
 # Define a new inventory item within the store
-define-inventory INVENTORY001 location STORE001:1:SHELF001 capacity 20 count 11 product MILK001
-define-inventory INVENTORY002 location STORE001:1:SHELF002 capacity 30 count 23 product HONEY001
+define-inventory INVENTORY001 location store123:1:SHELF001 capacity 20 count 11 product MILK001
+define-inventory INVENTORY002 location store123:1:SHELF002 capacity 30 count 23 product HONEY001
 
 # Show the details of the inventory
 show-inventory INVENTORY001
@@ -225,9 +236,9 @@ show-inventory INVENTORY002
 
 
 # Define 12 customers (9 registered who have 200 Units transferred from the master account = 10 transactions now)
-define-customer CUSTOMER00001 first_name ann last_name fred type registered email_address "afred@gmail.com" account ann01
-define-customer CUSTOMER00002 first_name ted last_name hill type registered email_address "thill@yahoo.com" account ted01
-define-customer CUSTOMER00003 first_name jane last_name dan type guest email_address "jdan@gmail.com" account jane01
+define-customer debra first_name deborah last_name bain type registered email_address "dbain@gmail.com" account debra01
+define-customer jimmy first_name jimmy last_name jones type registered email_address "thill@yahoo.com" account ted01
+define-customer sam first_name sam last_name davis type guest email_address "jdan@gmail.com" account jane01
 define-customer CUSTOMER00004 first_name tami last_name donny type registered email_address "tdonny@gmail.com" account tami01
 define-customer CUSTOMER00005 first_name tayo last_name akin type registered email_address "takin@yahoo.com" account tayo01
 define-customer CUSTOMER00006 first_name dami last_name davis type guest email_address "ddavis@gmail.com" account dami01
@@ -240,16 +251,16 @@ define-customer CUSTOMER00012 first_name abby last_name gotham type registered e
 
 
 # Define device of type camera, robot, speakers, microphones, and turnstile
-define-device CAMERA001 name front_door_camera type camera location STORE001:1
-define-device CAMERA002 name right_end_camera type camera location STORE001:2
-define-device ROBOT001 name r2d2 type robot location STORE001:1
-define-device ROBOT002 name r2d3 type robot location STORE001:2
-define-device ROBOT003 name r2d4 type robot location STORE001:2
-define-device TURNSTILE001 name cashier1 type turnstile location STORE001:1
-define-device TURNSTILE002 name cashier2 type turnstile location STORE001:2
-define-device MICROPHONE001 name front-microphone type microphone location STORE001:1
-define-device SPEAKER001 name middle-aisle-speaker type speaker location STORE001:2
-define-device SPEAKER002 name middle-aisle-speaker type speaker location STORE001:3
+define-device CAMERA001 name front_door_camera type camera location store123:1
+define-device CAMERA002 name right_end_camera type camera location store123:2
+define-device ROBOT001 name r2d2 type robot location store123:1
+define-device ROBOT002 name r2d3 type robot location store123:2
+define-device ROBOT003 name r2d4 type robot location store123:2
+define-device TURNSTILE001 name cashier1 type turnstile location store123:1
+define-device TURNSTILE002 name cashier2 type turnstile location store123:2
+define-device MICROPHONE001 name front-microphone type microphone location store123:1
+define-device SPEAKER001 name middle-aisle-speaker type speaker location store123:2
+define-device SPEAKER002 name middle-aisle-speaker type speaker location store123:3
 
 # Show sensor details using its unique id
 show-device CAMERA001
@@ -263,76 +274,80 @@ show-device CAMERA002
 show-device SPEAKER001
 show-device SPEAKER002
 
+# log out of debra smart's account, login to customer account (sam davis)
+# logout
+# login sam password sam123
+
 
 # Create enter-store events for 3 customers
-create-event TURNSTILE001 event "enter-store CUSTOMER00001 TURNSTILE001 STORE001:1"
-create-event TURNSTILE002 event "enter-store CUSTOMER00002 TURNSTILE002 STORE001:2"
-create-event TURNSTILE001 event "enter-store CUSTOMER00003 TURNSTILE001 STORE001:1"
+create-event TURNSTILE001 event "enter-store debra TURNSTILE001 store123:1"
+create-event TURNSTILE002 event "enter-store jimmy TURNSTILE002 store123:2"
+create-event TURNSTILE001 event "enter-store sam TURNSTILE001 store123:1"
 
-# Create a customer-seen event for CUSTOMER00001 - location should change to {STORE001=3}
-create-event CAMERA001 event "customer-seen CUSTOMER00001 STORE001:3"
+# Create a customer-seen event for debra - location should change to {store123=3}
+create-event CAMERA001 event "customer-seen debra store123:3"
 
 # Create a basket-event event (leaving 9 out of the 11 milk products on the shelf)
-create-event CAMERA001 event "basket-event CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 2"
+create-event CAMERA001 event "basket-event debra MILK001 INVENTORY001 store123:1:SHELF001 2"
 
 
 # Create a fetch-product event - expect a command to 1 robot to fetch the product
-create-event MICROPHONE001 event "fetch-product CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 3" credential secure
+create-event MICROPHONE001 event "fetch-product debra MILK001 INVENTORY001 store123:1:SHELF001 3"
 
 
 # Create a fetch-product event - expect a command to 1 robot to restock because inventory count is 1 (less than 3)
-create-event MICROPHONE001 event "fetch-product CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 5"
+create-event MICROPHONE001 event "fetch-product debra MILK001 INVENTORY001 store123:1:SHELF001 5"
 
 
 # Create an emergency event - all turnstiles open, 1 attends to emergency and the rest help
 # customers, while speakers announce for customers to leave store
-create-event CAMERA001 event "emergency ARMED_INTRUDER STORE001:1"
+create-event CAMERA001 event "emergency ARMED_INTRUDER store123:1"
 
 
-# 3 customers enter the STORE001 again
-create-event TURNSTILE001 event "enter-store CUSTOMER00001 TURNSTILE001 STORE001:1"
-create-event TURNSTILE002 event "enter-store CUSTOMER00002 TURNSTILE002 STORE001:2"
-create-event TURNSTILE002 event "enter-store CUSTOMER00003 TURNSTILE002 STORE001:2"
+# 3 customers enter the store123 again
+create-event TURNSTILE001 event "enter-store debra TURNSTILE001 store123:1"
+create-event TURNSTILE002 event "enter-store jimmy TURNSTILE002 store123:2"
+create-event TURNSTILE002 event "enter-store sam TURNSTILE002 store123:2"
 
 
 # Show the details of the customers before updating location
-show-customer CUSTOMER00001
+show-customer debra
 
-# Create a customer-seen event for CUSTOMER00001 - location should change to {STORE001=1}
-create-event CAMERA001 event "customer-seen CUSTOMER00001 STORE001:1"
+# Create a customer-seen event for debra - location should change to {store123=1}
+create-event CAMERA001 event "customer-seen debra store123:1"
 
 
-# Create a customer-seen event for CUSTOMER00003 - location should change to {STORE001=3}
-create-event CAMERA001 event "customer-seen CUSTOMER00003 STORE001:3"
+# Create a customer-seen event for sam - location should change to {store123=3}
+create-event CAMERA001 event "customer-seen sam store123:3"
 
-show-customer CUSTOMER00003
+show-customer sam
 
 
 # Create a broken-glass event - expect a robot to be assigned a new command to clean up glass
-create-event CAMERA002 event "broken-glass STORE001:1"
+create-event CAMERA002 event "broken-glass store123:1"
 
 
 # Create a product-spill event - expect a robot to be assigned a command to clean the milk
-create-event CAMERA002 event "product-spill STORE001:2 MILK001"
+create-event CAMERA002 event "product-spill store123:2 MILK001"
 
 
 # Create a missing-person event using a microphone - expect that the missing customer is in aisle 1
-create-event MICROPHONE001 event "missing-person STORE001 CUSTOMER00001"
+create-event MICROPHONE001 event "missing-person store123 debra"
 
 
-# Create a basket-event event for CUSTOMER00001
-create-event CAMERA001 event "basket-event CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 2"
-create-event CAMERA002 event "basket-event CUSTOMER00001 HONEY001 INVENTORY002 STORE001:1:SHELF002 5"
-create-event CAMERA001 event "basket-event CUSTOMER00001 MILK001 INVENTORY001 STORE001:1:SHELF001 2"
+# Create a basket-event event for debra
+create-event CAMERA001 event "basket-event debra MILK001 INVENTORY001 store123:1:SHELF001 2"
+create-event CAMERA002 event "basket-event debra HONEY001 INVENTORY002 store123:1:SHELF002 5"
+create-event CAMERA001 event "basket-event debra MILK001 INVENTORY001 store123:1:SHELF001 2"
 
 
 # Create a check-acc-bal event using a microphone - expect only one speaker to give response - total cost = 77
-create-event MICROPHONE001 event "check-acc-bal CUSTOMER00001 STORE001:2"
+create-event MICROPHONE001 event "check-acc-bal debra store123:2"
 
 
 # Create an assist-customer event using a turnstile location
-create-event TURNSTILE001 event "assist-customer CUSTOMER00001 STORE001:1"
+create-event TURNSTILE001 event "assist-customer debra store123:1"
 
 
 # Create a checkout event
-create-event TURNSTILE001 event "checkout CUSTOMER00001 STORE001:1"
+create-event TURNSTILE001 event "checkout debra store123:1"

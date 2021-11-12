@@ -4,6 +4,7 @@ package com.cscie97.store.controller;
 import com.cscie97.ledger.Ledger;
 import com.cscie97.ledger.LedgerException;
 import com.cscie97.store.authentication.AuthenticationService;
+import com.cscie97.store.authentication.AuthenticationServiceException;
 import com.cscie97.store.model.*;
 
 import java.util.Map;
@@ -25,13 +26,15 @@ public class EnterStore implements Command {
 
 	private Ledger ledger;
 
+	private AuthenticationService authenticationService;
+
 	public EnterStore(String customerId, String turnstileId, String storeId, String aisleId, StoreModelService storeModelService, Ledger ledger, AuthenticationService authenticationService) {
 		this.customerId = customerId;
 		this.turnstileId = turnstileId;
 		this.storeId = storeId;
 		this.storeModelService = storeModelService;
 		this.ledger = ledger;
-
+		this.authenticationService = authenticationService;
 	}
 
 	/**
@@ -48,7 +51,14 @@ public class EnterStore implements Command {
 	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws StoreModelServiceException, LedgerException, ControllerException {
+	public void execute() throws StoreModelServiceException, LedgerException, ControllerException, AuthenticationServiceException {
+
+		String voicePrint = "faceprint-" + customerId;
+		String authToken = this.authenticationService.login("faceprint", voicePrint);
+		System.out.println("User Permission Verified\n");
+		this.authenticationService.getInstance().checkAccess(authToken, storeId, "enter_store");
+
+
 		// get customer from storemodelservice
 		Customer customer = storeModelService.getCustomer(customerId);
 

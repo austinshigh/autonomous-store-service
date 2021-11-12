@@ -222,7 +222,9 @@ public class CommandProcessor {
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						} catch (LedgerException e) {
-							e.printStackTrace();
+							throw new CommandProcessorException(e);
+						} catch (AuthenticationServiceException e) {
+							throw new CommandProcessorException(e);
 						}
 					case "show-store":
 						if (commands.size() != 2) {
@@ -247,7 +249,9 @@ public class CommandProcessor {
 							return("aisle id : " + storeModelService.createAisle(idArray[0], idArray[1], commands.get(3), commands.get(5), commands.get(7)));
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
-					}
+						} catch (AuthenticationServiceException e) {
+							throw new CommandProcessorException(e);
+						}
 					case "show-aisle":
 						if (commands.size() != 2) {
 							// throw exception if incorrect number of command line arguments
@@ -277,6 +281,8 @@ public class CommandProcessor {
 							}
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
+						} catch (AuthenticationServiceException e) {
+							throw new CommandProcessorException(e);
 						}
 					case "show-shelf":
 						if (commands.size() != 2) {
@@ -304,6 +310,8 @@ public class CommandProcessor {
 									idArray[0], idArray[1], idArray[2], commands.get(1), Integer.valueOf(commands.get(5)), Integer.valueOf(commands.get(7)), commands.get(9)
 									));
 						}catch(StoreModelServiceException e){
+							throw new CommandProcessorException(e);
+						} catch (AuthenticationServiceException e) {
 							throw new CommandProcessorException(e);
 						}
 					case "update-inventory":
@@ -333,6 +341,8 @@ public class CommandProcessor {
 							}
 							return("new product created, product id:" + commands.get(1));
 						}catch(StoreModelServiceException e){
+							throw new CommandProcessorException(e);
+						} catch (AuthenticationServiceException e) {
 							throw new CommandProcessorException(e);
 						}
 					case "show-product":
@@ -383,7 +393,9 @@ public class CommandProcessor {
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						} catch (LedgerException e) {
-							e.printStackTrace();
+							throw new CommandProcessorException(e);
+						} catch (AuthenticationServiceException e) {
+							throw new CommandProcessorException(e);
 						}
 					case "show-customer":
 						if (commands.size() != 2) {
@@ -429,6 +441,8 @@ public class CommandProcessor {
 						try {
 							return("Basket id: " + storeModelService.defineBasket(commands.get(1)));
 						}catch (StoreModelServiceException e){
+							throw new CommandProcessorException(e);
+						} catch (AuthenticationServiceException e) {
 							throw new CommandProcessorException(e);
 						}
 					case "assign-basket":
@@ -528,6 +542,8 @@ public class CommandProcessor {
 							}
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
+						} catch (AuthenticationServiceException e) {
+							throw new CommandProcessorException(e);
 						}
 					case "show-device":
 						if (commands.size() != 2) {
@@ -563,13 +579,13 @@ public class CommandProcessor {
 							throw new CommandProcessorException(e);
 						}
 					case "create-event":
-						if (commands.size() != 6) {
+						if (commands.size() != 4) {
 							// throw exception if incorrect number of command line arguments
 							throw new CommandProcessorException("command should follow form:" +
-									"\ncreate-event <device_id> event <event> credential <credential>");
+									"\ncreate-event <device_id> event <event>");
 						}
 						try {
-							return(storeModelService.createEvent(commands.get(1), commands.get(3), commands.get(5)));
+							return(storeModelService.createEvent(commands.get(1), commands.get(3)));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						} catch (ControllerException e) {
@@ -642,13 +658,13 @@ public class CommandProcessor {
 	 *
 	 * @param file file
 	 */
-	public void processCommandFile(String file) {
+	public void processCommandFile(String file) throws FileNotFoundException, CommandProcessorException {
 		try {
-			ledgerService = new Ledger("test", "testService", "controller");
-			ledgerService.fundLedger();
 			authenticationService = AuthenticationService.getInstance();
-			storeModelService = new StoreModelService("authToken", authenticationService.getInstance());
-			storeController = new StoreController(storeModelService,ledgerService, authenticationService.getInstance());
+			ledgerService = new Ledger("test", "testService", "controller", authenticationService);
+			ledgerService.fundLedger();
+			storeModelService = new StoreModelService("authToken", authenticationService);
+			storeController = new StoreController(storeModelService,ledgerService, authenticationService);
 			storeModelService.attach(storeController);
 			// get script file in test folder specified as parameter
 			File myObj = new File("com/cscie97/store/test/" + file);
@@ -669,9 +685,12 @@ public class CommandProcessor {
 			}
 			// close reader
 			myReader.close();
-		} catch (FileNotFoundException | LedgerException e) {
-			// if file not found, print exception
-			System.out.println(e);
+		} catch (FileNotFoundException e){
+			throw new FileNotFoundException("File not found");
+		} catch(LedgerException e){
+			throw new CommandProcessorException(e);
+		} catch(AuthenticationServiceException e){
+			throw new CommandProcessorException(e);
 		}
 	}
 

@@ -1,4 +1,7 @@
 package com.cscie97.ledger;
+import com.cscie97.store.authentication.AuthenticationService;
+import com.cscie97.store.authentication.AuthenticationServiceException;
+
 import java.util.*;
 
 
@@ -26,6 +29,7 @@ public class Ledger {
     private String seed;
     private TreeMap<Integer, Block> blockMap;
     private Block genesisBlock;
+    private AuthenticationService authenticationService;
 
     /**
      * Class Constructor.
@@ -34,12 +38,13 @@ public class Ledger {
      * @param description description of ledger
      * @param seed hash value of genesis block (arbitrary)
      */
-    public Ledger(String name, String description, String seed){
+    public Ledger(String name, String description, String seed, AuthenticationService authenticationService){
         this.name = name;
         this.description = description;
         this.seed = seed;
         this.blockMap = new TreeMap<Integer, Block>();
         this.genesisBlock = new Block(1, seed, null);
+        this.authenticationService = authenticationService;
     }
 
     /**
@@ -49,12 +54,28 @@ public class Ledger {
      * Used after instantiation of new ledger.
      * @throws LedgerException com.cscie97.ledger. ledger exception
      */
-    public void fundLedger() throws LedgerException {
+    public void fundLedger() throws LedgerException, AuthenticationServiceException {
         if (blockMap.size() != 0){
             throw new LedgerException("fund ledger", "fund ledger requires a new ledger");
         }
         blockMap.put(1, genesisBlock);
-        createAccount("master");
+        createAccountFundLedger("master");
+    }
+
+    /**
+     * check access
+     *
+     * @param permission permission
+     * @throws AuthenticationServiceException com.cscie97.store.authentication. authentication service exception
+     */
+    public void checkAccess(String permission) throws AuthenticationServiceException {
+        if (authenticationService.getCurrentUser() == null){
+            throw new AuthenticationServiceException("no user logged in");
+        }else {
+            String authToken = authenticationService.getCurrentUser().getToken().getId();
+            authenticationService.checkAccess(authToken, permission);
+            System.out.println("User Permission Verified\n");
+        }
     }
 
     /**
@@ -64,7 +85,8 @@ public class Ledger {
      * @return New Account
      * @throws LedgerException com.cscie97.ledger. ledger exception
      */
-    public Account createAccount(String address) throws LedgerException {
+    public Account createAccount(String address) throws LedgerException, AuthenticationServiceException {
+        checkAccess("provision_store");
         // retrieve last entry in blockchain
         Block currentBlock = blockMap.lastEntry().getValue();
         if (currentBlock.getAccountBalanceMap().containsKey(address)) {
@@ -87,7 +109,40 @@ public class Ledger {
             genAcctBalanceMap.put(address, newAcct);
             return new Account(address);
         }
-    };
+    }
+
+    /**
+     * Creates a new account without checking user's access to provision master account
+     * Only used to fund ledger
+     *
+     * @param address address for new account (must be unique)
+     * @return New Account
+     * @throws LedgerException com.cscie97.ledger. ledger exception
+     */
+    private Account createAccountFundLedger(String address) throws LedgerException {
+        // retrieve last entry in blockchain
+        Block currentBlock = blockMap.lastEntry().getValue();
+        if (currentBlock.getAccountBalanceMap().containsKey(address)) {
+            // if the most recent block contains the address already, require a unique address
+            throw new LedgerException("create account", "unique account address required.");
+        } else {
+            Account newAcct;
+            if ((address.equals("master") && (blockMap.size() == 1))){
+                // create master account and set maximum balance
+                newAcct = new Account("master");
+                newAcct.setBalance(2147483647);
+            }else{
+                // create account set balance to 0
+                newAcct = new Account(address);
+                newAcct.setBalance(0);
+            }
+            // if valid address, create new account
+            HashMap<String, Account> genAcctBalanceMap = currentBlock.getAccountBalanceMap();
+            // add new account to ledger account balance map
+            genAcctBalanceMap.put(address, newAcct);
+            return new Account(address);
+        }
+    }
 
     /**
      * Checks the current account balance for the block with a given address.
@@ -223,7 +278,7 @@ public class Ledger {
      * @see String
      * @throws LedgerException com.cscie97.ledger. ledger exception
      */
-    public String processTransaction(Transaction transaction) throws LedgerException {
+    public String processTransaction(Transaction transaction) throws LedgerException, AuthenticationServiceException {
         String payerAddress = transaction.getPayer();
         String receiverAddress = transaction.getReceiver();
         int payerBalance;
@@ -304,7 +359,7 @@ public class Ledger {
      * @param currentBlock currentBlock
      * @throws LedgerException com.cscie97.ledger. ledger exception
      */
-    private void blockFull(Block currentBlock) throws LedgerException {
+    private void blockFull(Block currentBlock) throws LedgerException, AuthenticationServiceException {
         // compute and hash for current block
         String hash = computeHash(currentBlock);
         currentBlock.setHash(hash);
@@ -480,4 +535,23 @@ public class Ledger {
      * @param genesisBlock genesisBlock
      */
     public void setGenesisBlock(Block genesisBlock) {this.genesisBlock = genesisBlock;}
+
+
+    /**
+     * get field
+     *
+     * @return authenticationService
+     */
+    public AuthenticationService getAuthenticationService() {
+        return this.authenticationService;
+    }
+
+    /**
+     * set field
+     *
+     * @param authenticationService
+     */
+    public void setAuthenticationService(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
 }
