@@ -45,13 +45,8 @@ public class AssistCustomerToCar implements Command {
 	 */
 	public void execute() throws StoreModelServiceException, AuthenticationServiceException {
 
-//		String voicePrint = "voiceprint-" + customerId;
-//		String authToken = this.authenticationService.login(controllerId, "password", controllerPassword);
-//		System.out.println("User Permission Verified\n");
-//		this.authenticationService.getInstance().checkAccess(authToken, storeId, "control_robot");
-
-//		String authToken = this.authenticationService.login(customerId, credential);
-//		this.authenticationService.getInstance().checkAccess(authToken, "fetch_product");
+		String token = authenticationService.getCurrentUser().getToken().getId();
+		this.authenticationService.getInstance().checkAccess(token, storeId, "control_robot");
 
 		// find robot closest to turnstile where checkout is occurring
 		String[] robotLocation = storeModelService.findNearestRobot(storeId, aisleId).split(":");

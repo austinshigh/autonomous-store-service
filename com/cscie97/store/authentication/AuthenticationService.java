@@ -51,7 +51,7 @@ public class AuthenticationService extends Visitable {
 		if (checkAccess.isPermissionFound()){
 			return true;
 		}else{
-			throw new AuthenticationServiceException("Permission Not Found");
+			throw new AuthenticationServiceException("Permission Not Found: " + permission);
 		}
 	}
 
@@ -61,7 +61,7 @@ public class AuthenticationService extends Visitable {
 		if (checkAccess.isPermissionFound()){
 			return true;
 		}else{
-			throw new AuthenticationServiceException("Permission Not Found");
+			throw new AuthenticationServiceException("Permission Not Found: " + permission);
 		}
 	}
 
@@ -77,7 +77,7 @@ public class AuthenticationService extends Visitable {
 		if (checkAccess.isPermissionFound()){
 			return "Success: Permission Authorized.";
 		}else{
-			throw new AuthenticationServiceException("Failure: Permission Not Found");
+			throw new AuthenticationServiceException("Permission Not Found: " + permissionId);
 		}
 	}
 

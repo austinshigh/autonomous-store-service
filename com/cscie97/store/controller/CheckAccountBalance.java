@@ -54,11 +54,9 @@ public class CheckAccountBalance implements Command {
 	 * @see Command#execute()
 	 */
 	public void execute() throws StoreModelServiceException, LedgerException, AuthenticationServiceException {
-
-		String voicePrint = "voiceprint-" + customerId;
-		String authToken = this.authenticationService.login("voiceprint", voicePrint);
-		System.out.println("User Permission Verified\n");
-		this.authenticationService.getInstance().checkAccess(authToken, storeId, "control_speaker");
+		String token = authenticationService.getCurrentUser().getToken().getId();
+		this.authenticationService.checkAccess(token, storeId, "control_speaker");
+		this.authenticationService.getInstance().checkAccess(token, storeId, "access_blockchain");
 
 		// get customer from store model service
 		Customer customer = storeModelService.getCustomer(customerId);

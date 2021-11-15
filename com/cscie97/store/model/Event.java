@@ -6,7 +6,6 @@ package com.cscie97.store.model;
  */
 public class Event {
 
-    private String credential;
     private String eventType;
     private String arg0;
     private String arg1;
@@ -230,24 +229,6 @@ public class Event {
         this.arg6 = arg6;
     }
 
-
-    /**
-     * get field
-     *
-     * @return credential
-     */
-    public String getCredential() {
-        return this.credential;
-    }
-
-    /**
-     * set field
-     *
-     * @param credential
-     */
-    public void setCredential(String credential) {
-        this.credential = credential;
-    }
 }
 
 

@@ -22,7 +22,7 @@ public class StoreController implements Observer {
 	public StoreController(StoreModelService storeModelService, Ledger ledger, AuthenticationService authenticationService) {
 		this.storeModelService = storeModelService;
 		this.ledger = ledger;
-		this.authenticationService = authenticationService.getInstance();
+		this.authenticationService = authenticationService;
 	}
 
 
@@ -51,7 +51,7 @@ public class StoreController implements Observer {
 				fetchProduct.execute();
 				break;
 			case "basket-event":
-				BasketEvent basketEvent = new BasketEvent(event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3(), event.getArg4(), event.getArg5(), event.getArg6(), storeModelService, authenticationService);
+				BasketEvent basketEvent = new BasketEvent(event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3(), event.getArg4(), event.getArg5(), event.getArg6(), storeModelService);
 				basketEvent.execute();
 				break;
 			case "customer-seen":

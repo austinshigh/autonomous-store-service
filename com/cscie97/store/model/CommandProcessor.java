@@ -68,7 +68,7 @@ public class CommandProcessor {
 										"\nlogin faceprint|voiceprint <faceprint|voiceprint>");
 							}
 							try{
-								return authenticationService.login(commands.get(1), commands.get(2));
+								return "Token ID: " + authenticationService.login(commands.get(1), commands.get(2));
 							}catch(AuthenticationServiceException e){
 								throw new CommandProcessorException(e);
 							}
@@ -79,7 +79,7 @@ public class CommandProcessor {
 									"\nlogin <username> password <password>");
 						}
 						try {
-							return authenticationService.login(commands.get(1), commands.get(2), commands.get(3));
+							return "Token ID: " + authenticationService.login(commands.get(1), commands.get(2), commands.get(3));
 						}catch(AuthenticationServiceException e){
 							throw new CommandProcessorException(e);
 						}
@@ -579,13 +579,13 @@ public class CommandProcessor {
 							throw new CommandProcessorException(e);
 						}
 					case "create-event":
-						if (commands.size() != 4) {
+						if (commands.size() != 6) {
 							// throw exception if incorrect number of command line arguments
 							throw new CommandProcessorException("command should follow form:" +
-									"\ncreate-event <device_id> event <event>");
+									"\ncreate-event <device_id> event <event> credential <credential>");
 						}
 						try {
-							return(storeModelService.createEvent(commands.get(1), commands.get(3)));
+							return(storeModelService.createEvent(commands.get(1), commands.get(3), commands.get(4), commands.get(5)));
 						}catch (StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						} catch (ControllerException e) {

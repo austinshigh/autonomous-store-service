@@ -1,6 +1,7 @@
 package com.cscie97.store.controller;
 
 import com.cscie97.store.authentication.AuthenticationService;
+import com.cscie97.store.authentication.AuthenticationServiceException;
 import com.cscie97.store.model.*;
 
 import java.util.HashMap;
@@ -53,7 +54,12 @@ public class Emergency implements Command {
 	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws StoreModelServiceException, ControllerException {
+	public void execute() throws StoreModelServiceException, ControllerException, AuthenticationServiceException {
+		String token = authenticationService.getCurrentUser().getToken().getId();
+		authenticationService.checkAccess(token, storeId, "control_robot");
+		authenticationService.checkAccess(token, storeId, "control_turnstile");
+		authenticationService.checkAccess(token, storeId, "control_speaker");
+
 		if (!(emergencyType.equalsIgnoreCase("FIRE") ||
 				emergencyType.equalsIgnoreCase("EARTHQUAKE") ||
 				emergencyType.equalsIgnoreCase("FLOOD") ||

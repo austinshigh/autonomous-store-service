@@ -1,6 +1,7 @@
 package com.cscie97.store.controller;
 
 import com.cscie97.store.authentication.AuthenticationService;
+import com.cscie97.store.authentication.AuthenticationServiceException;
 import com.cscie97.store.model.StoreModelService;
 import com.cscie97.store.model.StoreModelServiceException;
 
@@ -18,11 +19,18 @@ public class CleaningEvent implements Command {
 
 	private StoreModelService storeModelService;
 
-	public CleaningEvent(String storeId, String aisleId, String productId, StoreModelService storeModelService, AuthenticationService authenticationService) {
+	private AuthenticationService authenticationService;
+
+	public CleaningEvent(String storeId,
+						 String aisleId,
+						 String productId,
+						 StoreModelService storeModelService,
+						 AuthenticationService authenticationService) {
 		this.storeId = storeId;
 		this.aisleId = aisleId;
 		this.productId = productId;
 		this.storeModelService = storeModelService;
+		this.authenticationService = authenticationService;
 	}
 
 	/**
@@ -33,7 +41,10 @@ public class CleaningEvent implements Command {
 	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws StoreModelServiceException {
+	public void execute() throws StoreModelServiceException, AuthenticationServiceException {
+
+		String token = authenticationService.getCurrentUser().getToken().getId();
+		this.authenticationService.getInstance().checkAccess(token, storeId, "control_robot");
 
 		// find nearest robot
 		String[] robotLocation = storeModelService.findNearestRobot(storeId, aisleId).split(":");

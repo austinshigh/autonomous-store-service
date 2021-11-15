@@ -812,8 +812,13 @@ public class StoreModelService implements Subject {
 	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
 	 * @throws LedgerException com.cscie97.ledger. ledger exception
 	 */
-	public String createEvent(String deviceId, String event) throws StoreModelServiceException, LedgerException, ControllerException, AuthenticationServiceException {
+	public String createEvent(String deviceId, String event, String userName, String credential) throws StoreModelServiceException, LedgerException, ControllerException, AuthenticationServiceException {
 		String[] eventArgs = event.split(" ");
+		if (userName.equals("voiceprint")||userName.equals("faceprint")){
+			authenticationService.login(userName, credential);
+		}else {
+			authenticationService.login(userName, "password", credential);
+		}
 		Device selectedDevice = getDevice(deviceId);
 		Event createdEvent;
 		switch(eventArgs[0]){
@@ -883,6 +888,7 @@ public class StoreModelService implements Subject {
 		selectedDevice.getEventLogger().add(createdEvent);
 		// notify observers of new event
 		notify(createdEvent);
+		authenticationService.logout();
 		return("");
 	}
 

@@ -27,7 +27,14 @@ public class BasketEvent implements Command {
 
 	private StoreModelService storeModelService;
 
-	public BasketEvent(String customerId, String productId, String inventoryId, String storeId, String aisleId, String shelfId, String quantity, StoreModelService storeModelService, AuthenticationService authenticationService) {
+	public BasketEvent(String customerId,
+					   String productId,
+					   String inventoryId,
+					   String storeId,
+					   String aisleId,
+					   String shelfId,
+					   String quantity,
+					   StoreModelService storeModelService) {
 		this.customerId = customerId;
 		this.productId = productId;
 		this.inventoryId = inventoryId;
@@ -52,6 +59,7 @@ public class BasketEvent implements Command {
 	 * @see Command#execute()
 	 */
 	public void execute() throws StoreModelServiceException, AuthenticationServiceException {
+
 		// get customer from storemodelservice
 		Customer customer = storeModelService.getCustomer(customerId);
 

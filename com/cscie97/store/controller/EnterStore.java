@@ -53,10 +53,8 @@ public class EnterStore implements Command {
 	 */
 	public void execute() throws StoreModelServiceException, LedgerException, ControllerException, AuthenticationServiceException {
 
-		String voicePrint = "faceprint-" + customerId;
-		String authToken = this.authenticationService.login("faceprint", voicePrint);
-		System.out.println("User Permission Verified\n");
-		this.authenticationService.getInstance().checkAccess(authToken, storeId, "enter_store");
+		String token = authenticationService.getCurrentUser().getToken().getId();
+		this.authenticationService.getInstance().checkAccess(token, storeId, "enter_store");
 
 
 		// get customer from storemodelservice

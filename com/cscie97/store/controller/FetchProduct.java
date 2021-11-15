@@ -62,10 +62,8 @@ public class FetchProduct implements Command {
 	 */
 	public void execute() throws StoreModelServiceException, AuthenticationServiceException {
 
-		String voicePrint = "voiceprint-" + customerId;
-		String authToken = this.authenticationService.login("voiceprint", voicePrint);
-		System.out.println("User Permission Verified\n");
-		this.authenticationService.getInstance().checkAccess(authToken, storeId, "control_robot");
+		String token = authenticationService.getCurrentUser().getToken().getId();
+		this.authenticationService.getInstance().checkAccess(token, storeId, "control_robot");
 
 		String customerAisle = storeModelService.getCustomer(customerId).getLocation().getAisleNumber();
 
@@ -90,7 +88,7 @@ public class FetchProduct implements Command {
 
 			String basketId = storeModelService.getCustomerBasketId(customerId);
 			// make changes to inventory and customer's basket
-			BasketEvent basketEvent = new BasketEvent(customerId, productId, inventoryId, storeId, aisleId, shelfId, String.valueOf(quantity), storeModelService, authenticationService);
+			BasketEvent basketEvent = new BasketEvent(customerId, productId, inventoryId, storeId, aisleId, shelfId, String.valueOf(quantity), storeModelService);
 			basketEvent.execute();
 		}
 	}

@@ -1,6 +1,7 @@
 package com.cscie97.store.controller;
 
 import com.cscie97.store.authentication.AuthenticationService;
+import com.cscie97.store.authentication.AuthenticationServiceException;
 import com.cscie97.store.model.StoreModelService;
 import com.cscie97.store.model.StoreModelServiceException;
 
@@ -18,11 +19,18 @@ public class BrokenGlass implements Command {
 
 	private StoreModelService storeModelService;
 
-	public BrokenGlass(String storeId, String aisleId, String deviceId, StoreModelService storeModelService, AuthenticationService authenticationService) {
+	private AuthenticationService authenticationService;
+
+	public BrokenGlass(String storeId,
+					   String aisleId,
+					   String deviceId,
+					   StoreModelService storeModelService,
+					   AuthenticationService authenticationService) {
 		this.storeId = storeId;
 		this.aisleId = aisleId;
 		this.deviceId = deviceId;
 		this.storeModelService = storeModelService;
+		this.authenticationService = authenticationService;
 	}
 
 	/**
@@ -31,7 +39,10 @@ public class BrokenGlass implements Command {
 	 * Commands robot to "clean up broken glass in <aisle>"
 	 * @see Command#execute()
 	 */
-	public void execute() throws StoreModelServiceException {
+	public void execute() throws StoreModelServiceException, AuthenticationServiceException {
+
+		String token = authenticationService.getCurrentUser().getToken().getId();
+		this.authenticationService.checkAccess(token, storeId, "control_robot");
 
 		// find nearest robot
 		String[] robotLocation = storeModelService.findNearestRobot(storeId, aisleId).split(":");

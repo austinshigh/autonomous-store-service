@@ -35,6 +35,7 @@ public class MissingPerson implements Command {
 	 * @see Command#execute()
 	 */
 	public void execute() throws StoreModelServiceException {
+
 		// get customer aisle
 		String aisleNumber = storeModelService.getCustomer(customerId).getLocation().getAisleNumber();
 

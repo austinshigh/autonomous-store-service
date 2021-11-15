@@ -1,6 +1,7 @@
 package com.cscie97.store.controller;
 
 import com.cscie97.store.authentication.AuthenticationService;
+import com.cscie97.store.authentication.AuthenticationServiceException;
 import com.cscie97.store.model.StoreModelService;
 import com.cscie97.store.model.StoreModelServiceException;
 
@@ -18,11 +19,18 @@ public class CustomerSeen implements Command {
 
 	private StoreModelService storeModelService;
 
-	public CustomerSeen(String customerId, String storeId, String aisleId, StoreModelService storeModelService, AuthenticationService authenticationService) {
+	private AuthenticationService authenticationService;
+
+	public CustomerSeen(String customerId,
+						String storeId,
+						String aisleId,
+						StoreModelService storeModelService,
+						AuthenticationService authenticationService) {
 		this.customerId = customerId;
 		this.storeId = storeId;
 		this.aisleId = aisleId;
 		this.storeModelService = storeModelService;
+		this.authenticationService = authenticationService;
 	}
 
 	/**
@@ -32,7 +40,10 @@ public class CustomerSeen implements Command {
 	 *
 	 * @see Command#execute()
 	 */
-	public void execute() throws StoreModelServiceException {
+	public void execute() throws StoreModelServiceException, AuthenticationServiceException {
+
+		String token = authenticationService.getCurrentUser().getToken().getId();
+		authenticationService.checkAccess(token, storeId, "control_camera");
 		System.out.println(storeModelService.updateCustomerLocation(customerId, storeId, aisleId));
 	}
 
