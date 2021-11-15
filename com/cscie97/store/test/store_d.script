@@ -64,6 +64,8 @@ define_permission control_camera permission_name "Control Camera" permission_des
 define_permission enter_store permission_name "Enter Store" permission_description "Permission to Enter Store"
 # Define Permission checkout
 define_permission checkout permission_name "Checkout" permission_description "Permission to Checkout"
+# Define Permission access_blockchain
+define_permission access_blockchain permission_name "Access Blockchain" permission_description "Permission to Submit Transactions to Blockchain"
 # Define Permission get_user_authtoken
 define_permission get_user_authtoken permission_name "Get User's AuthToken" permission_description "Permission to get AuthToken"
 # Define Permission provision_store
@@ -104,6 +106,8 @@ add_permission_to_role adult_consumer_role control_robot
 add_permission_to_role adult_consumer_role enter_store
 # add permission checkout to adult_consumer_role
 add_permission_to_role adult_consumer_role checkout
+# add permission access_blockchain to adult_consumer_role
+add_permission_to_role adult_consumer_role access_blockchain
 # for child consumer
 # add permission enter_store to child_consumer_role
 add_permission_to_role child_consumer_role enter_store
@@ -127,6 +131,8 @@ add_permission_to_role controller_service_role get_user_authtoken
 add_permission_to_role controller_service_role control_microphone
 # add permission control_camera to admin_role
 add_permission_to_role controller_service_role control_camera
+# add permission access_blockchain to admin_role
+add_permission_to_role controller_service_role access_blockchain
 
 # Create Store Users
 # create_user <user_id> name <user_name>
@@ -249,7 +255,7 @@ show-inventory INVENTORY002
 # Define 12 customers (9 registered who have 200 Units transferred from the master account = 10 transactions now)
 define-customer debra first_name deborah last_name bain type registered email_address "dbain@gmail.com" account debra01
 define-customer jimmy first_name jimmy last_name jones type registered email_address "thill@yahoo.com" account ted01
-define-customer sam first_name sam last_name davis type guest email_address "jdan@gmail.com" account jane01
+define-customer sam first_name sam last_name davis type registered email_address "jdan@gmail.com" account jane01
 define-customer CUSTOMER00004 first_name tami last_name donny type registered email_address "tdonny@gmail.com" account tami01
 define-customer CUSTOMER00005 first_name tayo last_name akin type registered email_address "takin@yahoo.com" account tayo01
 define-customer CUSTOMER00006 first_name dami last_name davis type guest email_address "ddavis@gmail.com" account dami01
@@ -330,10 +336,10 @@ create-event TURNSTILE002 event "enter-store sam TURNSTILE002 store123:2" facepr
 
 
 # Show the details of the customers before updating location
-show-customer debra
+show-customer sam
 
-# Create a customer-seen event for debra - location should change to {store123=1}
-create-event CAMERA001 event "customer-seen debra store123:1" scs scs123
+# Create a customer-seen event for sam - location should change to {store123=1}
+create-event CAMERA001 event "customer-seen sam store123:1" scs scs123
 
 
 # Create a customer-seen event for sam - location should change to {store123=3}
@@ -351,22 +357,22 @@ create-event CAMERA002 event "product-spill store123:2 MILK001" scs scs123
 
 
 # Create a missing-person event using a microphone - expect that the missing customer is in aisle 1
-create-event MICROPHONE001 event "missing-person store123 debra" scs scs123
+create-event MICROPHONE001 event "missing-person store123 sam" scs scs123
 
 
-# Create a basket-event event for debra
-create-event CAMERA001 event "basket-event debra MILK001 INVENTORY001 store123:1:SHELF001 2" faceprint faceprint-debra
-create-event CAMERA002 event "basket-event debra HONEY001 INVENTORY002 store123:1:SHELF002 5" faceprint faceprint-debra
-create-event CAMERA001 event "basket-event debra MILK001 INVENTORY001 store123:1:SHELF001 2" faceprint faceprint-debra
+# Create a basket-event event for sam
+create-event CAMERA001 event "basket-event sam MILK001 INVENTORY001 store123:1:SHELF001 2" faceprint faceprint-sam
+create-event CAMERA002 event "basket-event sam HONEY001 INVENTORY002 store123:1:SHELF002 5" faceprint faceprint-sam
+create-event CAMERA001 event "basket-event sam MILK001 INVENTORY001 store123:1:SHELF001 2" faceprint faceprint-sam
 
 
 # Create a check-acc-bal event using a microphone - expect only one speaker to give response - total cost = 77
-create-event MICROPHONE001 event "check-acc-bal debra store123:2" voiceprint voiceprint-debra
+create-event MICROPHONE001 event "check-acc-bal sam store123:2" voiceprint voiceprint-sam
 
 
 # Create an assist-customer event using a turnstile location
-create-event TURNSTILE001 event "assist-customer debra store123:1" scs scs123
+create-event TURNSTILE001 event "assist-customer sam store123:1" scs scs123
 
 
 # Create a checkout event
-create-event TURNSTILE001 event "checkout debra store123:1" faceprint faceprint-debra
+create-event TURNSTILE001 event "checkout sam store123:1" faceprint faceprint-sam

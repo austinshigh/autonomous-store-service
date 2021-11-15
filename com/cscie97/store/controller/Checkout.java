@@ -58,8 +58,7 @@ public class Checkout implements Command {
 	 */
 	public void execute() throws StoreModelServiceException, LedgerException, AuthenticationServiceException {
 		String token = authenticationService.getCurrentUser().getToken().getId();
-		this.authenticationService.getInstance().checkAccess(token, storeId, "control_turnstile");
-		this.authenticationService.getInstance().checkAccess(token, storeId, "access_blockchain");
+		this.authenticationService.getInstance().checkAccess(token, storeId, "checkout");
 
 		// get customer from storemodelservice
 		Customer customer = storeModelService.getCustomer(customerId);
