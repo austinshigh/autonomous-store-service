@@ -25,18 +25,16 @@ public class CheckAccountBalance implements Command {
 
 	private AuthenticationService authenticationService;
 
-	public CheckAccountBalance(String customerId,
-							   String storeId,
-							   String aisleId,
-							   StoreModelService storeModelService,
-							   Ledger ledger,
-							   AuthenticationService authenticationService) {
+	private String token;
+
+	public CheckAccountBalance(String customerId, String storeId, String aisleId, StoreModelService storeModelService, Ledger ledger, AuthenticationService authenticationService, String token) {
 		this.customerId = customerId;
 		this.storeId = storeId;
 		this.aisleId = aisleId;
 		this.storeModelService = storeModelService;
 		this.ledger = ledger;
 		this.authenticationService = authenticationService;
+		this.token = token;
 	}
 
 	/**
@@ -54,8 +52,6 @@ public class CheckAccountBalance implements Command {
 	 * @see Command#execute()
 	 */
 	public void execute() throws StoreModelServiceException, LedgerException, AuthenticationServiceException {
-		String token = authenticationService.getCurrentUser().getToken().getId();
-		this.authenticationService.checkAccess(token, storeId, "control_speaker");
 		this.authenticationService.getInstance().checkAccess(token, storeId, "access_blockchain");
 
 		// get customer from store model service

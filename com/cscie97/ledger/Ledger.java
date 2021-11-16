@@ -63,29 +63,46 @@ public class Ledger {
     }
 
     /**
-     * check access
-     *
-     * @param permission permission
-     * @throws AuthenticationServiceException com.cscie97.store.authentication. authentication service exception
-     */
-    public void checkAccess(String permission) throws AuthenticationServiceException {
-        if (authenticationService.getCurrentUser() == null){
-            throw new AuthenticationServiceException("no user logged in");
-        }else {
-            String authToken = authenticationService.getCurrentUser().getToken().getId();
-            authenticationService.checkAccess(authToken, permission);
-        }
-    }
-
-    /**
      * Creates a new account after verifying that the user selected account address is unique.
      *
      * @param address address for new account (must be unique)
      * @return New Account
      * @throws LedgerException com.cscie97.ledger. ledger exception
      */
-    public Account createAccount(String address) throws LedgerException, AuthenticationServiceException {
-        checkAccess("provision_store");
+    public Account createAccount(String address, String authToken) throws LedgerException, AuthenticationServiceException {
+        authenticationService.checkAccess(authToken, "provision_store");
+        // retrieve last entry in blockchain
+        Block currentBlock = blockMap.lastEntry().getValue();
+        if (currentBlock.getAccountBalanceMap().containsKey(address)) {
+            // if the most recent block contains the address already, require a unique address
+            throw new LedgerException("create account", "unique account address required.");
+        } else {
+            Account newAcct;
+            if ((address.equals("master") && (blockMap.size() == 1))){
+                // create master account and set maximum balance
+                newAcct = new Account("master");
+                newAcct.setBalance(2147483647);
+            }else{
+                // create account set balance to 0
+                newAcct = new Account(address);
+                newAcct.setBalance(0);
+            }
+            // if valid address, create new account
+            HashMap<String, Account> genAcctBalanceMap = currentBlock.getAccountBalanceMap();
+            // add new account to ledger account balance map
+            genAcctBalanceMap.put(address, newAcct);
+            return new Account(address);
+        }
+    }
+
+    /**
+     * Private createAccount method used solely for updating account balances in blockFull() method
+     *
+     * @param address address for new account (must be unique)
+     * @return New Account
+     * @throws LedgerException com.cscie97.ledger. ledger exception
+     */
+    private Account createAccount(String address) throws LedgerException, AuthenticationServiceException {
         // retrieve last entry in blockchain
         Block currentBlock = blockMap.lastEntry().getValue();
         if (currentBlock.getAccountBalanceMap().containsKey(address)) {

@@ -22,17 +22,16 @@ public class AssistCustomerToCar implements Command {
 
 	private AuthenticationService authenticationService;
 
-	public AssistCustomerToCar(String customerId,
-							   String storeId,
-							   String aisleId,
-							   StoreModelService storeModelService,
-							   AuthenticationService authenticationService
-							   ) {
+	private String token;
+
+
+	public AssistCustomerToCar(String customerId, String storeId, String aisleId, StoreModelService storeModelService, AuthenticationService authenticationService, String token) {
 		this.customerId = customerId;
 		this.storeId = storeId;
 		this.aisleId = aisleId;
 		this.storeModelService = storeModelService;
 		this.authenticationService = authenticationService;
+		this.token = token;
 	}
 
 	/**
@@ -45,7 +44,6 @@ public class AssistCustomerToCar implements Command {
 	 */
 	public void execute() throws StoreModelServiceException, AuthenticationServiceException {
 
-		String token = authenticationService.getCurrentUser().getToken().getId();
 		this.authenticationService.getInstance().checkAccess(token, storeId, "control_robot");
 
 		// find robot closest to turnstile where checkout is occurring

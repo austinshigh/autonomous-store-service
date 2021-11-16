@@ -24,6 +24,7 @@ public class CommandProcessor {
 	private static AuthenticationService authenticationService;
 	private static String[] idArray;
 	private static Ledger ledgerService;
+	private static String authToken;
 
 		/**
 		 * Compares CLI input to available methods, runs appropriate method.
@@ -68,7 +69,8 @@ public class CommandProcessor {
 										"\nlogin faceprint|voiceprint <faceprint|voiceprint>");
 							}
 							try{
-								return "Token ID: " + authenticationService.login(commands.get(1), commands.get(2));
+								authToken = authenticationService.login(commands.get(1), commands.get(2));
+								return "login successful";
 							}catch(AuthenticationServiceException e){
 								throw new CommandProcessorException(e);
 							}
@@ -79,7 +81,8 @@ public class CommandProcessor {
 									"\nlogin <username> password <password>");
 						}
 						try {
-							return "Token ID: " + authenticationService.login(commands.get(1), commands.get(2), commands.get(3));
+							authToken = authenticationService.login(commands.get(1), commands.get(2), commands.get(3));
+							return "login successful";
 						}catch(AuthenticationServiceException e){
 							throw new CommandProcessorException(e);
 						}
@@ -156,7 +159,16 @@ public class CommandProcessor {
 							throw new CommandProcessorException(e);
 						}
 					case "logout":
-							return authenticationService.logout();
+						if (commands.size() != 2){
+							// throw exception if incorrect number of command line arguments
+							throw new CommandProcessorException("command should follow form:" +
+									"\nlogout <user_id>");
+						}
+						try {
+							return authenticationService.logout(commands.get(1));
+						}catch(AuthenticationServiceException e){
+							throw new CommandProcessorException(e);
+						}
 					case "create_resource_role":
 						if (commands.size() != 4){
 							// throw exception if incorrect number of command line arguments
@@ -205,12 +217,12 @@ public class CommandProcessor {
 							// throw exception if incorrect number of command line arguments
 							throw new CommandProcessorException("command should follow form:" +
 									"\ndefine-store <identifier> name <name> address <address>" +
-									"\n address should follow form 'street city state'");
+									"\n address should follow form 'street city state' ");
 						}
 						// split store location into array for input
 						idArray = commands.get(5).split(", ");
 						try {
-							ledgerService.createAccount(commands.get(1));
+							ledgerService.createAccount(commands.get(1), authToken);
 							Transaction tx = new Transaction(ThreadLocalRandom.current().nextInt(0, 99999999 + 1),
 									20000,
 									10,
@@ -218,7 +230,7 @@ public class CommandProcessor {
 									"master",
 									commands.get(1));
 							ledgerService.processTransaction(tx);
-							return ("new store id: " + storeModelService.createStore(commands.get(1), commands.get(3), idArray[0], idArray[1], idArray[2]));
+							return ("new store id: " + storeModelService.createStore(commands.get(1), commands.get(3), idArray[0], idArray[1], idArray[2], authToken));
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						} catch (LedgerException e) {
@@ -246,7 +258,7 @@ public class CommandProcessor {
 						// split ids into array for input
 						idArray = commands.get(1).split(":");
 						try {
-							return("aisle id : " + storeModelService.createAisle(idArray[0], idArray[1], commands.get(3), commands.get(5), commands.get(7)));
+							return("aisle id : " + storeModelService.createAisle(idArray[0], idArray[1], commands.get(3), commands.get(5), commands.get(7), authToken));
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						} catch (AuthenticationServiceException e) {
@@ -275,9 +287,9 @@ public class CommandProcessor {
 						idArray = commands.get(1).split(":");
 						try {
 							if (commands.size() == 10) {
-								return("Shelf defined, new shelf id: " + storeModelService.createShelf(idArray[0], idArray[1], idArray[2], commands.get(3), commands.get(5), commands.get(7), commands.get(9)));
+								return("Shelf defined, new shelf id: " + storeModelService.createShelf(idArray[0], idArray[1], idArray[2], commands.get(3), commands.get(5), commands.get(7), commands.get(9), authToken));
 							}else{
-								return("Shelf defined, new shelf id: " + storeModelService.createShelf(idArray[0], idArray[1], idArray[2], commands.get(3), commands.get(5), commands.get(7)));
+								return("Shelf defined, new shelf id: " + storeModelService.createShelf(idArray[0], idArray[1], idArray[2], commands.get(3), commands.get(5), commands.get(7), authToken));
 							}
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
@@ -307,7 +319,7 @@ public class CommandProcessor {
 						idArray = commands.get(3).split(":");
 						try {
 							return("Inventory Created, New Inventory Id:" + storeModelService.createInventory(
-									idArray[0], idArray[1], idArray[2], commands.get(1), Integer.valueOf(commands.get(5)), Integer.valueOf(commands.get(7)), commands.get(9)
+									idArray[0], idArray[1], idArray[2], commands.get(1), Integer.valueOf(commands.get(5)), Integer.valueOf(commands.get(7)), commands.get(9), authToken
 									));
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
@@ -334,10 +346,10 @@ public class CommandProcessor {
 						try {
 							if(commands.size() == 12) {
 								// if temperature is not specified, use 6 parameters
-								storeModelService.createProduct(commands.get(1), commands.get(3), commands.get(5), commands.get(7), commands.get(9), Integer.parseInt(commands.get(11)));
+								storeModelService.createProduct(commands.get(1), commands.get(3), commands.get(5), commands.get(7), commands.get(9), Integer.parseInt(commands.get(11)), authToken);
 							}else{
 								// if temperature is specified, use 7 parameters
-								storeModelService.createProduct(commands.get(1), commands.get(3), commands.get(5), commands.get(7), commands.get(9), Integer.parseInt(commands.get(11)), commands.get(13));;
+								storeModelService.createProduct(commands.get(1), commands.get(3), commands.get(5), commands.get(7), commands.get(9), Integer.parseInt(commands.get(11)), commands.get(13), authToken);
 							}
 							return("new product created, product id:" + commands.get(1));
 						}catch(StoreModelServiceException e){
@@ -378,7 +390,7 @@ public class CommandProcessor {
 							if (commands.get(7).equals("registered")) {
 								// if customer is registered, transfer 200 credits to their account.
 								registered = true;
-								ledgerService.createAccount(commands.get(11));
+								ledgerService.createAccount(commands.get(11), authToken);
 								Transaction tx = new Transaction(ThreadLocalRandom.current().nextInt(0, 99999999 + 1),
 										200,
 										10,
@@ -387,9 +399,9 @@ public class CommandProcessor {
 										commands.get(11));
 								ledgerService.processTransaction(tx);
 							}else{
-								ledgerService.createAccount(commands.get(11));
+								ledgerService.createAccount(commands.get(11), authToken);
 							}
-							return("customer id: " + storeModelService.createCustomer(commands.get(1), commands.get(3), commands.get(5), registered, commands.get(9), commands.get(11)));
+							return("customer id: " + storeModelService.createCustomer(commands.get(1), commands.get(3), commands.get(5), registered, commands.get(9), commands.get(11), authToken));
 						}catch(StoreModelServiceException e){
 							throw new CommandProcessorException(e);
 						} catch (LedgerException e) {
@@ -529,13 +541,13 @@ public class CommandProcessor {
 								case "microphone":
 								case "camera":
 									// create sensor if user enters sensor name
-									storeModelService.createSensor(commands.get(1), commands.get(3), commands.get(5), idArray[0], idArray[1]);
+									storeModelService.createSensor(commands.get(1), commands.get(3), commands.get(5), idArray[0], idArray[1], authToken);
 									return("sensor id:" + commands.get(1));
 								case "robot":
 								case "turnstile":
 								case "speaker":
 									// create appliance if user enters appliance name
-									storeModelService.createAppliance(commands.get(1), commands.get(3), commands.get(5), idArray[0], idArray[1]);
+									storeModelService.createAppliance(commands.get(1), commands.get(3), commands.get(5), idArray[0], idArray[1], authToken);
 									return("appliance id:" + commands.get(1));
 								default:
 									throw new CommandProcessorException("invalid type of device, must be of set (microphone, camera, robot, turnstile, speaker)");
@@ -663,7 +675,7 @@ public class CommandProcessor {
 			authenticationService = AuthenticationService.getInstance();
 			ledgerService = new Ledger("test", "testService", "controller", authenticationService);
 			ledgerService.fundLedger();
-			storeModelService = new StoreModelService("authToken", authenticationService);
+			storeModelService = new StoreModelService(authenticationService);
 			storeController = new StoreController(storeModelService,ledgerService, authenticationService);
 			storeModelService.attach(storeController);
 			// get script file in test folder specified as parameter

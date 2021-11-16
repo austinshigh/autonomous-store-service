@@ -14,6 +14,7 @@ public class Event {
     private String arg4;
     private String arg5;
     private String arg6;
+    private String token;
 
 
     public Event() {
@@ -25,44 +26,50 @@ public class Event {
         this.arg4 = null;
         this.arg5 = null;
         this.arg6 = null;
+        this.token = null;
     }
 
-    public Event(String eventType, String arg0) {
+    public Event(String eventType, String arg0, String token) {
         this.eventType = eventType;
         this.arg0 = arg0;
+        this.token = token;
     }
 
-    public Event(String eventType, String arg0, String arg1) {
+    public Event(String eventType, String arg0, String arg1, String token) {
         this.eventType = eventType;
         this.arg0 = arg0;
         this.arg1 = arg1;
+        this.token = token;
     }
 
-    public Event(String eventType, String arg0, String arg1, String arg2) {
+    public Event(String eventType, String arg0, String arg1, String arg2, String token) {
         this.eventType = eventType;
         this.arg0 = arg0;
         this.arg1 = arg1;
         this.arg2 = arg2;
+        this.token = token;
     }
 
-    public Event(String eventType, String arg0, String arg1, String arg2, String arg3) {
+    public Event(String eventType, String arg0, String arg1, String arg2, String arg3, String token) {
         this.eventType = eventType;
         this.arg0 = arg0;
         this.arg1 = arg1;
         this.arg2 = arg2;
         this.arg3 = arg3;
+        this.token = token;
     }
 
-    public Event(String eventType, String arg0, String arg1, String arg2, String arg3, String arg4) {
+    public Event(String eventType, String arg0, String arg1, String arg2, String arg3, String arg4, String token) {
         this.eventType = eventType;
         this.arg0 = arg0;
         this.arg1 = arg1;
         this.arg2 = arg2;
         this.arg3 = arg3;
         this.arg4 = arg4;
+        this.token = token;
     }
 
-    public Event(String eventType, String arg0, String arg1, String arg2, String arg3, String arg4, String arg5) {
+    public Event(String eventType, String arg0, String arg1, String arg2, String arg3, String arg4, String arg5, String token) {
         this.eventType = eventType;
         this.arg0 = arg0;
         this.arg1 = arg1;
@@ -70,9 +77,10 @@ public class Event {
         this.arg3 = arg3;
         this.arg4 = arg4;
         this.arg5 = arg5;
+        this.token = token;
     }
 
-    public Event(String eventType, String arg0, String arg1, String arg2, String arg3, String arg4, String arg5, String arg6) {
+    public Event(String eventType, String arg0, String arg1, String arg2, String arg3, String arg4, String arg5, String arg6, String token) {
         this.eventType = eventType;
         this.arg0 = arg0;
         this.arg1 = arg1;
@@ -81,6 +89,7 @@ public class Event {
         this.arg4 = arg4;
         this.arg5 = arg5;
         this.arg6 = arg6;
+        this.token = token;
     }
 
     /**
@@ -229,6 +238,24 @@ public class Event {
         this.arg6 = arg6;
     }
 
+
+    /**
+     * get field
+     *
+     * @return token
+     */
+    public String getToken() {
+        return this.token;
+    }
+
+    /**
+     * set field
+     *
+     * @param token
+     */
+    public void setToken(String token) {
+        this.token = token;
+    }
 }
 
 

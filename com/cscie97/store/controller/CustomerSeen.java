@@ -21,16 +21,15 @@ public class CustomerSeen implements Command {
 
 	private AuthenticationService authenticationService;
 
-	public CustomerSeen(String customerId,
-						String storeId,
-						String aisleId,
-						StoreModelService storeModelService,
-						AuthenticationService authenticationService) {
+	private String token;
+
+	public CustomerSeen(String customerId, String storeId, String aisleId, StoreModelService storeModelService, AuthenticationService authenticationService, String token) {
 		this.customerId = customerId;
 		this.storeId = storeId;
 		this.aisleId = aisleId;
 		this.storeModelService = storeModelService;
 		this.authenticationService = authenticationService;
+		this.token = token;
 	}
 
 	/**
@@ -41,8 +40,6 @@ public class CustomerSeen implements Command {
 	 * @see Command#execute()
 	 */
 	public void execute() throws StoreModelServiceException, AuthenticationServiceException {
-
-		String token = authenticationService.getCurrentUser().getToken().getId();
 		authenticationService.checkAccess(token, storeId, "control_camera");
 		System.out.println(storeModelService.updateCustomerLocation(customerId, storeId, aisleId));
 	}

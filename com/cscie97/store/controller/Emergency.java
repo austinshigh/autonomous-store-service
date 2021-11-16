@@ -29,12 +29,15 @@ public class Emergency implements Command {
 
 	private AuthenticationService authenticationService;
 
-	public Emergency(String emergencyType, String storeId, String aisleId, StoreModelService storeModelService, AuthenticationService authenticationService) {
+	private String token;
+
+	public Emergency(String emergencyType, String storeId, String aisleId, StoreModelService storeModelService, AuthenticationService authenticationService, String token) {
 		this.emergencyType = emergencyType;
 		this.storeId = storeId;
 		this.aisleId = aisleId;
 		this.storeModelService = storeModelService;
 		this.authenticationService = authenticationService;
+		this.token = token;
 	}
 
 	/**
@@ -55,7 +58,6 @@ public class Emergency implements Command {
 	 * @see Command#execute()
 	 */
 	public void execute() throws StoreModelServiceException, ControllerException, AuthenticationServiceException {
-		String token = authenticationService.getCurrentUser().getToken().getId();
 		authenticationService.checkAccess(token, storeId, "control_robot");
 		authenticationService.checkAccess(token, storeId, "control_turnstile");
 		authenticationService.checkAccess(token, storeId, "control_speaker");

@@ -30,14 +30,17 @@ public class Checkout implements Command {
 
 	private AuthenticationService authenticationService;
 
-	public Checkout(String customerId, String storeId, String aisleId, String turnstileId, StoreModelService storeModelService, Ledger ledger, AuthenticationService authenticationService) {
-		this.storeId = storeId;
+	private String token;
+
+	public Checkout(String customerId, String storeId, String aisleId, String turnstileId, StoreModelService storeModelService, Ledger ledger, AuthenticationService authenticationService, String token) {
 		this.customerId = customerId;
+		this.storeId = storeId;
 		this.aisleId = aisleId;
 		this.turnstileId = turnstileId;
 		this.storeModelService = storeModelService;
 		this.ledger = ledger;
 		this.authenticationService = authenticationService;
+		this.token = token;
 	}
 
 	/**
@@ -57,7 +60,7 @@ public class Checkout implements Command {
 	 * @see Command#execute()
 	 */
 	public void execute() throws StoreModelServiceException, LedgerException, AuthenticationServiceException {
-		String token = authenticationService.getCurrentUser().getToken().getId();
+
 		this.authenticationService.getInstance().checkAccess(token, storeId, "checkout");
 
 		// get customer from storemodelservice
@@ -100,7 +103,7 @@ public class Checkout implements Command {
 			int basketWeight = Integer.parseInt(storeModelService.computeBasketWeight(basketId));
 			// if product weight is more than 10lbs (in grams), assist customer to car
 			if (basketWeight > 4535) {
-				AssistCustomerToCar assistCustomerToCar = new AssistCustomerToCar(customerId, storeId, aisleId, storeModelService, authenticationService);
+				AssistCustomerToCar assistCustomerToCar = new AssistCustomerToCar(customerId, storeId, aisleId, storeModelService, authenticationService, token);
 				assistCustomerToCar.execute();
 			}
 			store.getCustomerMap().remove(customerId);

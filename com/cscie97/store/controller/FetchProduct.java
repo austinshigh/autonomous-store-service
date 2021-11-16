@@ -30,15 +30,9 @@ public class FetchProduct implements Command {
 
 	private AuthenticationService authenticationService;
 
-	public FetchProduct(String customerId,
-						String productId,
-						String inventoryId,
-						String storeId,
-						String aisleId,
-						String shelfId,
-						String quantity,
-						StoreModelService storeModelService,
-						AuthenticationService authenticationService) {
+	private String token;
+
+	public FetchProduct(String customerId, String productId, String inventoryId, String storeId, String aisleId, String shelfId, String quantity, StoreModelService storeModelService, AuthenticationService authenticationService, String token) {
 		this.customerId = customerId;
 		this.productId = productId;
 		this.inventoryId = inventoryId;
@@ -47,7 +41,8 @@ public class FetchProduct implements Command {
 		this.shelfId = shelfId;
 		this.quantity = quantity;
 		this.storeModelService = storeModelService;
-		this.authenticationService = authenticationService.getInstance();
+		this.authenticationService = authenticationService;
+		this.token = token;
 	}
 
 	/**
@@ -62,7 +57,6 @@ public class FetchProduct implements Command {
 	 */
 	public void execute() throws StoreModelServiceException, AuthenticationServiceException {
 
-		String token = authenticationService.getCurrentUser().getToken().getId();
 		this.authenticationService.getInstance().checkAccess(token, storeId, "control_robot");
 
 		String customerAisle = storeModelService.getCustomer(customerId).getLocation().getAisleNumber();

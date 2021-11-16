@@ -21,16 +21,15 @@ public class CleaningEvent implements Command {
 
 	private AuthenticationService authenticationService;
 
-	public CleaningEvent(String storeId,
-						 String aisleId,
-						 String productId,
-						 StoreModelService storeModelService,
-						 AuthenticationService authenticationService) {
+	private String token;
+
+	public CleaningEvent(String storeId, String productId, String aisleId, StoreModelService storeModelService, AuthenticationService authenticationService, String token) {
 		this.storeId = storeId;
-		this.aisleId = aisleId;
 		this.productId = productId;
+		this.aisleId = aisleId;
 		this.storeModelService = storeModelService;
 		this.authenticationService = authenticationService;
+		this.token = token;
 	}
 
 	/**
@@ -43,7 +42,6 @@ public class CleaningEvent implements Command {
 	 */
 	public void execute() throws StoreModelServiceException, AuthenticationServiceException {
 
-		String token = authenticationService.getCurrentUser().getToken().getId();
 		this.authenticationService.getInstance().checkAccess(token, storeId, "control_robot");
 
 		// find nearest robot

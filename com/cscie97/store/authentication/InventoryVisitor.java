@@ -10,19 +10,19 @@ public class InventoryVisitor extends Visitor {
 	 * @see Visitor#visit(User)
 	 */
 	public void visit(User user) {
-		report += "User: " + user.getName() + "\n";
+		report += "\t\tUser: " + user.getName() + "\n";
 		for (Entitlement e : user.getEntitlementList()){
 			if (e instanceof Role) {
 				Role subRole = (Role) e;
-				report += "\tRole: " + subRole.getId() + "\n";
+				report += "\t\t\tRole: " + subRole.getId() + "\n";
 			}
 			else if (e instanceof ResourceRole) {
 				ResourceRole resourceRole = (ResourceRole) e;
-				report += "\tResourceRole: " + resourceRole.getId() + "\n";
+				report += "\t\t\tResourceRole: " + resourceRole.getId() + "\n";
 			}
 			else if (e instanceof Permission) {
 				Permission permission = (Permission) e;
-				report += "\tPermission: " + permission.getId() + "\n";
+				report += "\t\t\tPermission: " + permission.getId() + "\n";
 			}
 		}
 	}
@@ -33,12 +33,12 @@ public class InventoryVisitor extends Visitor {
 	public void visit(Entitlement entitlement){
 		if (entitlement instanceof Role) {
 			Role subRole = (Role) entitlement;
-			report += "\tRole: " + subRole.getId() + "\n";
+			report += "\t\tRole: " + subRole.getId() + "\n";
 			visit(subRole);
 		}
 		else if (entitlement instanceof ResourceRole) {
 			ResourceRole resourceRole = (ResourceRole) entitlement;
-			report += "\tResourceRole: " + resourceRole.getId() + "\n\t";
+			report += "\t\tResourceRole: " + resourceRole.getId() + "\n\t";
 			visit(resourceRole);
 		}
 		else if (entitlement instanceof Permission) {
@@ -71,7 +71,7 @@ public class InventoryVisitor extends Visitor {
 	 * @see Visitor#visit(ResourceRole)
 	 */
 	public void visit(ResourceRole resourceRole) {
-		report += resourceRole.getId() + " " + resourceRole.getRole().getId() + " " + resourceRole.getResourceId() + "\n";
+		report += "\tResource ID: " + resourceRole.getResourceId() + "\n\t\tRole ID: " + resourceRole.getRole().getId() + "\n";
 	}
 
 
@@ -88,16 +88,19 @@ public class InventoryVisitor extends Visitor {
 	 */
 	public void visit(AuthenticationService authService) {
 		report += "AuthenticationService ID: " + authService.getId() + "\n";
+		report += "\t Permissions:\n";
 		for (Map.Entry<String, Entitlement> permission : authService.getEntitlementMap().entrySet()) {
 			if (permission.getValue() instanceof Permission) {
 				visit(permission.getValue());
 			}
 		}
+		report += "\t Roles:\n";
 		for (Map.Entry<String, Entitlement> role : authService.getEntitlementMap().entrySet()) {
-			if (role.getValue() instanceof Role) {
+			if (role.getValue() instanceof Role || role.getValue() instanceof ResourceRole) {
 				visit(role.getValue());
 			}
 		}
+		report += "\t Users:\n";
 		for (Map.Entry<String, User> user : authService.getUserMap().entrySet()) {
 			visit(user.getValue());
 		}

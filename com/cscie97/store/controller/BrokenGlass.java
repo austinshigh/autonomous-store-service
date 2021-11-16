@@ -21,16 +21,15 @@ public class BrokenGlass implements Command {
 
 	private AuthenticationService authenticationService;
 
-	public BrokenGlass(String storeId,
-					   String aisleId,
-					   String deviceId,
-					   StoreModelService storeModelService,
-					   AuthenticationService authenticationService) {
+	private String token;
+
+	public BrokenGlass(String storeId, String aisleId, String deviceId, StoreModelService storeModelService, AuthenticationService authenticationService, String token) {
 		this.storeId = storeId;
 		this.aisleId = aisleId;
 		this.deviceId = deviceId;
 		this.storeModelService = storeModelService;
 		this.authenticationService = authenticationService;
+		this.token = token;
 	}
 
 	/**
@@ -41,7 +40,6 @@ public class BrokenGlass implements Command {
 	 */
 	public void execute() throws StoreModelServiceException, AuthenticationServiceException {
 
-		String token = authenticationService.getCurrentUser().getToken().getId();
 		this.authenticationService.checkAccess(token, storeId, "control_robot");
 
 		// find nearest robot

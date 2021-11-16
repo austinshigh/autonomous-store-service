@@ -16,11 +16,11 @@ import java.util.Map;
  */
 public class EnterStore implements Command {
 
-	private String storeId;
-
 	private String customerId;
 
 	private String turnstileId;
+
+	private String storeId;
 
 	private StoreModelService storeModelService;
 
@@ -28,13 +28,16 @@ public class EnterStore implements Command {
 
 	private AuthenticationService authenticationService;
 
-	public EnterStore(String customerId, String turnstileId, String storeId, String aisleId, StoreModelService storeModelService, Ledger ledger, AuthenticationService authenticationService) {
+	private String token;
+
+	public EnterStore(String customerId, String turnstileId, String storeId, StoreModelService storeModelService, Ledger ledger, AuthenticationService authenticationService, String token) {
+		this.storeId = storeId;
 		this.customerId = customerId;
 		this.turnstileId = turnstileId;
-		this.storeId = storeId;
 		this.storeModelService = storeModelService;
 		this.ledger = ledger;
 		this.authenticationService = authenticationService;
+		this.token = token;
 	}
 
 	/**
@@ -53,8 +56,7 @@ public class EnterStore implements Command {
 	 */
 	public void execute() throws StoreModelServiceException, LedgerException, ControllerException, AuthenticationServiceException {
 
-		String token = authenticationService.getCurrentUser().getToken().getId();
-		this.authenticationService.getInstance().checkAccess(token, storeId, "enter_store");
+		this.authenticationService.checkAccess(token, storeId, "enter_store");
 
 
 		// get customer from storemodelservice

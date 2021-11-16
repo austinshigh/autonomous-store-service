@@ -45,7 +45,7 @@ add_role_to_user debra auth_admin_role
 get_inventory
 
 # logout from root user
-logout
+logout root
 
 # login as auth_admin_role to provision store users and entitlements.
 login faceprint faceprint-debra
@@ -199,8 +199,7 @@ add_role_to_user austin auth_readonly_role
 get_inventory
 
 # Logout
-logout
-
+logout debra
 
 
 
@@ -280,7 +279,7 @@ define-device SPEAKER001 name middle-aisle-speaker type speaker location store12
 define-device SPEAKER002 name middle-aisle-speaker type speaker location store123:3
 
 # log out of debra smart's account, login to customer account (austin high)
-logout
+logout debra
 login austin password austin123
 
 # Show sensor details using its unique id
@@ -299,7 +298,7 @@ show-device SPEAKER002
 define-store store123 storeName "costco" storeAddress "77 Elma St, San Luis, CA"
 
 # logout of austin
-logout
+logout austin
 
 # login sam password sam123
 

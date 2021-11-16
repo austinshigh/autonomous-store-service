@@ -1,6 +1,7 @@
 package com.cscie97.store.model;
 
 import com.cscie97.ledger.CommandProcessorException;
+import com.cscie97.ledger.Ledger;
 import com.cscie97.ledger.LedgerException;
 import com.cscie97.store.authentication.AuthenticationService;
 import com.cscie97.store.authentication.AuthenticationServiceException;
@@ -31,8 +32,6 @@ import static java.lang.Math.abs;
  */
 public class StoreModelService implements Subject {
 
-	private String authToken;
-
 	private AuthenticationService authenticationService;
 
 	private Map<String, Store> storeMap;
@@ -49,8 +48,7 @@ public class StoreModelService implements Subject {
 
 	private ArrayList<Observer> observerArrayList;
 
-	public StoreModelService(String authToken, AuthenticationService authenticationService) {
-		this.authToken = authToken;
+	public StoreModelService(AuthenticationService authenticationService) {
 		this.storeMap = new HashMap<String, Store>();
 		this.productMap = new HashMap<String, Product>();
 		this.basketMap = new HashMap<String, Basket>();
@@ -82,14 +80,9 @@ public class StoreModelService implements Subject {
 	 * @param permission permission
 	 * @throws AuthenticationServiceException com.cscie97.store.authentication. authentication service exception
 	 */
-	public void checkAccess(String permission) throws AuthenticationServiceException {
-		if (authenticationService.getCurrentUser() == null){
-			throw new AuthenticationServiceException("no user logged in");
-		}else {
-			String authToken = authenticationService.getCurrentUser().getToken().getId();
-			authenticationService.checkAccess(authToken, "provision_store");
+	public void checkAccess(String permission, String authToken) throws AuthenticationServiceException {
+			authenticationService.checkAccess(authToken, permission);
 		}
-	}
 
 	/**
 	 * check access
@@ -98,19 +91,15 @@ public class StoreModelService implements Subject {
 	 * @param permission permission
 	 * @throws AuthenticationServiceException com.cscie97.store.authentication. authentication service exception
 	 */
-	public void checkAccess(String resourceId, String permission) throws AuthenticationServiceException {
-		if (authenticationService.getCurrentUser() == null){
-			throw new AuthenticationServiceException("no user logged in");
-		}else {
-			String authToken = authenticationService.getCurrentUser().getToken().getId();
-			authenticationService.checkAccess(authToken, "provision_store");
+	public void checkAccess(String resourceId, String permission, String authToken) throws AuthenticationServiceException {
+			authenticationService.checkAccess(authToken, resourceId, permission);
 		}
-	}
 
+		
 	/**
 	 * Creates a new store and adds to the store map
 	 *
-	 * @param id id
+	 * @param storeId id
 	 * @param name name
 	 * @param street street
 	 * @param city city
@@ -118,15 +107,15 @@ public class StoreModelService implements Subject {
 	 * @return {@link String}
 	 * @see String
 	 */
-	public String createStore(String id, String name, String street, String city, String state) throws StoreModelServiceException, AuthenticationServiceException {
-		checkAccess(id, "provision_store");
-		if (storeMap.containsKey(id)){
-			throw new StoreModelServiceException("create store", "store with store id: [" + id + "] already exists");
+	public String createStore(String storeId, String name, String street, String city, String state, String authToken) throws StoreModelServiceException, AuthenticationServiceException {
+		authenticationService.checkAccess(authToken, storeId, "provision_store");
+		if (storeMap.containsKey(storeId)){
+			throw new StoreModelServiceException("create store", "store with store id: [" + storeId + "] already exists");
 		}
 		Address address = new Address(street, city, state);
-		Store nextStore = new Store(id, name, address);
-		storeMap.put(id, nextStore);
-		return id;
+		Store nextStore = new Store(storeId, name, address);
+		storeMap.put(storeId, nextStore);
+		return storeId;
 	}
 
 	/**
@@ -143,8 +132,8 @@ public class StoreModelService implements Subject {
 	 * @see String
 	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
 	 */
-	public String createAisle(String storeId, String aisleNumber, String name, String description, String location) throws StoreModelServiceException, AuthenticationServiceException {
-		checkAccess("provision_store");
+	public String createAisle(String storeId, String aisleNumber, String name, String description, String location, String authToken) throws StoreModelServiceException, AuthenticationServiceException {
+		authenticationService.checkAccess(authToken, "provision_store");
 		Aisle nextAisle = new Aisle(aisleNumber, name, description, location);
 		if (!(location.equals("store_room") || location.equals("floor"))){
 			throw new StoreModelServiceException("create aisle", "aisle must be located in 'store_room' or 'floor'," +
@@ -183,8 +172,8 @@ public class StoreModelService implements Subject {
 	 * @see String
 	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
 	 */
-	public String createShelf(String storeId, String aisleNumber, String shelfId, String name, String description, String height) throws StoreModelServiceException, AuthenticationServiceException {
-		checkAccess("provision_store");
+	public String createShelf(String storeId, String aisleNumber, String shelfId, String name, String description, String height, String authToken) throws StoreModelServiceException, AuthenticationServiceException {
+		authenticationService.checkAccess(authToken, storeId, "provision_store");
 		Shelf nextShelf = new Shelf(shelfId, name, description, height);
 		getAisle(storeId, aisleNumber).createShelf(nextShelf);
 		return shelfId;
@@ -205,8 +194,8 @@ public class StoreModelService implements Subject {
 	 * @see String
 	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
 	 */
-	public String createShelf(String storeId, String aisleNumber, String shelfId, String name, String description, String height, String temperature) throws StoreModelServiceException, AuthenticationServiceException {
-		checkAccess("provision_store");
+	public String createShelf(String storeId, String aisleNumber, String shelfId, String name, String description, String height, String temperature, String authToken) throws StoreModelServiceException, AuthenticationServiceException {
+		authenticationService.checkAccess(authToken, storeId, "provision_store");
 		Shelf nextShelf = new Shelf(shelfId, name, description, height, temperature);
 		getAisle(storeId, aisleNumber).createShelf(nextShelf);
 		return shelfId;
@@ -261,8 +250,8 @@ public class StoreModelService implements Subject {
 	 */
 	public String createProduct(String productId, String name, String description,
 								String size, String category,
-								int unitPrice, String temperature) throws StoreModelServiceException, AuthenticationServiceException {
-		checkAccess("provision_store");
+								int unitPrice, String temperature, String authToken) throws StoreModelServiceException, AuthenticationServiceException {
+		authenticationService.checkAccess(authToken, "provision_store");
 		if (!productMap.isEmpty() && productMap.containsKey(productId)){
 			throw new StoreModelServiceException("create product", "product must have unique id, [" + productId +
 					"] is not unique");
@@ -296,8 +285,9 @@ public class StoreModelService implements Subject {
 								String description,
 								String size,
 								String category,
-								int unitPrice) throws StoreModelServiceException, AuthenticationServiceException {
-		checkAccess("provision_store");
+								int unitPrice,
+								String authToken) throws StoreModelServiceException, AuthenticationServiceException {
+		authenticationService.checkAccess(authToken, "provision_store");
 		if (!productMap.isEmpty() && productMap.containsKey(productId)){
 			throw new StoreModelServiceException("create product", "product must have unique id, [" + productId +
 					"] is not unique");
@@ -370,8 +360,8 @@ public class StoreModelService implements Subject {
 	 */
 	public String createCustomer(String customerId, String firstName,
 								 String lastName, boolean registered,
-								 String email, String accountAddress) throws StoreModelServiceException, AuthenticationServiceException {
-		checkAccess("provision_store");
+								 String email, String accountAddress, String authToken) throws StoreModelServiceException, AuthenticationServiceException {
+		authenticationService.checkAccess(authToken, "provision_store");
 		if (!customerMap.isEmpty() && customerMap.containsKey(customerId)){
 			throw new StoreModelServiceException("create customer", "customer must have unique id, [" + customerId
 			+ "] is not a unique id");
@@ -457,9 +447,10 @@ public class StoreModelService implements Subject {
 								  String inventoryId,
 								  int capacity,
 								  int count,
-								  String productId
+								  String productId,
+								  String authToken
 								  ) throws StoreModelServiceException, AuthenticationServiceException {
-		checkAccess("provision_store");
+		authenticationService.checkAccess(authToken, storeId, "provision_store");
 		if (count > capacity){
 			// if inventory count is greater than capacity, throw error
 			throw new StoreModelServiceException("create inventory", "inventory count [" +
@@ -564,8 +555,9 @@ public class StoreModelService implements Subject {
 							   String name,
 							   String type,
 							   String storeId,
-							   String aisleId) throws StoreModelServiceException, AuthenticationServiceException {
-		checkAccess("provision_store");
+							   String aisleId,
+							   String authToken) throws StoreModelServiceException, AuthenticationServiceException {
+		authenticationService.checkAccess(authToken, "provision_store");
 		if (!deviceIdMap.isEmpty() && deviceIdMap.containsKey(sensorId)){
 			throw new StoreModelServiceException("create sensor", "new sensor requires unique device id [" +
 					sensorId + "] is not unique");
@@ -602,8 +594,8 @@ public class StoreModelService implements Subject {
 	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
 	 */
 	public String createAppliance(String applianceId, String name,
-								  String type, String storeId, String aisleId) throws StoreModelServiceException, AuthenticationServiceException {
-		checkAccess("provision_store");
+								  String type, String storeId, String aisleId, String authToken) throws StoreModelServiceException, AuthenticationServiceException {
+		authenticationService.checkAccess(authToken, "provision_store");
 		if (!deviceIdMap.isEmpty() && deviceIdMap.containsKey(applianceId)){
 			throw new StoreModelServiceException("createAppliance", "new appliance requires unique device id, [" +
 					applianceId + "] is not unique");
@@ -669,7 +661,6 @@ public class StoreModelService implements Subject {
 	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
 	 */
 	public String defineBasket(String basketId) throws StoreModelServiceException, AuthenticationServiceException {
-		checkAccess("provision_store");
 		if (basketMap.containsKey(basketId)){
 			throw new StoreModelServiceException("define basket", "basket id: [" + basketId + "] already exists");
 		}
@@ -799,6 +790,14 @@ public class StoreModelService implements Subject {
 		return basketMap.get(basketId);
 	}
 
+	public String login(String firstCredential, String secondCredential) throws AuthenticationServiceException {
+		if (firstCredential.equals("faceprint") || firstCredential.equals("voiceprint")){
+			return authenticationService.login(firstCredential,secondCredential);
+		}else{
+			return authenticationService.login(firstCredential, "password", secondCredential);
+		}
+	}
+
 
 	/**
 	 * Parses event string, instantiates event,
@@ -812,13 +811,9 @@ public class StoreModelService implements Subject {
 	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
 	 * @throws LedgerException com.cscie97.ledger. ledger exception
 	 */
-	public String createEvent(String deviceId, String event, String userName, String credential) throws StoreModelServiceException, LedgerException, ControllerException, AuthenticationServiceException {
+	public String createEvent(String deviceId, String event, String firstCredential, String secondCredential) throws StoreModelServiceException, LedgerException, ControllerException, AuthenticationServiceException {
 		String[] eventArgs = event.split(" ");
-		if (userName.equals("voiceprint")||userName.equals("faceprint")){
-			authenticationService.login(userName, credential);
-		}else {
-			authenticationService.login(userName, "password", credential);
-		}
+		String authToken = login(firstCredential, secondCredential);
 		Device selectedDevice = getDevice(deviceId);
 		Event createdEvent;
 		switch(eventArgs[0]){
@@ -828,7 +823,7 @@ public class StoreModelService implements Subject {
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 				}else{
 					String[] storeAisleShelf = eventArgs[4].split(":");
-					createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2], eventArgs[3], storeAisleShelf[0], storeAisleShelf[1], storeAisleShelf[2], eventArgs[5]);
+					createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2], eventArgs[3], storeAisleShelf[0], storeAisleShelf[1], storeAisleShelf[2], eventArgs[5], authToken);
 				}
 				break;
 			case "enter-store":
@@ -836,8 +831,8 @@ public class StoreModelService implements Subject {
 				throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 			}else{
 				String[] storeAisle = eventArgs[3].split(":");
-				createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2], storeAisle[0], storeAisle[1]);
-			}
+				createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2], storeAisle[0], storeAisle[1], authToken);
+				}
 			break;
 			case "checkout":
 			case "assist-customer":
@@ -845,14 +840,14 @@ public class StoreModelService implements Subject {
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 				}else{
 					String[] storeAisleShelf = eventArgs[2].split(":");
-					createdEvent = new Event(eventArgs[0], eventArgs[1], storeAisleShelf[0], storeAisleShelf[1], deviceId);
+					createdEvent = new Event(eventArgs[0], eventArgs[1], storeAisleShelf[0], storeAisleShelf[1], deviceId, authToken);
 				}
 				break;
 			case "missing-person":
 				if (eventArgs.length != 3){
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 				}else{
-					createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2], deviceId);
+					createdEvent = new Event(eventArgs[0], eventArgs[1], eventArgs[2], deviceId, authToken);
 				}
 				break;
 			case "customer-seen":
@@ -862,7 +857,7 @@ public class StoreModelService implements Subject {
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 				}else{
 					String[] storeAisleShelf = eventArgs[2].split(":");
-					createdEvent = new Event(eventArgs[0], eventArgs[1], storeAisleShelf[0], storeAisleShelf[1]);
+					createdEvent = new Event(eventArgs[0], eventArgs[1], storeAisleShelf[0], storeAisleShelf[1], authToken);
 				}
 				break;
 			case "product-spill":
@@ -870,7 +865,7 @@ public class StoreModelService implements Subject {
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 				}else{
 					String[] storeAisleShelf = eventArgs[1].split(":");
-					createdEvent = new Event(eventArgs[0], storeAisleShelf[0], storeAisleShelf[1], eventArgs[2]);
+					createdEvent = new Event(eventArgs[0], storeAisleShelf[0], storeAisleShelf[1], eventArgs[2], authToken);
 				}
 				break;
 			case "broken-glass":
@@ -878,7 +873,7 @@ public class StoreModelService implements Subject {
 					throw new StoreModelServiceException("incorrect event arguments", event + " has incorrect number of arguments");
 				}else{
 					String[] storeAisleShelf = eventArgs[1].split(":");
-					createdEvent = new Event(eventArgs[0], storeAisleShelf[0], storeAisleShelf[1], deviceId);
+					createdEvent = new Event(eventArgs[0], storeAisleShelf[0], storeAisleShelf[1], deviceId, authToken);
 				}
 				break;
 			default:
@@ -888,7 +883,7 @@ public class StoreModelService implements Subject {
 		selectedDevice.getEventLogger().add(createdEvent);
 		// notify observers of new event
 		notify(createdEvent);
-		authenticationService.logout();
+		authenticationService.logoutWithToken(authToken);
 		return("");
 	}
 
@@ -998,25 +993,6 @@ public class StoreModelService implements Subject {
 						"only appliances: robots, turnstiles, and speakers, can receive commands");
 		}
 		return result;
-	}
-
-
-	/**
-	 * get field
-	 *
-	 * @return authToken
-	 */
-	public String getAuthToken() {
-		return this.authToken;
-	}
-
-	/**
-	 * set field
-	 *
-	 * @param authToken
-	 */
-	public void setAuthToken(String authToken) {
-		this.authToken = authToken;
 	}
 
 	/**

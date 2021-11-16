@@ -39,7 +39,7 @@ public class StoreController implements Observer {
 	public void update(Event event) throws StoreModelServiceException, LedgerException, ControllerException, AuthenticationServiceException {
 		switch(event.getEventType()){
 			case "emergency":
-				Emergency emergency = new Emergency(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService, authenticationService);
+				Emergency emergency = new Emergency(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService, authenticationService, event.getToken());
 				emergency.execute();
 				break;
 			case "missing-person":
@@ -47,7 +47,7 @@ public class StoreController implements Observer {
 				missingPerson.execute();
 				break;
 			case "fetch-product":
-				FetchProduct fetchProduct = new FetchProduct(event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3(), event.getArg4(), event.getArg5(), event.getArg6(), storeModelService, authenticationService);
+				FetchProduct fetchProduct = new FetchProduct(event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3(), event.getArg4(), event.getArg5(), event.getArg6(), storeModelService, authenticationService, event.getToken());
 				fetchProduct.execute();
 				break;
 			case "basket-event":
@@ -55,31 +55,31 @@ public class StoreController implements Observer {
 				basketEvent.execute();
 				break;
 			case "customer-seen":
-				CustomerSeen customerSeen = new CustomerSeen(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService, authenticationService);
+				CustomerSeen customerSeen = new CustomerSeen(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService, authenticationService, event.getToken());
 				customerSeen.execute();
 				break;
 			case "broken-glass":
-				BrokenGlass brokenGlass = new BrokenGlass(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService, authenticationService);
+				BrokenGlass brokenGlass = new BrokenGlass(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService, authenticationService, event.getToken());
 				brokenGlass.execute();
 				break;
 			case "product-spill":
-				CleaningEvent cleaningEvent = new CleaningEvent(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService, authenticationService);
+				CleaningEvent cleaningEvent = new CleaningEvent(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService, authenticationService, event.getToken());
 				cleaningEvent.execute();
 				break;
 			case "enter-store":
-				EnterStore enterStore = new EnterStore(event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3(), storeModelService, ledger, authenticationService);
+				EnterStore enterStore = new EnterStore(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService, ledger, authenticationService, event.getToken());
 				enterStore.execute();
 				break;
 			case "check-acc-bal":
-				CheckAccountBalance checkAccountBalance = new CheckAccountBalance(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService, ledger, authenticationService);
+				CheckAccountBalance checkAccountBalance = new CheckAccountBalance(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService, ledger, authenticationService, event.getToken());
 				checkAccountBalance.execute();
 				break;
 			case "checkout":
-				Checkout checkout = new Checkout(event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3(), storeModelService, ledger, authenticationService);
+				Checkout checkout = new Checkout(event.getArg0(), event.getArg1(), event.getArg2(), event.getArg3(), storeModelService, ledger, authenticationService, event.getToken());
 				checkout.execute();
 				break;
 			case "assist-customer":
-				AssistCustomerToCar assistCustomerToCar = new AssistCustomerToCar(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService, authenticationService);
+				AssistCustomerToCar assistCustomerToCar = new AssistCustomerToCar(event.getArg0(), event.getArg1(), event.getArg2(), storeModelService, authenticationService, event.getToken());
 				assistCustomerToCar.execute();
 				break;
 		}

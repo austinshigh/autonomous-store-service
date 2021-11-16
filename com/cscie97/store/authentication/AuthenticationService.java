@@ -12,8 +12,6 @@ public class AuthenticationService extends Visitable {
 
 	private AuthenticationServiceException AuthenticationServiceException;
 
-	private User currentUser;
-
 	private Visitor visitor;
 
 	private Map<String, User> userMap;
@@ -51,7 +49,7 @@ public class AuthenticationService extends Visitable {
 		if (checkAccess.isPermissionFound()){
 			return true;
 		}else{
-			throw new AuthenticationServiceException("Permission Not Found: " + permission);
+			throw new AuthenticationServiceException("User does not have permission: " + permission);
 		}
 	}
 
@@ -61,7 +59,7 @@ public class AuthenticationService extends Visitable {
 		if (checkAccess.isPermissionFound()){
 			return true;
 		}else{
-			throw new AuthenticationServiceException("Permission Not Found: " + permission);
+			throw new AuthenticationServiceException("User does not have permission: " + permission);
 		}
 	}
 
@@ -73,11 +71,11 @@ public class AuthenticationService extends Visitable {
 			tokenId = login(publicKey, privateKey);
 		}
 		CheckAccessVisitor checkAccess = new CheckAccessVisitor(tokenId, resourceId, permissionId);
-		checkAccess.visit(currentUser);
+		checkAccess.visit(getInstance());
 		if (checkAccess.isPermissionFound()){
 			return "Success: Permission Authorized.";
 		}else{
-			throw new AuthenticationServiceException("Permission Not Found: " + permissionId);
+			throw new AuthenticationServiceException("User does not have permission: " + permissionId);
 		}
 	}
 
@@ -96,7 +94,6 @@ public class AuthenticationService extends Visitable {
 			}else{
 				tokenId = user.getToken().getId();
 			}
-			setCurrentUser(user);
 			return tokenId;
 		}
 		catch(AuthenticationServiceException e){
@@ -110,7 +107,7 @@ public class AuthenticationService extends Visitable {
 				String facePrint = entry.getValue().getFacePrint().getValue();
 				if (facePrint != null) {
 					if (facePrint.equals(credential)) {
-						return login(entry.getValue().getId(), type, credential);
+						return login(entry.getValue().getId(), "faceprint", credential);
 					}
 				}
 			}
@@ -119,7 +116,7 @@ public class AuthenticationService extends Visitable {
 				String voicePrint = entry.getValue().getVoicePrint().getValue();
 				if (voicePrint != null) {
 					if (voicePrint.equals(credential)) {
-						return login(entry.getValue().getId(), type, credential);
+						return login(entry.getValue().getId(), "voiceprint", credential);
 					}
 				}
 			}
@@ -142,8 +139,12 @@ public class AuthenticationService extends Visitable {
 		return "user created: " + id;
 	}
 
-	public User getUser(String id){
-		return userMap.get(id);
+	public User getUser(String id) throws AuthenticationServiceException {
+		if (userMap.containsKey(id)){
+			return userMap.get(id);
+		}else{
+			throw new AuthenticationServiceException("User with id not found: " + id);
+		}
 	}
 
 	public String addUserCredential(String userId, String type, String value) throws AuthenticationServiceException {
@@ -165,11 +166,23 @@ public class AuthenticationService extends Visitable {
 		return type + " added to user: " + userId;
 	}
 
-	public String logout() {
+	public String logout(String userId) throws AuthenticationServiceException {
+		User currentUser = getUser(userId);
 		currentUser.getToken().invalidateToken();
 		String message = currentUser.getId() + " logged out.";
-		currentUser = null;
 		return message;
+	}
+
+	public String logoutWithToken(String authToken) throws AuthenticationServiceException {
+		for (Map.Entry<String, User> user : userMap.entrySet()){
+			if (user.getValue().getToken().getId() != null){
+				if (user.getValue().getToken().getId().equals(authToken)) {
+					user.getValue().getToken().invalidateToken();
+					return user.getValue().getId() + " logged out.";
+				}
+			}
+		}
+		throw new AuthenticationServiceException("Unsuccessful Logout");
 	}
 
 	public String createPermission(String id, String name, String description) throws AuthenticationServiceException {
@@ -248,7 +261,7 @@ public class AuthenticationService extends Visitable {
 		return "permission: " + permissionId + " added to role: " + roleId;
 	}
 
-	public void addPermissionToUser(String userId, String permissionId) {
+	public void addPermissionToUser(String userId, String permissionId) throws AuthenticationServiceException {
 		Permission permission = getPermission(permissionId);
 		User user = getUser(userId);
 		user.addPermission(permission);
@@ -405,22 +418,4 @@ public class AuthenticationService extends Visitable {
 		this.entitlementMap = entitlementMap;
 	}
 
-
-	/**
-	 * get field
-	 *
-	 * @return currentUser
-	 */
-	public User getCurrentUser() {
-		return this.currentUser;
-	}
-
-	/**
-	 * set field
-	 *
-	 * @param currentUser
-	 */
-	public void setCurrentUser(User currentUser) {
-		this.currentUser = currentUser;
-	}
 }
