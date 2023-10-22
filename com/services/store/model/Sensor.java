@@ -1,4 +1,4 @@
-package com.cscie97.store.model;
+package com.services.store.model;
 
 /**
  *  Sensor class provides abstraction for device class

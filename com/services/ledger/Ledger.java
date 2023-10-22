@@ -1,6 +1,6 @@
-package com.cscie97.ledger;
-import com.cscie97.store.authentication.AuthenticationService;
-import com.cscie97.store.authentication.AuthenticationServiceException;
+package com.services.ledger;
+import com.services.store.authentication.AuthenticationService;
+import com.services.store.authentication.AuthenticationServiceException;
 
 import java.util.*;
 
@@ -52,7 +52,7 @@ public class Ledger {
      * for ledger by creating master account.
      *
      * Used after instantiation of new ledger.
-     * @throws LedgerException com.cscie97.ledger. ledger exception
+     * @throws LedgerException com.services.ledger. ledger exception
      */
     public void fundLedger() throws LedgerException, AuthenticationServiceException {
         if (blockMap.size() != 0){
@@ -67,7 +67,7 @@ public class Ledger {
      *
      * @param address address for new account (must be unique)
      * @return New Account
-     * @throws LedgerException com.cscie97.ledger. ledger exception
+     * @throws LedgerException com.services.ledger. ledger exception
      */
     public Account createAccount(String address, String authToken) throws LedgerException, AuthenticationServiceException {
         authenticationService.checkAccess(authToken, "provision_store");
@@ -100,7 +100,7 @@ public class Ledger {
      *
      * @param address address for new account (must be unique)
      * @return New Account
-     * @throws LedgerException com.cscie97.ledger. ledger exception
+     * @throws LedgerException com.services.ledger. ledger exception
      */
     private Account createAccount(String address) throws LedgerException, AuthenticationServiceException {
         // retrieve last entry in blockchain
@@ -133,7 +133,7 @@ public class Ledger {
      *
      * @param address address for new account (must be unique)
      * @return New Account
-     * @throws LedgerException com.cscie97.ledger. ledger exception
+     * @throws LedgerException com.services.ledger. ledger exception
      */
     private Account createAccountFundLedger(String address) throws LedgerException {
         // retrieve last entry in blockchain
@@ -169,7 +169,7 @@ public class Ledger {
      *
      * @param address account address
      * @return {@link int}
-     * @throws LedgerException com.cscie97.ledger. ledger exception
+     * @throws LedgerException com.services.ledger. ledger exception
      */
     public int getAccountBalance(String address) throws LedgerException {
         // instantiate last entry in blockchain, this entry is yet to be committed
@@ -199,7 +199,7 @@ public class Ledger {
      * @see HashMap
      * @see String
      * @see Integer
-     * @throws LedgerException com.cscie97.ledger. ledger exception
+     * @throws LedgerException com.services.ledger. ledger exception
      */
     public HashMap<String, Integer> getAccountBalances() throws LedgerException {
         // create hashmap for return object
@@ -258,7 +258,7 @@ public class Ledger {
      * @param blockNumber blockNumber
      * @return {@link Block}
      * @see Block
-     * @throws LedgerException com.cscie97.ledger. ledger exception
+     * @throws LedgerException com.services.ledger. ledger exception
      */
     public Block getBlock(int blockNumber) throws LedgerException{
         if (blockNumber > blockMap.size() - 1){
@@ -292,7 +292,7 @@ public class Ledger {
      * @param transaction transaction
      * @return {@link String}
      * @see String
-     * @throws LedgerException com.cscie97.ledger. ledger exception
+     * @throws LedgerException com.services.ledger. ledger exception
      */
     public String processTransaction(Transaction transaction) throws LedgerException, AuthenticationServiceException {
         String payerAddress = transaction.getPayer();
@@ -373,7 +373,7 @@ public class Ledger {
      * and transfers account balances from current block to new block.
      *
      * @param currentBlock currentBlock
-     * @throws LedgerException com.cscie97.ledger. ledger exception
+     * @throws LedgerException com.services.ledger. ledger exception
      */
     private void blockFull(Block currentBlock) throws LedgerException, AuthenticationServiceException {
         // compute and hash for current block
@@ -429,7 +429,7 @@ public class Ledger {
      * each completed block has exactly 10 transactions,
      * the hash of each block is equal to the following block's previousHash field.
      *
-     * @throws LedgerException com.cscie97.ledger. ledger exception
+     * @throws LedgerException com.services.ledger. ledger exception
      */
     public void validate() throws LedgerException{
         for (Map.Entry<Integer, Block>

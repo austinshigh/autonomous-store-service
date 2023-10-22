@@ -1,4 +1,4 @@
-package com.cscie97.store.model;
+package com.services.store.model;
 
 /**
  *  Stores product attributes that are referenced by inventory objects

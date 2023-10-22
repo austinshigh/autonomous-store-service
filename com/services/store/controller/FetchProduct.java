@@ -1,9 +1,9 @@
-package com.cscie97.store.controller;
+package com.services.store.controller;
 
 
-import com.cscie97.store.authentication.AuthenticationService;
-import com.cscie97.store.authentication.AuthenticationServiceException;
-import com.cscie97.store.model.*;
+import com.services.store.authentication.AuthenticationService;
+import com.services.store.authentication.AuthenticationServiceException;
+import com.services.store.model.*;
 
 /**
  *  Commmands robot to fetch product for customer,

@@ -1,4 +1,4 @@
-package com.cscie97.store.model;
+package com.services.store.model;
 
 /**
  *  Tracks location of customers and devices.

@@ -1,4 +1,4 @@
-package com.cscie97.store.model;
+package com.services.store.model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +52,7 @@ public class Basket {
 	 *
 	 * @param productId productId
 	 * @param count count
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public void removeProductFromBasket(String productId, int count) throws StoreModelServiceException {
 		if (count <= 0){
@@ -79,7 +79,7 @@ public class Basket {
 	 *
 	 * @param productId productId
 	 * @param count count
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public void addProductToBasket(String productId, int count) throws StoreModelServiceException {
 		if (count <= 0){
@@ -108,7 +108,7 @@ public class Basket {
 	 *
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String showBasketItems() throws StoreModelServiceException {
 		if (this.customer == null){

@@ -1,4 +1,4 @@
-java -cp . com.cscie97.store.test.TestDriver store_b.script
+java -cp . com.services.store.test.TestDriver store_b.script
 
 
 # Define a store - this creates a ledger and transfers 20000 Units to the store
@@ -141,7 +141,7 @@ ROBOT003: Command Received: assist customers leaving the store: STORE002
 
 # Should throw incorrect number of arguments error
 >>> create-event CAMERA002 "customer-seen CUSTOMER00003 STORE002:2"
-cscie97.store.model.CommandProcessorException:
+services.store.model.CommandProcessorException:
 command = 'create-event CAMERA002 "customer-seen CUSTOMER00003 STORE002:2"'
 reason = 'command should follow form:
 create-event <device_id> event <event>'

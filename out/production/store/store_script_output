@@ -1,4 +1,4 @@
-java -cp . com.cscie97.store.test.TestDriver store.script
+java -cp . com.services.store.test.TestDriver store.script
 # Define a store - this creates a ledger and transfers 20000 Units to the store
 >>> define-store STORE001 storeName "costco" storeAddress "77 Elma St, San Luis, CA"
 new store id: STORE001

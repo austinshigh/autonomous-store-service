@@ -3,6 +3,16 @@
 **Date:** 9/23/2021  
 **Author:** Austin High
 
+Command to Build program:
+
+javac com/services/store/model/\*.java com/services/store/controller/\*.java com/services/ledger/\*.java com/services/store/test/\*.java
+
+Command to Run tests:
+
+java -cp . com.services.store.test.TestDriver store.script
+java -cp . com.services.store.test.TestDriver store_b.script
+java -cp . com.services.store.test.TestDriver store_c.script
+
 ### Introduction
 
 Improvements in sensors, robots, and electronic payment capabilities have made the fully automated store a reality. This document outlines the implementation of a Controller that is part of a larger back-end service for a grocery store that operates without employees. Robots stock shelves, clean floors, check inventory, fetch items for customers, and respond to customer questions. Sensor-embedded turnstiles check out customers and monitor for fires. Cameras monitor customers' location throughout stores.
@@ -157,7 +167,7 @@ The following class diagram **/diagrams** defines the classes defined in the des
 
 ### Class Dictionary
 
-This section specifies the class dictionary for the Store Model Service. Device and Observer are defined within the package "com.cscie97.store.model". The remaining classes should be defined within the package "com.cscie97.store.controller".
+This section specifies the class dictionary for the Store Model Service. Device and Observer are defined within the package "com.services.store.model". The remaining classes should be defined within the package "com.services.store.controller".
 
 **Device**
 
@@ -425,17 +435,17 @@ The Controller provides automation for the Sensor and Appliance behavior within 
 
 **Testing**
 
-Implement a test driver class called TestDriver that implements a static main() method. The main() method should accept a single parameter, which is a command file. The main method will call the CommandProcessor.processCommandFile(file:string) method, passing in the name of the provided command file. The TestDriver class should be defined within the package "cscie97.store.test".
+Implement a test driver class called TestDriver that implements a static main() method. The main() method should accept a single parameter, which is a command file. The main method will call the CommandProcessor.processCommandFile(file:string) method, passing in the name of the provided command file. The TestDriver class should be defined within the package "services.store.test".
 
 Three test CLI files will be included. They contain the API commands included in the "Assignment3_Script_Syntax.pdf" document.
 
 Command to build program:
 
-javac com/cscie97/store/model/_.java com/cscie97/store/controller/_.java com/cscie97/ledger/_.java com/cscie97/store/test/_.java
+javac com/services/store/model/_.java com/services/store/controller/_.java com/services/ledger/_.java com/services/store/test/_.java
 
-java -cp . com/cscie97.store.test.TestDriver store.script
-java -cp . com.cscie97.store.test.TestDriver store_b.script
-java -cp . com.cscie97.store.test.TestDriver store_c.script
+java -cp . com/services.store.test.TestDriver store.script
+java -cp . com.services.store.test.TestDriver store_b.script
+java -cp . com.services.store.test.TestDriver store_c.script
 
 **Risks**
 

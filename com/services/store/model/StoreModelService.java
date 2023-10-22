@@ -1,11 +1,11 @@
-package com.cscie97.store.model;
+package com.services.store.model;
 
-import com.cscie97.ledger.CommandProcessorException;
-import com.cscie97.ledger.Ledger;
-import com.cscie97.ledger.LedgerException;
-import com.cscie97.store.authentication.AuthenticationService;
-import com.cscie97.store.authentication.AuthenticationServiceException;
-import com.cscie97.store.controller.ControllerException;
+import com.services.ledger.CommandProcessorException;
+import com.services.ledger.Ledger;
+import com.services.ledger.LedgerException;
+import com.services.store.authentication.AuthenticationService;
+import com.services.store.authentication.AuthenticationServiceException;
+import com.services.store.controller.ControllerException;
 
 import javax.naming.AuthenticationException;
 import java.time.LocalDateTime;
@@ -65,7 +65,7 @@ public class StoreModelService implements Subject {
 	 * @param storeId storeId
 	 * @return {@link Store}
 	 * @see Store
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public Store getStore(String storeId) throws StoreModelServiceException {
 		if (!storeMap.containsKey(storeId)){
@@ -78,7 +78,7 @@ public class StoreModelService implements Subject {
 	 * check access
 	 *
 	 * @param permission permission
-	 * @throws AuthenticationServiceException com.cscie97.store.authentication. authentication service exception
+	 * @throws AuthenticationServiceException com.services.store.authentication. authentication service exception
 	 */
 	public void checkAccess(String permission, String authToken) throws AuthenticationServiceException {
 			authenticationService.checkAccess(authToken, permission);
@@ -89,7 +89,7 @@ public class StoreModelService implements Subject {
 	 *
 	 * @param resourceId resourceId
 	 * @param permission permission
-	 * @throws AuthenticationServiceException com.cscie97.store.authentication. authentication service exception
+	 * @throws AuthenticationServiceException com.services.store.authentication. authentication service exception
 	 */
 	public void checkAccess(String resourceId, String permission, String authToken) throws AuthenticationServiceException {
 			authenticationService.checkAccess(authToken, resourceId, permission);
@@ -130,7 +130,7 @@ public class StoreModelService implements Subject {
 	 * @param location location
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String createAisle(String storeId, String aisleNumber, String name, String description, String location, String authToken) throws StoreModelServiceException, AuthenticationServiceException {
 		authenticationService.checkAccess(authToken, "provision_store");
@@ -150,7 +150,7 @@ public class StoreModelService implements Subject {
 	 * @param aisleId aisleId
 	 * @return {@link Aisle}
 	 * @see Aisle
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public Aisle getAisle(String storeId, String aisleId) throws StoreModelServiceException {
 		return getStore(storeId).getAisle(aisleId);
@@ -170,7 +170,7 @@ public class StoreModelService implements Subject {
 	 * @param height height
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String createShelf(String storeId, String aisleNumber, String shelfId, String name, String description, String height, String authToken) throws StoreModelServiceException, AuthenticationServiceException {
 		authenticationService.checkAccess(authToken, storeId, "provision_store");
@@ -192,7 +192,7 @@ public class StoreModelService implements Subject {
 	 * @param temperature temperature
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String createShelf(String storeId, String aisleNumber, String shelfId, String name, String description, String height, String temperature, String authToken) throws StoreModelServiceException, AuthenticationServiceException {
 		authenticationService.checkAccess(authToken, storeId, "provision_store");
@@ -209,7 +209,7 @@ public class StoreModelService implements Subject {
 	 * @param shelfId shelfId
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String showShelfDetails(String storeId, String aisleId, String shelfId) throws StoreModelServiceException {
 		return getAisle(storeId,aisleId).getShelf(shelfId).toString();
@@ -221,7 +221,7 @@ public class StoreModelService implements Subject {
 	 * @param productId productId
 	 * @return {@link Product}
 	 * @see Product
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public Product getProduct(String productId) throws StoreModelServiceException {
 		if (productMap.isEmpty() || !productMap.containsKey(productId)) {
@@ -246,7 +246,7 @@ public class StoreModelService implements Subject {
 	 * @param temperature temperature
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String createProduct(String productId, String name, String description,
 								String size, String category,
@@ -278,7 +278,7 @@ public class StoreModelService implements Subject {
 	 * @param unitPrice unitPrice
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String createProduct(String productId,
 								String name,
@@ -333,7 +333,7 @@ public class StoreModelService implements Subject {
 	 * @param customerId customerId
 	 * @return {@link Customer}
 	 * @see Customer
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public Customer getCustomer(String customerId) throws StoreModelServiceException {
 		if (customerMap.isEmpty() || !customerMap.containsKey(customerId)) {
@@ -356,7 +356,7 @@ public class StoreModelService implements Subject {
 	 * @param accountAddress accountAddress
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String createCustomer(String customerId, String firstName,
 								 String lastName, boolean registered,
@@ -386,7 +386,7 @@ public class StoreModelService implements Subject {
 	 * @param aisleId aisleId
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String updateCustomerLocation(String customerId, String storeId, String aisleId) throws StoreModelServiceException {
 		// instantiate new location object
@@ -414,7 +414,7 @@ public class StoreModelService implements Subject {
 	 * @param inventoryId inventoryId
 	 * @return {@link Inventory}
 	 * @see Inventory
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public Inventory getInventoryItem(String inventoryId) throws StoreModelServiceException {
 		if (inventoryIdMap.isEmpty() || !inventoryIdMap.containsKey(inventoryId)) {
@@ -439,7 +439,7 @@ public class StoreModelService implements Subject {
 	 * @param productId productId
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String createInventory(String storeId,
 								  String aisleId,
@@ -483,7 +483,7 @@ public class StoreModelService implements Subject {
 	 * @param change change
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String updateInventory(String inventoryId, String change) throws StoreModelServiceException {
 		Inventory item = getInventoryItem(inventoryId);
@@ -496,7 +496,7 @@ public class StoreModelService implements Subject {
 	 * @param deviceId deviceId
 	 * @return {@link Device}
 	 * @see Device
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public Device getDevice(String deviceId) throws StoreModelServiceException {
 		if (!deviceIdMap.containsKey(deviceId)){
@@ -549,7 +549,7 @@ public class StoreModelService implements Subject {
 	 * @param aisleId aisleId
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String createSensor(String sensorId,
 							   String name,
@@ -591,7 +591,7 @@ public class StoreModelService implements Subject {
 	 * @param aisleId aisleId
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String createAppliance(String applianceId, String name,
 								  String type, String storeId, String aisleId, String authToken) throws StoreModelServiceException, AuthenticationServiceException {
@@ -625,7 +625,7 @@ public class StoreModelService implements Subject {
 	 *
 	 * @param basketId basketId
 	 * @return {@link int}
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public int getBasketTotal(String basketId) throws StoreModelServiceException {
 		Basket basket = getBasket(basketId);
@@ -645,7 +645,7 @@ public class StoreModelService implements Subject {
 	 * @param customerId customerId
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String getCustomerBasketId(String customerId) throws StoreModelServiceException {
 		String basketId = getCustomer(customerId).getBasketId();
@@ -658,7 +658,7 @@ public class StoreModelService implements Subject {
 	 * @param basketId basketId
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String defineBasket(String basketId) throws StoreModelServiceException, AuthenticationServiceException {
 		if (basketMap.containsKey(basketId)){
@@ -677,7 +677,7 @@ public class StoreModelService implements Subject {
 	 * @param customerId customerId
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String associateBasket(String basketId, String customerId) throws StoreModelServiceException {
 		Customer currentCustomer = getCustomer(customerId);
@@ -697,7 +697,7 @@ public class StoreModelService implements Subject {
 	 * @param itemCount itemCount
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String addBasketItem(String basketId,
 								String productId,
@@ -718,7 +718,7 @@ public class StoreModelService implements Subject {
 	 * @param itemCount itemCount
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String removeBasketItem(String basketId, String productId, String itemCount) throws StoreModelServiceException {
 		Basket nextBasket = getBasket(basketId);
@@ -738,7 +738,7 @@ public class StoreModelService implements Subject {
 	 * Removes all associations from basket with given basket id.
 	 *
 	 * @param basketId basketId
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public void clearBasket(String basketId) throws StoreModelServiceException{
 		getBasket(basketId).clearBasket();
@@ -751,7 +751,7 @@ public class StoreModelService implements Subject {
 	 * @param basketId basketId
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String showBasketItems(String basketId) throws StoreModelServiceException{
 		Basket selectedBasket = getBasket(basketId);
@@ -764,7 +764,7 @@ public class StoreModelService implements Subject {
 	 * @param basketId basketId
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException com.services.store.model. store model service exception
 	 */
 	public String computeBasketWeight (String basketId) throws StoreModelServiceException{
 		Map<String, Integer> selectedBasket = getBasket(basketId).getProductCountMap();
@@ -781,7 +781,7 @@ public class StoreModelService implements Subject {
 	 * @param basketId basketId
 	 * @return {@link Basket}
 	 * @see Basket
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	private Basket getBasket(String basketId) throws StoreModelServiceException{
 		if (basketMap.isEmpty() || !basketMap.containsKey(basketId)){
@@ -808,8 +808,8 @@ public class StoreModelService implements Subject {
 	 * @param event event
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
-	 * @throws LedgerException com.cscie97.ledger. ledger exception
+	 * @throws StoreModelServiceException com.services.store.model. store model service exception
+	 * @throws LedgerException com.services.ledger. ledger exception
 	 */
 	public String createEvent(String deviceId, String event, String firstCredential, String secondCredential) throws StoreModelServiceException, LedgerException, ControllerException, AuthenticationServiceException {
 		String[] eventArgs = event.split(" ");
@@ -909,8 +909,8 @@ public class StoreModelService implements Subject {
 	 * notifies observers by calling update() method on each observer, passing the new event
 	 *
 	 * @param event event
-	 * @throws com.cscie97.store.model.CommandProcessorException com.cscie97.store.model. command processor exception
-	 * @throws CommandProcessorException com.cscie97.ledger. command processor exception
+	 * @throws com.services.store.model.CommandProcessorException com.services.store.model. command processor exception
+	 * @throws CommandProcessorException com.services.ledger. command processor exception
 	 */
 	public void notify(Event event) throws StoreModelServiceException, LedgerException, ControllerException, AuthenticationServiceException {
 		for (Observer curr : observerArrayList){
@@ -925,7 +925,7 @@ public class StoreModelService implements Subject {
 	 * @param announcement announcement
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException com.services.store.model. store model service exception
 	 */
 	public String createAnnouncement(String deviceId, String announcement) throws StoreModelServiceException {
 		Appliance appliance = (Appliance) getDevice(deviceId);
@@ -938,7 +938,7 @@ public class StoreModelService implements Subject {
 	 * @param turnstileId turnstileId
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException com.services.store.model. store model service exception
 	 */
 	public String openTurnstile(String turnstileId) throws StoreModelServiceException {
 		Turnstile selected = (Turnstile) getDevice(turnstileId);
@@ -951,7 +951,7 @@ public class StoreModelService implements Subject {
 	 * @param storeId storeId
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException com.services.store.model. store model service exception
 	 */
 	public String openAllTurnstiles(String storeId) throws StoreModelServiceException {
 		Map<String, Device> devicesInStore = getStore(storeId).getDeviceMap();
@@ -973,7 +973,7 @@ public class StoreModelService implements Subject {
 	 * @param storeModelService
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public String createCommand(String deviceId, String event, StoreModelService storeModelService) throws StoreModelServiceException {
 		// get selected device

@@ -1,4 +1,4 @@
-package com.cscie97.store.model;
+package com.services.store.model;
 
 /**
  * Represents an inventory instance on a particular shelf.

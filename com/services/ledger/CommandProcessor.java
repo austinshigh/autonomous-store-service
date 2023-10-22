@@ -1,4 +1,4 @@
-//package com.cscie97.ledger;
+//package com.services.ledger;
 //
 //import java.io.File;
 //import java.io.FileNotFoundException;
@@ -28,7 +28,7 @@
 //     * feedback to the user for incorrect arguments.
 //     *
 //     * @param command command
-//     * @throws CommandProcessorException com.cscie97.ledger. command processor exception
+//     * @throws CommandProcessorException com.services.ledger. command processor exception
 //     * @return
 //     */
 //    public static String processCommand(String command) throws CommandProcessorException {
@@ -157,7 +157,7 @@
 //    public void processCommandFile(String file) {
 //        try {
 //            // get script file in test folder specified as parameter
-//            File myObj = new File("com/cscie97/ledger/test/" + file);
+//            File myObj = new File("com/services/ledger/test/" + file);
 //            Scanner myReader = new Scanner(myObj);
 //            int i = 0;
 //            while (myReader.hasNextLine()) {

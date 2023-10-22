@@ -132,7 +132,7 @@ This class diagram **(/diagrams)** defines all classes used in the service.
 
 ### Class Dictionary
 
-This section specifies the class dictionary for the Store Model Service. The classes should be defined within the package "com.cscie97.storemodelservice".
+This section specifies the class dictionary for the Store Model Service. The classes should be defined within the package "com.services.storemodelservice".
 
 #### StoreModelService
 
@@ -514,6 +514,6 @@ Several changes were made to the original design:
 
 ## Testing
 
-Implement a test driver class called TestDriver that implements a static main() method. The main() method should accept a single parameter, which is a command file. The main method will call the `CommandProcessor.processCommandFile(file: string)` method, passing in the name of the provided command file. The TestDriver class should be defined within the package "cscie97.store.test".
+Implement a test driver class called TestDriver that implements a static main() method. The main() method should accept a single parameter, which is a command file. The main method will call the `CommandProcessor.processCommandFile(file: string)` method, passing in the name of the provided command file. The TestDriver class should be defined within the package "services.store.test".
 
 A single test CLI file will be included. It contains the API commands included in the "store_model_script.txt" document.

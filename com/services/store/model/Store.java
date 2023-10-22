@@ -1,4 +1,4 @@
-package com.cscie97.store.model;
+package com.services.store.model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +45,7 @@ public class Store {
 	 * Creates a new aisle after verifying that the aisle number is unique
 	 *
 	 * @param aisle aisle
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public void createAisle(Aisle aisle) throws StoreModelServiceException {
 		if (!aisleMap.isEmpty() && aisleMap.containsKey(aisle.getNumber())) {
@@ -63,7 +63,7 @@ public class Store {
 	 * @param number number
 	 * @return {@link Aisle}
 	 * @see Aisle
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public Aisle getAisle(String number) throws StoreModelServiceException {
 		if (aisleMap.isEmpty() || !aisleMap.containsKey(number)){

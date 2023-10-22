@@ -1,6 +1,6 @@
-package com.cscie97.ledger;
+package com.services.ledger;
 
-import com.cscie97.store.model.StoreModelServiceException;
+import com.services.store.model.StoreModelServiceException;
 
 /**
  * Returned from the Ledger API methods in response to an error condition.

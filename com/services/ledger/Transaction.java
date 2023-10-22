@@ -1,4 +1,4 @@
-package com.cscie97.ledger;
+package com.services.ledger;
 
 /**
  * Represents a transaction in the Ledger System.

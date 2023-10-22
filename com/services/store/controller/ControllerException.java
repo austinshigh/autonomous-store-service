@@ -1,4 +1,4 @@
-package com.cscie97.store.controller;
+package com.services.store.controller;
 
     /**
      * Returned from the Controller methods in response to an error condition.

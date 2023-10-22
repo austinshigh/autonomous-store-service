@@ -1,8 +1,8 @@
-package com.cscie97.store.controller;
+package com.services.store.controller;
 
-import com.cscie97.ledger.LedgerException;
-import com.cscie97.store.authentication.AuthenticationServiceException;
-import com.cscie97.store.model.StoreModelServiceException;
+import com.services.ledger.LedgerException;
+import com.services.store.authentication.AuthenticationServiceException;
+import com.services.store.model.StoreModelServiceException;
 
 import javax.naming.AuthenticationException;
 
@@ -17,8 +17,8 @@ public interface Command {
 	/**
 	 * Runs commands containing logic pertaining to newly created events
 	 *
-	 * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
-	 * @throws LedgerException com.cscie97.ledger. ledger exception
+	 * @throws StoreModelServiceException com.services.store.model. store model service exception
+	 * @throws LedgerException com.services.ledger. ledger exception
 	 */
 	public abstract void execute() throws StoreModelServiceException, LedgerException, ControllerException, AuthenticationException, AuthenticationServiceException;
 

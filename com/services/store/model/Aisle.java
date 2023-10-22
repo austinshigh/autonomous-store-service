@@ -1,4 +1,4 @@
-package com.cscie97.store.model;
+package com.services.store.model;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +53,7 @@ public class Aisle {
 	 * @param shelfId shelfId
 	 * @return {@link Shelf}
 	 * @see Shelf
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public Shelf getShelf(String shelfId) throws StoreModelServiceException {
 		if (shelfMap.isEmpty() || !shelfMap.containsKey(shelfId)){
@@ -67,7 +67,7 @@ public class Aisle {
 	 * Creates new shelf
 	 *
 	 * @param shelf shelf
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public void createShelf(Shelf shelf) throws StoreModelServiceException {
 		if (!shelfMap.isEmpty() && shelfMap.containsKey(shelf.getId())) {

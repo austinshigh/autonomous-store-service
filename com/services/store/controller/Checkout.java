@@ -1,11 +1,11 @@
-package com.cscie97.store.controller;
+package com.services.store.controller;
 
-import com.cscie97.ledger.Ledger;
-import com.cscie97.ledger.LedgerException;
-import com.cscie97.ledger.Transaction;
-import com.cscie97.store.authentication.AuthenticationService;
-import com.cscie97.store.authentication.AuthenticationServiceException;
-import com.cscie97.store.model.*;
+import com.services.ledger.Ledger;
+import com.services.ledger.LedgerException;
+import com.services.ledger.Transaction;
+import com.services.store.authentication.AuthenticationService;
+import com.services.store.authentication.AuthenticationServiceException;
+import com.services.store.model.*;
 
 import java.util.concurrent.ThreadLocalRandom;
 

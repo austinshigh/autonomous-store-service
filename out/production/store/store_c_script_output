@@ -1,4 +1,4 @@
-java -cp . com.cscie97.store.test.TestDriver store_c.script
+java -cp . com.services.store.test.TestDriver store_c.script
 
 
 # Define a store - this creates a ledger and transfers 20000 Units to the store
@@ -146,7 +146,7 @@ SPEAKER001: Announcement: basket total is 23 which is less than your account bal
 
 # Ann tries to enter the store (should not be able to because she is already in the store)
 >>> create-event TURNSTILE001 event "enter-store CUSTOMER00001 TURNSTILE001 STORE002:1"
-cscie97.store.model.CommandProcessorException:
+services.store.model.CommandProcessorException:
 command = 'create-event TURNSTILE001 event "enter-store CUSTOMER00001 TURNSTILE001 STORE002:1"'
 reason = 'Customer is already in store'
 lineNumber = 69
@@ -172,7 +172,7 @@ Command Received:  "Hello ann, welcome to costco!"
 # Create an emergency event - all turnstiles open, 1 attends to emergency and the rest help
 # customers, while speakers announce for customers to leave store
 >>> create-event CAMERA001 event "emergency CRYINGBABY STORE002:1"
-cscie97.store.model.CommandProcessorException:
+services.store.model.CommandProcessorException:
 command = 'create-event CAMERA001 event "emergency CRYINGBABY STORE002:1"'
 reason = 'Event: CRYINGBABY is not an emergency'
 lineNumber = 80

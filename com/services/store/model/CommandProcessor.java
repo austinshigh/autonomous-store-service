@@ -1,12 +1,12 @@
-package com.cscie97.store.model;
+package com.services.store.model;
 
-import com.cscie97.ledger.Ledger;
-import com.cscie97.ledger.LedgerException;
-import com.cscie97.ledger.Transaction;
-import com.cscie97.store.authentication.AuthenticationServiceException;
-import com.cscie97.store.controller.ControllerException;
-import com.cscie97.store.controller.StoreController;
-import com.cscie97.store.authentication.AuthenticationService;
+import com.services.ledger.Ledger;
+import com.services.ledger.LedgerException;
+import com.services.ledger.Transaction;
+import com.services.store.authentication.AuthenticationServiceException;
+import com.services.store.controller.ControllerException;
+import com.services.store.controller.StoreController;
+import com.services.store.authentication.AuthenticationService;
 
 import javax.naming.AuthenticationException;
 import java.io.File;
@@ -37,7 +37,7 @@ public class CommandProcessor {
 		 * feedback to the user for incorrect arguments.
 		 *
 		 * @param command command
-		 * @throws CommandProcessorException cscie97.store.command processor exception
+		 * @throws CommandProcessorException services.store.command processor exception
 		 */
 		public static String processCommand(String command) throws CommandProcessorException {
 			try {
@@ -679,7 +679,7 @@ public class CommandProcessor {
 			storeController = new StoreController(storeModelService,ledgerService, authenticationService);
 			storeModelService.attach(storeController);
 			// get script file in test folder specified as parameter
-			File myObj = new File("com/cscie97/store/test/" + file);
+			File myObj = new File("com/services/store/test/" + file);
 			Scanner myReader = new Scanner(myObj);
 			int i = 0;
 			while (myReader.hasNextLine()) {

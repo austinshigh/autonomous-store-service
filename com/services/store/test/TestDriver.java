@@ -1,7 +1,7 @@
-package com.cscie97.store.test;
+package com.services.store.test;
 
-import com.cscie97.store.model.CommandProcessor;
-import com.cscie97.store.model.CommandProcessorException;
+import com.services.store.model.CommandProcessor;
+import com.services.store.model.CommandProcessorException;
 
 import java.io.FileNotFoundException;
 

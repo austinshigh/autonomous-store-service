@@ -1,4 +1,4 @@
-package com.cscie97.store.model;
+package com.services.store.model;
 
 import java.util.ArrayList;
 
@@ -38,7 +38,7 @@ public interface Device {
 	 * @param command command
 	 * @return {@link String}
 	 * @see String
-	 * @throws StoreModelServiceException cscie97.store.model. store model service exception
+	 * @throws StoreModelServiceException services.store.model. store model service exception
 	 */
 	public abstract String createCommand(String command) throws StoreModelServiceException;
 

@@ -1,4 +1,4 @@
-package com.cscie97.store.authentication;
+package com.services.store.authentication;
 
 public class Permission extends Entitlement {
 

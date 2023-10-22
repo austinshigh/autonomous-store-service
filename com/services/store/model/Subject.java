@@ -1,8 +1,8 @@
-package com.cscie97.store.model;
+package com.services.store.model;
 
-import com.cscie97.ledger.LedgerException;
-import com.cscie97.store.authentication.AuthenticationServiceException;
-import com.cscie97.store.controller.ControllerException;
+import com.services.ledger.LedgerException;
+import com.services.store.authentication.AuthenticationServiceException;
+import com.services.store.controller.ControllerException;
 
 import javax.naming.AuthenticationException;
 
@@ -22,8 +22,8 @@ public interface Subject {
      * Calls the update method on each Observer in the Subject's list of observers
      *
      * @param event event
-     * @throws StoreModelServiceException com.cscie97.store.model. store model service exception
-     * @throws LedgerException com.cscie97.ledger. ledger exception
+     * @throws StoreModelServiceException com.services.store.model. store model service exception
+     * @throws LedgerException com.services.ledger. ledger exception
      */
     public void notify(Event event) throws StoreModelServiceException, LedgerException, ControllerException, AuthenticationException, AuthenticationServiceException;
 
