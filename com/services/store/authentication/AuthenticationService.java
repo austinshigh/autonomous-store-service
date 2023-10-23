@@ -22,18 +22,11 @@ public class AuthenticationService extends Visitable {
 		this.id = 1;
 		this.tokenTimeout = 10;
 		this.userMap = new HashMap<String,User>();
-		//
 		User root = new User("root", "superuser");
 		Password rootPassword = new Password("default");
 		root.addCredential(rootPassword);
 		userMap.put(root.getId(), root);
-		//
 		this.entitlementMap = new HashMap<String, Entitlement>();
-		//
-		//Permission permission = new Permission("1", "fetch_product", "test");
-		//entitlementMap.put(permission.getId(), permission);
-		//
-		//addPermissionToUser("root", permission.getId());
 	}
 
 	@Override

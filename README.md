@@ -9,9 +9,7 @@ javac com/services/store/model/\*.java com/services/store/controller/\*.java com
 
 Command to Run tests:
 
-java -cp . com.services.store.test.TestDriver store.script
-java -cp . com.services.store.test.TestDriver store_b.script
-java -cp . com.services.store.test.TestDriver store_c.script
+java -cp . com.services.store.test.TestDriver store_d.script
 
 ### Introduction
 

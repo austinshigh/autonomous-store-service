@@ -1,7 +1,6 @@
 
 # Sample Authentication Script
 # This script only provisions the Authentication service
-# You should use the script from the Controller Service assignment to test interaction between the Authentication Service, Store Model Service, and Controller Service.
 
 # Login to the default bootstrap root account which has full access. Use it to setup basic authentication entitlements and users.
 login root password default
@@ -349,10 +348,6 @@ show-customer sam
 
 # Create a broken-glass event - expect a robot to be assigned a new command to clean up glass
 create-event CAMERA002 event "broken-glass store123:1" scs scs123
-
-
-# Create a product-spill event - expect a robot to be assigned a command to clean the milk
-create-event CAMERA002 event "product-spill store123:2 MILK001" scs scs123
 
 
 # Create a missing-person event using a microphone - expect that the missing customer is in aisle 1

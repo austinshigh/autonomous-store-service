@@ -1,61 +1,0 @@
-
-STMicroelectronics STLBLE1:
-	Version 1.0.0
-	SensorTile
-OK Temperature Sensor1
-OK Pressure Sensor
-Enabled Temperature Sensor1
-Enabled Pressure Sensor
-	(HAL 1.5.1_0)
-	Compiled Oct  1 2021 22:18:24 (openstm32)
-	Send Every  500mS Temperature/Humidity/Pressure
-Debug Connection         Enabled
-Debug Notify Trasmission Enabled
-SERVER: BLE Stack Initialized 
-		Board type=SensorTile HWver=49, FWver=7.2.c
-		BoardName= STLB100
-		BoardMAC = c0:6e:28:33:55:58
-
-HW      Service W2ST added successfully
-Config  Service W2ST added successfully
-
-STMicroelectronics STLBLE1:
-	Version 1.0.0
-	SensorTile
-OK Temperature Sensor1
-OK Pressure Sensor
-Enabled Temperature Sensor1
-Enabled Pressure Sensor
-	(HAL 1.5.1_0)
-	Compiled Oct  1 2021 22:18:24 (openstm32)
-	Send Every  500mS Temperature/Humidity/Pressure
-Debug Connection         Enabled
-Debug Notify Trasmission Enabled
-SERVER: BLE Stack Initialized 
-		Board type=SensorTile HWver=49, FWver=7.2.c
-		BoardName= STLB100
-		BoardMAC = c0:6e:28:33:55:58
-
-HW      Service W2ST added successfully
-Config  Service W2ST added successfully
->>>>>>CONNECTED b8:27:eb:28:8e:6
-Notification UNKNOW handle
-<<<<<<DISCONNECTED
->>>>>>CONNECTED b8:27:eb:28:8e:6
-Notification UNKNOW handle
-<<<<<<DISCONNECTED
->>>>>>CONNECTED b8:27:eb:28:8e:6
-Notification UNKNOW handle
-<<<<<<DISCONNECTED
->>>>>>CONNECTED b8:27:eb:28:8e:6
-Notification UNKNOW handle
-<<<<<<DISCONNECTED
->>>>>>CONNECTED b8:27:eb:28:8e:6
-Notification UNKNOW handle
-<<<<<<DISCONNECTED
->>>>>>CONNECTED b8:27:eb:28:8e:6
-Notification UNKNOW handle
-<<<<<<DISCONNECTED
->>>>>>CONNECTED b8:27:eb:28:8e:6
-Notification UNKNOW handle
-<<<<<<DISCONNECTED
